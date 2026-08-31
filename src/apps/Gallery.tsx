@@ -15,29 +15,11 @@ const DEFAULT_GALLERY = Array.from({ length: 33 }, (_, i) => {
 })
 
 export default function Gallery() {
-  const [items, setItems] = useState<Array<{ id: string; img: string; name: string }>>(() => {
-    const saved = localStorage.getItem('syau-os-gallery')
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved)
-        if (Array.isArray(parsed) && parsed.length === 33 && !JSON.stringify(parsed).includes('syau-photo-17.png')) {
-          return parsed
-        }
-      } catch {}
-    }
-    localStorage.removeItem('syau-os-gallery')
-    return DEFAULT_GALLERY
-  })
+  const [items] = useState<Array<{ id: string; img: string; name: string }>>(DEFAULT_GALLERY)
 
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
   const [lightbox, setLightbox] = useState<number | null>(null)
   const [zoomLevel, setZoomLevel] = useState<number>(1)
-  const [urlInput, setUrlInput] = useState('')
-  const [showAddModal, setShowAddModal] = useState(false)
-
-  useEffect(() => {
-    localStorage.setItem('syau-os-gallery', JSON.stringify(items))
-  }, [items])
 
   // Escape key & arrow navigation for Lightbox
   useEffect(() => {
@@ -57,41 +39,6 @@ export default function Gallery() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [lightbox, items.length])
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const dataUrl = event.target?.result as string
-      if (dataUrl) {
-        const newItem = { id: Date.now().toString(), img: dataUrl, name: file.name }
-        setItems(prev => [newItem, ...prev])
-        setShowAddModal(false)
-      }
-    }
-    reader.readAsDataURL(file)
-  }
-
-  const handleAddUrl = () => {
-    if (!urlInput.trim()) return
-    const newItem = { id: Date.now().toString(), img: urlInput.trim(), name: 'Custom Image' }
-    setItems(prev => [newItem, ...prev])
-    setUrlInput('')
-    setShowAddModal(false)
-  }
-
-  const handleDelete = (id: string, index: number) => {
-    setItems(prev => prev.filter(item => item.id !== id))
-    if (lightbox === index) setLightbox(null)
-  }
-
-  const handleReset = () => {
-    if (confirm('Reset gallery to default images?')) {
-      setItems(DEFAULT_GALLERY)
-      localStorage.removeItem('syau-os-gallery')
-    }
-  }
-
   const setAsWallpaper = (imgUrl: string) => {
     localStorage.setItem('syau-os-wallpaper', imgUrl)
     localStorage.setItem('syau-os-bg', 'image')
@@ -107,74 +54,7 @@ export default function Gallery() {
           <span style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-sakura)' }}>Gallery</span>
           <span style={{ fontSize: 11, color: 'var(--color-text-muted)', marginLeft: 8 }}>{items.length} photos</span>
         </div>
-        <div style={{ display: 'flex', gap: 6 }}>
-          <button
-            onClick={() => setShowAddModal(!showAddModal)}
-            style={{
-              padding: '5px 12px', borderRadius: 8, fontSize: 11, fontWeight: 600,
-              background: 'var(--color-sakura)', color: 'white', border: 'none',
-              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4,
-            }}
-          >
-            ＋ Add Image
-          </button>
-          <button
-            onClick={handleReset}
-            title="Reset to default photos"
-            style={{
-              padding: '5px 10px', borderRadius: 8, fontSize: 11, fontWeight: 500,
-              background: 'var(--color-glass-card)', color: 'var(--color-text-muted)',
-              border: '1px solid var(--color-glass-border)', cursor: 'pointer',
-            }}
-          >
-            Reset
-          </button>
-        </div>
       </div>
-
-      {/* Modal / Add Image Popup */}
-      {showAddModal && (
-        <div style={{
-          marginBottom: 16, padding: 14, borderRadius: 12, background: 'var(--color-glass-card)',
-          border: '1px solid var(--color-sakura)', display: 'flex', flexDirection: 'column', gap: 10,
-        }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-text-primary)' }}>Upload your own photo:</div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-            <label style={{
-              padding: '6px 12px', background: 'rgba(255,255,255,0.08)', borderRadius: 8,
-              fontSize: 11, fontWeight: 600, cursor: 'pointer', color: 'var(--color-text-primary)',
-              border: '1px solid var(--color-glass-border)',
-            }}>
-              Choose File from PC...
-              <input type="file" accept="image/*" onChange={handleFileUpload} style={{ display: 'none' }} />
-            </label>
-            <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>or paste URL:</span>
-          </div>
-
-          <div style={{ display: 'flex', gap: 6 }}>
-            <input
-              type="text"
-              placeholder="https://example.com/photo.jpg"
-              value={urlInput}
-              onChange={e => setUrlInput(e.target.value)}
-              style={{
-                flex: 1, padding: '6px 10px', borderRadius: 8, fontSize: 11,
-                background: 'rgba(0,0,0,0.3)', border: '1px solid var(--color-glass-border)',
-                color: 'var(--color-text-primary)', outline: 'none',
-              }}
-            />
-            <button
-              onClick={handleAddUrl}
-              style={{
-                padding: '6px 14px', borderRadius: 8, fontSize: 11, fontWeight: 600,
-                background: 'var(--color-sakura)', color: 'white', border: 'none', cursor: 'pointer',
-              }}
-            >
-              Add URL
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* Image Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: 10, flex: 1 }}>
@@ -271,19 +151,6 @@ export default function Gallery() {
               }}
             >
               🖼 Wallpaper
-            </button>
-
-            {/* Delete Button */}
-            <button
-              onClick={() => handleDelete(items[lightbox].id, lightbox)}
-              title="Delete this photo"
-              style={{
-                padding: '4px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
-                background: 'rgba(239, 68, 68, 0.2)', color: '#EF4444',
-                border: '1px solid rgba(239, 68, 68, 0.3)', cursor: 'pointer',
-              }}
-            >
-              🗑 Delete
             </button>
 
             {/* Close / Esc Exit Button */}

@@ -17,7 +17,7 @@ function formatDate(ts: number): string {
 }
 
 export default function FileManager() {
-  const { loaded, load, getChildren, getNode, createFile, createFolder, remove, rename, updateContent, getPath } = useFileSystem()
+  const { loaded, load, getChildren, getNode, createFile, createFolder, rename, updateContent, getPath } = useFileSystem()
   const [currentFolder, setCurrentFolder] = useState<string | null>(null)
   const [selected, setSelected] = useState<string | null>(null)
   const [viewMode, setViewMode] = useState<ViewMode>('list')
@@ -78,12 +78,6 @@ export default function FileManager() {
     if (!renameValue.trim()) { setRenamingId(null); return }
     await rename(id, renameValue.trim())
     setRenamingId(null)
-  }
-
-  const handleDelete = async (id: string) => {
-    await remove(id)
-    if (selected === id) setSelected(null)
-    setContextMenu(null)
   }
 
   if (!loaded) return (
@@ -318,8 +312,6 @@ export default function FileManager() {
                 <DropdownItem icon="📝" label="Open" onClick={() => { setEditingNode(node); setEditorText(node.content || ''); setEditorDirty(false); setContextMenu(null) }} />
               )}
               <DropdownItem icon="✏️" label="Rename" onClick={() => { setRenamingId(node.id); setRenameValue(node.name); setContextMenu(null) }} />
-              <div style={{ height: 1, background: 'var(--color-border)', margin: '4px 0' }} />
-              <DropdownItem icon="🗑" label="Delete" onClick={() => handleDelete(node.id)} danger />
             </motion.div>
           )
         })()}
