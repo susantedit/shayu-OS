@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BookOpen, Calendar, Tag, CheckCircle2, ChevronRight, Sparkles, Terminal, Code2, Layers, Sun, Moon } from 'lucide-react'
+import { BookOpen, Calendar, CheckCircle2, Sparkles, Sun, Moon } from 'lucide-react'
 import { useThemeStore } from '../store/themeStore'
 
 export interface DevlogEntry {

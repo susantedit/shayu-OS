@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Award, BookOpen, Code, ShieldCheck, Cpu, Terminal, ExternalLink,
-  Mail, Globe, Heart, CheckCircle, Sparkles, MessageSquare, Coffee
+  Award, Code, Mail, Globe, Sparkles, MessageSquare, Coffee
 } from 'lucide-react'
 
 const GithubIcon = ({ size = 16 }: { size?: number }) => (

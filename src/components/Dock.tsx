@@ -46,8 +46,7 @@ const appTitles: Record<string, string> = {
 
 const appSizes: Record<string, [number, number]> = {
   creator: [860, 580], devlogs: [840, 560], about: [480, 540], terminal: [600, 400], notes: [500, 450], calculator: [320, 460],
-  music: [380, 520], gallery: [600, 480], browser: [800, 560],
-  files: [640, 480], store: [420, 580], guide: [500, 560], settings: [460, 520],
+  music: [720, 500], gallery: [600, 480], browser: [800, 560],
   files: [640, 480], store: [420, 580], guide: [500, 560], settings: [460, 520],
   weather: [360, 420], kanban: [520, 440], timer: [340, 520],
   'typing-speed': [480, 420], 'paint-studio': [560, 480], 'image-editor': [520, 460],

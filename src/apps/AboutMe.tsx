@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ExternalLink, Mail, Globe, Sparkles, UserCheck } from 'lucide-react'
+import { UserCheck } from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 
 export default function AboutMe() {
