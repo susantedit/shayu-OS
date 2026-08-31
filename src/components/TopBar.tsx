@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
-import { Wifi, Battery, Volume2, Sun, Moon, BookOpen } from 'lucide-react'
+import { Wifi, Battery, Volume2, BookOpen } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useDesktopStore } from '../store/desktopStore'
-import { useThemeStore } from '../store/themeStore'
+
 
 export default function TopBar() {
   const [time, setTime] = useState(new Date())
@@ -15,7 +15,7 @@ export default function TopBar() {
   const currentWorkspace = useDesktopStore(s => s.currentWorkspace)
   const maxWorkspaces = useDesktopStore(s => s.maxWorkspaces)
   const switchWorkspace = useDesktopStore(s => s.switchWorkspace)
-  const { mode, toggleMode } = useThemeStore()
+
 
   const activeWin = windows.find(w => w.id === activeWindowId)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -126,19 +126,6 @@ export default function TopBar() {
           <span>Devlogs</span>
         </button>
 
-        {/* Dark / Light Theme Mode Toggle Button */}
-        <button
-          onClick={toggleMode}
-          title={`Switch to ${mode === 'dark' ? 'Light' : 'Dark'} Mode`}
-          style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            width: 26, height: 24, borderRadius: 6, border: '1px solid var(--color-glass-border)',
-            background: 'var(--color-glass-card)', cursor: 'pointer',
-            color: 'var(--color-text-primary)', transition: 'all 0.2s ease',
-          }}
-        >
-          {mode === 'dark' ? <Sun size={13} style={{ color: '#FDBA74' }} /> : <Moon size={13} style={{ color: '#7E57C2' }} />}
-        </button>
 
         {/* Window switcher button */}
         {windows.filter(w => w.workspace === currentWorkspace && !w.minimized).length > 1 && (

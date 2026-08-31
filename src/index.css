@@ -1137,28 +1137,51 @@ button:active { transform: scale(0.97); }
     border-radius: 9px !important;
   }
   .window {
+    left: 0 !important;
+    top: 32px !important;
+    width: 100vw !important;
     max-width: 100vw !important;
+    min-width: 0 !important;
+    height: calc(100dvh - 32px) !important;
     max-height: calc(100dvh - 32px) !important;
-    border-radius: 8px !important;
+    border-radius: 0 !important;
+    box-sizing: border-box !important;
   }
   .window.maximized {
     height: calc(100dvh - 32px) !important;
   }
+  .window-header {
+    height: 42px !important;
+    padding: 0 12px !important;
+    box-sizing: border-box !important;
+  }
   .traffic-light {
-    width: 22px !important;
-    height: 22px !important;
-    border-radius: 6px !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    border-radius: 7px !important;
+    touch-action: manipulation;
   }
   .traffic-light svg {
-    width: 10px !important;
-    height: 10px !important;
+    width: 11px !important;
+    height: 11px !important;
     opacity: 1 !important;
   }
   .window-traffic-lights {
     gap: 8px !important;
+    flex-shrink: 0 !important;
   }
   .topbar-hide-mobile {
     display: none !important;
+  }
+  .desktop-widgets {
+    display: none !important;
+  }
+  .desktop-greeting {
+    top: calc(50% - 24px) !important;
+    width: 90% !important;
+    max-width: 360px !important;
   }
 }
 

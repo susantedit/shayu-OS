@@ -131,9 +131,8 @@ export default function Desktop() {
         backgroundSize: '80px 80px', pointerEvents: 'none',
       }} />
 
-      {/* Center greeting */}
-      <div style={{
-        position: 'absolute', top: '30%', left: '50%',
+      <div className="desktop-greeting" style={{
+        position: 'absolute', top: '50%', left: '50%',
         transform: 'translate(-50%, -50%)',
         textAlign: 'center', pointerEvents: 'none', userSelect: 'none',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
@@ -168,7 +167,7 @@ export default function Desktop() {
           Created by <strong style={{ color: 'var(--color-text-primary)' }}>Kantaraj Luitel (Susant)</strong>
         </div>
         <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2, letterSpacing: 2 }}>
-          right-click anywhere to open menu
+          tap the dock below to open apps
         </div>
       </div>
 

@@ -105,7 +105,8 @@ export default function Widgets() {
     return () => cancelAnimationFrame(frame)
   }, [enabled])
 
-  if (!enabled || isAnyMaximized) return null
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  if (!enabled || isAnyMaximized || isMobile) return null
 
   // Calendar data
   const today = new Date()
@@ -138,7 +139,7 @@ export default function Widgets() {
   }
 
   return (
-    <div style={{ position: 'fixed', top: 80, right: 16, zIndex: 2, display: 'flex', flexDirection: 'column', gap: 10, pointerEvents: 'auto', transition: 'opacity 0.2s ease' }}>
+    <div className="desktop-widgets" style={{ position: 'fixed', top: 80, right: 16, zIndex: 2, display: 'flex', flexDirection: 'column', gap: 10, pointerEvents: 'auto', transition: 'opacity 0.2s ease' }}>
       {/* Analog clock */}
       <div style={{ ...glassStyle, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <canvas ref={canvasRef} style={{ width: 140, height: 140 }} />

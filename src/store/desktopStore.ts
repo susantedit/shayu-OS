@@ -63,6 +63,10 @@ export const useDesktopStore = create<DesktopStore>((set, get) => ({
     // Only check for existing windows on the CURRENT workspace
     const existing = windows.find(w => w.appId === appId && w.workspace === currentWorkspace && !w.minimized)
     if (existing) {
+      if (get().activeWindowId === existing.id) {
+        get().minimizeWindow(existing.id)
+        return
+      }
       get().focusWindow(existing.id)
       return
     }

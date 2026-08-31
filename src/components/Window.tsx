@@ -168,34 +168,35 @@ export default function Window({ window: win, children }: WindowProps) {
     ? `0 16px 48px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.08) inset, inset 2px 2px 1px rgba(255,255,255,0.08), inset -1px -1px 1px rgba(255,255,255,0.03), 0 0 0 1px ${accentColor.replace(/[\d.]+\)$/, '0.25)')}, 0 0 40px ${accentColor}`
     : `0 8px 40px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.06) inset, inset 2px 2px 1px rgba(255,255,255,0.06), inset -1px -1px 1px rgba(255,255,255,0.02), 0 0 0 1px rgba(255,255,255,0.08)`
 
-  const originX = win.origin ? win.origin.x - (win.x + win.width / 2) : 0
-  const originY = win.origin ? win.origin.y - (win.y + win.height / 2) : 0
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const originX = !isMobile && win.origin ? win.origin.x - (win.x + win.width / 2) : 0
+  const originY = !isMobile && win.origin ? win.origin.y - (win.y + win.height / 2) : 0
 
   return (
     <motion.div
       ref={winRef}
-      className={`window ${isActive ? 'active' : ''} ${win.maximized ? 'maximized' : ''}`}
+      className={`window ${isActive ? 'active' : ''} ${win.maximized || isMobile ? 'maximized' : ''}`}
       style={{
-        left: win.maximized ? 0 : Math.max(0, Math.min(window.innerWidth - 80, win.x)),
-        top: win.maximized ? 32 : win.y,
-        width: win.maximized ? '100vw' : win.width,
+        left: (win.maximized || isMobile) ? 0 : Math.max(0, Math.min(window.innerWidth - 80, win.x)),
+        top: (win.maximized || isMobile) ? 32 : win.y,
+        width: (win.maximized || isMobile) ? '100vw' : win.width,
         maxWidth: '100vw',
-        height: win.maximized ? 'calc(100dvh - 32px)' : win.height,
+        height: (win.maximized || isMobile) ? 'calc(100dvh - 32px)' : win.height,
         maxHeight: 'calc(100dvh - 32px)',
         zIndex: win.zIndex,
         boxShadow: shadow,
       }}
       initial={{
-        x: originX,
-        y: originY,
-        scale: win.origin ? 0.5 : 0.95,
+        x: isMobile ? 0 : originX,
+        y: isMobile ? 15 : originY,
+        scale: isMobile ? 0.98 : (win.origin ? 0.5 : 0.95),
         opacity: 0,
       }}
       animate={{ x: 0, y: 0, scale: 1, opacity: 1 }}
       exit={{
-        x: originX,
-        y: originY,
-        scale: 0.5,
+        x: isMobile ? 0 : originX,
+        y: isMobile ? 15 : originY,
+        scale: isMobile ? 0.98 : 0.5,
         opacity: 0,
         transition: { duration: 0.15 },
       }}
@@ -205,25 +206,42 @@ export default function Window({ window: win, children }: WindowProps) {
       <div
         className="window-header"
         onMouseDown={onMouseDown}
-        onDoubleClick={() => toggleMaximize(win.id)}
+        onDoubleClick={() => !isMobile && toggleMaximize(win.id)}
       >
         <div className="window-traffic-lights">
-          <button className="traffic-light close" onClick={(e) => { e.stopPropagation(); closeWindow(win.id) }} style={{ borderRadius: 4, width: 14, height: 14 }}>
-            <svg viewBox="0 0 7 7"><path d="M1.5 1.5l4 4M5.5 1.5l-4 4" stroke="rgba(0,0,0,0.35)" strokeWidth="1.3" fill="none"/></svg>
+          <button
+            className="traffic-light close"
+            onClick={(e) => { e.stopPropagation(); closeWindow(win.id) }}
+            title="Close"
+            aria-label="Close window"
+          >
+            <svg viewBox="0 0 7 7"><path d="M1.5 1.5l4 4M5.5 1.5l-4 4" stroke="rgba(0,0,0,0.6)" strokeWidth="1.3" fill="none"/></svg>
           </button>
-          <button className="traffic-light minimize" onClick={(e) => { e.stopPropagation(); minimizeWindow(win.id) }} style={{ borderRadius: 4, width: 14, height: 14 }}>
-            <svg viewBox="0 0 7 7"><path d="M1.5 3.5h4" stroke="rgba(0,0,0,0.35)" strokeWidth="1.3" fill="none"/></svg>
+          <button
+            className="traffic-light minimize"
+            onClick={(e) => { e.stopPropagation(); minimizeWindow(win.id) }}
+            title="Minimize"
+            aria-label="Minimize window"
+          >
+            <svg viewBox="0 0 7 7"><path d="M1.5 3.5h4" stroke="rgba(0,0,0,0.6)" strokeWidth="1.3" fill="none"/></svg>
           </button>
-          <button className="traffic-light maximize" onClick={(e) => { e.stopPropagation(); toggleMaximize(win.id) }} style={{ borderRadius: 4, width: 14, height: 14 }}>
-            <svg viewBox="0 0 7 7"><path d="M1.5 1.5h4v4h-4z" stroke="rgba(0,0,0,0.35)" strokeWidth="1.3" fill="none"/></svg>
-          </button>
+          {!isMobile && (
+            <button
+              className="traffic-light maximize"
+              onClick={(e) => { e.stopPropagation(); toggleMaximize(win.id) }}
+              title="Maximize"
+              aria-label="Maximize window"
+            >
+              <svg viewBox="0 0 7 7"><path d="M1.5 1.5h4v4h-4z" stroke="rgba(0,0,0,0.6)" strokeWidth="1.3" fill="none"/></svg>
+            </button>
+          )}
         </div>
         <div className="window-title">{win.title}</div>
       </div>
       <div className="window-content">{children}</div>
 
       {/* Resize handles */}
-      {!win.maximized && (
+      {!win.maximized && !isMobile && (
         <>
           <div className="resize-handle resize-handle-e" onMouseDown={e => onResizeStart(e, 'e')} />
           <div className="resize-handle resize-handle-s" onMouseDown={e => onResizeStart(e, 's')} />
