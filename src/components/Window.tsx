@@ -180,8 +180,8 @@ export default function Window({ window: win, children }: WindowProps) {
         top: win.maximized ? 32 : win.y,
         width: win.maximized ? '100vw' : win.width,
         maxWidth: '100vw',
-        height: win.maximized ? 'calc(100vh - 32px)' : win.height,
-        maxHeight: 'calc(100vh - 32px)',
+        height: win.maximized ? 'calc(100dvh - 32px)' : win.height,
+        maxHeight: 'calc(100dvh - 32px)',
         zIndex: win.zIndex,
         boxShadow: shadow,
       }}
