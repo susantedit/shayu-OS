@@ -176,10 +176,12 @@ export default function Window({ window: win, children }: WindowProps) {
       ref={winRef}
       className={`window ${isActive ? 'active' : ''} ${win.maximized ? 'maximized' : ''}`}
       style={{
-        left: win.maximized ? 0 : win.x,
+        left: win.maximized ? 0 : Math.max(0, Math.min(window.innerWidth - 80, win.x)),
         top: win.maximized ? 32 : win.y,
         width: win.maximized ? '100vw' : win.width,
+        maxWidth: '100vw',
         height: win.maximized ? 'calc(100vh - 32px)' : win.height,
+        maxHeight: 'calc(100vh - 32px)',
         zIndex: win.zIndex,
         boxShadow: shadow,
       }}

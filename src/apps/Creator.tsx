@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Award, Code, Mail, Globe, Sparkles, MessageSquare, Coffee
@@ -14,25 +14,41 @@ const LinkedinIcon = ({ size = 16 }: { size?: number }) => (
 
 export default function CreatorApp() {
   const [activeTab, setActiveTab] = useState<'overview' | 'certifications' | 'techstack' | 'socials'>('overview')
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    if (!containerRef.current) return
+    const observer = new ResizeObserver(entries => {
+      for (const entry of entries) {
+        setIsMobile(entry.contentRect.width < 580)
+      }
+    })
+    observer.observe(containerRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <div style={{
-      display: 'flex', flexDirection: 'column', height: '100%',
-      background: 'var(--color-window-bg)', color: 'var(--color-text-primary)',
-      overflow: 'hidden', fontFamily: 'var(--font-sans)',
-    }}>
+    <div
+      ref={containerRef}
+      style={{
+        display: 'flex', flexDirection: 'column', height: '100%',
+        background: 'var(--color-window-bg)', color: 'var(--color-text-primary)',
+        overflow: 'hidden', fontFamily: 'var(--font-sans)',
+      }}
+    >
       {/* Top Banner Header */}
       <div style={{
-        padding: '24px 28px',
+        padding: isMobile ? '16px' : '24px 28px',
         background: 'linear-gradient(135deg, rgba(232,130,155,0.15) 0%, rgba(107,63,160,0.1) 50%, rgba(126,221,214,0.1) 100%)',
         borderBottom: '1px solid var(--color-glass-border)',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16,
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 14,
       }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? 12 : 18, minWidth: 0, flex: 1 }}>
           {/* Animated Avatar / GIF Frame */}
           <div style={{
-            position: 'relative', width: 72, height: 72, borderRadius: '50%', overflow: 'hidden',
-            border: '2px solid var(--color-sakura)', boxShadow: '0 0 24px rgba(232,130,155,0.3)',
+            position: 'relative', width: isMobile ? 54 : 72, height: isMobile ? 54 : 72, borderRadius: '50%', overflow: 'hidden',
+            border: '2px solid var(--color-sakura)', boxShadow: '0 0 24px rgba(232,130,155,0.3)', flexShrink: 0,
           }}>
             <img
               src="https://cdn.dribbble.com/users/1019864/screenshots/3079099/codeloop.gif"
@@ -41,66 +57,69 @@ export default function CreatorApp() {
             />
           </div>
 
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <h1 className="font-heading" style={{ fontSize: 24, fontWeight: 700, margin: 0, color: 'var(--color-text-primary)' }}>
-                Kantaraj Luitel <span style={{ fontSize: 16, color: 'var(--color-sakura)', fontWeight: 600 }}>(Susant)</span>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              <h1 className="font-heading" style={{ fontSize: isMobile ? 18 : 24, fontWeight: 700, margin: 0, color: 'var(--color-text-primary)' }}>
+                Kantaraj Luitel <span style={{ fontSize: isMobile ? 13 : 16, color: 'var(--color-sakura)', fontWeight: 600 }}>(Susant)</span>
               </h1>
               <span style={{ fontSize: 10, background: 'rgba(232,130,155,0.2)', color: 'var(--color-sakura)', padding: '2px 8px', borderRadius: 10, fontWeight: 700 }}>
                 Creator of स्याउ OS
               </span>
             </div>
 
-            <p style={{ fontSize: 13, color: 'var(--color-text-secondary)', marginTop: 4, margin: 0, fontWeight: 500 }}>
+            <p style={{ fontSize: isMobile ? 11 : 13, color: 'var(--color-text-secondary)', marginTop: 4, margin: 0, fontWeight: 500, lineHeight: 1.4 }}>
               💻 Developer • 🔐 Cybersecurity Enthusiast • 🎬 Content Creator • 🏆 Hackathon Winner
             </p>
-            <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6 }}>
+            <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
               <span>📍 Nepal 🇳🇵</span> • <span>Cosmic International Academy</span>
             </div>
           </div>
         </div>
 
         {/* Quick Action Badges */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', width: isMobile ? '100%' : 'auto' }}>
           <a
             href="https://github.com/susantedit"
             target="_blank"
             rel="noopener noreferrer"
             style={{
+              flex: isMobile ? 1 : 'initial', justifyContent: 'center',
               padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
               background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
               color: 'var(--color-text-primary)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6,
-              transition: 'all 0.2s ease',
+              transition: 'all 0.2s ease', whiteSpace: 'nowrap',
             }}
           >
-            <GithubIcon size={14} /> GitHub Profile
+            <GithubIcon size={14} /> GitHub
           </a>
           <a
             href="https://buymeacoffee.com/Susantedit"
             target="_blank"
             rel="noopener noreferrer"
             style={{
+              flex: isMobile ? 1 : 'initial', justifyContent: 'center',
               padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700,
               background: 'linear-gradient(135deg, #FFDD00 0%, #F59E0B 100%)',
               color: '#1E1B4B', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6,
-              boxShadow: '0 4px 12px rgba(245,158,11,0.3)',
+              boxShadow: '0 4px 12px rgba(245,158,11,0.3)', whiteSpace: 'nowrap',
             }}
           >
-            <Coffee size={14} /> Buy Me a Coffee
+            <Coffee size={14} /> Buy Coffee
           </a>
         </div>
       </div>
 
       {/* Navigation Tabs */}
       <div style={{
-        display: 'flex', gap: 8, padding: '12px 28px',
+        display: 'flex', gap: 6, padding: isMobile ? '8px 12px' : '12px 28px',
         borderBottom: '1px solid var(--color-glass-border)', background: 'rgba(0,0,0,0.02)',
+        overflowX: 'auto', scrollbarWidth: 'none', msOverflowStyle: 'none', flexShrink: 0,
       }}>
         {[
-          { id: 'overview', label: 'Overview & Bio', icon: Sparkles },
-          { id: 'certifications', label: 'Certifications & Awards', icon: Award },
-          { id: 'techstack', label: 'Tech Stack & Tools', icon: Code },
-          { id: 'socials', label: 'Social Connections', icon: Globe },
+          { id: 'overview', label: 'Overview', icon: Sparkles },
+          { id: 'certifications', label: 'Certifications', icon: Award },
+          { id: 'techstack', label: 'Tech Stack', icon: Code },
+          { id: 'socials', label: 'Socials', icon: Globe },
         ].map(tab => {
           const Icon = tab.icon
           const isActive = activeTab === tab.id
@@ -109,12 +128,12 @@ export default function CreatorApp() {
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               style={{
-                padding: '8px 16px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+                padding: '6px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
                 border: isActive ? '1px solid var(--color-sakura)' : '1px solid transparent',
                 background: isActive ? 'rgba(232,130,155,0.15)' : 'transparent',
                 color: isActive ? 'var(--color-sakura)' : 'var(--color-text-secondary)',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                transition: 'all 0.15s ease',
+                transition: 'all 0.15s ease', whiteSpace: 'nowrap', flexShrink: 0,
               }}
             >
               <Icon size={14} /> {tab.label}
@@ -124,7 +143,7 @@ export default function CreatorApp() {
       </div>
 
       {/* Tab Content */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: '24px 28px' }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: isMobile ? '16px' : '24px 28px' }}>
         <AnimatePresence mode="wait">
           {activeTab === 'overview' && (
             <motion.div
@@ -133,20 +152,20 @@ export default function CreatorApp() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              style={{ display: 'flex', flexDirection: 'column', gap: 20 }}
+              style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
             >
               {/* Highlight Banner */}
               <div style={{
-                padding: 18, borderRadius: 12,
+                padding: 14, borderRadius: 12,
                 background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
-                display: 'flex', alignItems: 'center', gap: 14,
+                display: 'flex', alignItems: 'center', gap: 12,
               }}>
-                <Award size={28} style={{ color: 'var(--color-peach)', flexShrink: 0 }} />
+                <Award size={26} style={{ color: 'var(--color-peach)', flexShrink: 0 }} />
                 <div>
-                  <div style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                  <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>
                     🥈 2nd Place - Campfire Kathmandu 2026 (HackClub)
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--color-text-secondary)', marginTop: 2 }}>
+                  <div style={{ fontSize: 11, color: 'var(--color-text-secondary)', marginTop: 2, lineHeight: 1.4 }}>
                     Honored to receive 2nd Place at Campfire Kathmandu 2026. Grateful to be part of an inspiring community building cool projects!
                   </div>
                 </div>
@@ -154,31 +173,31 @@ export default function CreatorApp() {
 
               {/* Object Inspector Card */}
               <div style={{
-                background: 'rgba(10, 12, 20, 0.85)', borderRadius: 12, padding: 18,
-                border: '1px solid var(--color-glass-border)', fontFamily: 'var(--font-mono)', fontSize: 12,
+                background: 'rgba(10, 12, 20, 0.85)', borderRadius: 12, padding: 14,
+                border: '1px solid var(--color-glass-border)', fontFamily: 'var(--font-mono)', fontSize: isMobile ? 11 : 12,
                 lineHeight: 1.6, color: '#E2E8F0', overflowX: 'auto',
               }}>
                 <div style={{ color: '#94A3B8', marginBottom: 6 }}>// Creator Data Object</div>
                 <div><span style={{ color: '#F43F5E' }}>const</span> <span style={{ color: '#38BDF8' }}>kantaraj</span> = &#123;</div>
-                <div style={{ paddingLeft: 20 }}><span style={{ color: '#A855F7' }}>name</span>: <span style={{ color: '#4ADE80' }}>"Kantaraj Luitel (Susant)"</span>,</div>
-                <div style={{ paddingLeft: 20 }}><span style={{ color: '#A855F7' }}>location</span>: <span style={{ color: '#4ADE80' }}>"Nepal 🇳🇵"</span>,</div>
-                <div style={{ paddingLeft: 20 }}><span style={{ color: '#A855F7' }}>role</span>: <span style={{ color: '#4ADE80' }}>"Student • Developer • AI Enthusiast • Content Creator"</span>,</div>
-                <div style={{ paddingLeft: 20 }}><span style={{ color: '#A855F7' }}>education</span>: <span style={{ color: '#4ADE80' }}>"Cosmic International Academy (Grades 11-12)"</span>,</div>
-                <div style={{ paddingLeft: 20 }}><span style={{ color: '#A855F7' }}>achievements</span>: [</div>
-                <div style={{ paddingLeft: 40, color: '#FDE047' }}>"🏆 2nd Place - Campfire Kathmandu 2026",</div>
-                <div style={{ paddingLeft: 40, color: '#FDE047' }}>"🎓 Oracle Cloud Certified - Generative AI Professional",</div>
-                <div style={{ paddingLeft: 40, color: '#FDE047' }}>"🎓 Oracle Cloud Certified - AI Foundations Associate",</div>
-                <div style={{ paddingLeft: 40, color: '#FDE047' }}>"🔐 APIsec Certified Practitioner"</div>
-                <div style={{ paddingLeft: 20 }}>],</div>
-                <div style={{ paddingLeft: 20 }}><span style={{ color: '#A855F7' }}>goal</span>: <span style={{ color: '#4ADE80' }}>"Become a powerful developer, AI expert, and cybersecurity professional 🚀"</span></div>
+                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>name</span>: <span style={{ color: '#4ADE80' }}>"Kantaraj Luitel (Susant)"</span>,</div>
+                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>location</span>: <span style={{ color: '#4ADE80' }}>"Nepal 🇳🇵"</span>,</div>
+                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>role</span>: <span style={{ color: '#4ADE80' }}>"Student • Developer • AI Enthusiast"</span>,</div>
+                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>education</span>: <span style={{ color: '#4ADE80' }}>"Cosmic International Academy"</span>,</div>
+                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>achievements</span>: [</div>
+                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"🏆 2nd Place - Campfire Kathmandu 2026",</div>
+                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"🎓 Oracle Certified - GenAI Professional",</div>
+                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"🎓 Oracle Certified - AI Associate",</div>
+                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"🔐 APIsec Certified Practitioner"</div>
+                <div style={{ paddingLeft: 16 }}>],</div>
+                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>goal</span>: <span style={{ color: '#4ADE80' }}>"Build powerful AI & cybersecurity projects 🚀"</span></div>
                 <div>&#125;;</div>
               </div>
 
               {/* Quote Card */}
               <div style={{
-                padding: 16, borderRadius: 12, textAlign: 'center',
+                padding: 14, borderRadius: 12, textAlign: 'center',
                 background: 'linear-gradient(135deg, rgba(232,130,155,0.08) 0%, rgba(126,221,214,0.08) 100%)',
-                border: '1px solid var(--color-glass-border)', fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)',
+                border: '1px solid var(--color-glass-border)', fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)',
               }}>
                 ✨ "Code. Break. Learn. Build again. Every expert was once a beginner."
               </div>
@@ -192,7 +211,7 @@ export default function CreatorApp() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: 16 }}
+              style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(300px, 1fr))', gap: 12 }}
             >
               {[
                 { title: 'Oracle Cloud Infrastructure 2025 Certified Generative AI Professional', org: 'Oracle Cloud', tag: 'Sep 2025 - Sep 2027', color: '#F80000' },
@@ -205,18 +224,18 @@ export default function CreatorApp() {
                 { title: 'Introduction to Prompt Engineering with GitHub Copilot', org: 'Microsoft', tag: 'Sep 2025', color: '#6366F1' },
               ].map((c, i) => (
                 <div key={i} style={{
-                  padding: 16, borderRadius: 12, background: 'var(--color-glass-card)',
+                  padding: 14, borderRadius: 12, background: 'var(--color-glass-card)',
                   border: '1px solid var(--color-glass-border)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
                 }}>
                   <div>
-                    <div style={{ fontSize: 10, fontWeight: 700, color: c.color, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 6 }}>
+                    <div style={{ fontSize: 10, fontWeight: 700, color: c.color, textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>
                       {c.org}
                     </div>
-                    <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 8, lineHeight: 1.4 }}>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 8, lineHeight: 1.4 }}>
                       {c.title}
                     </div>
                   </div>
-                  <div style={{ fontSize: 11, color: 'var(--color-text-muted)', background: 'rgba(255,255,255,0.03)', padding: '4px 8px', borderRadius: 6, display: 'inline-block', width: 'fit-content' }}>
+                  <div style={{ fontSize: 10, color: 'var(--color-text-muted)', background: 'rgba(255,255,255,0.03)', padding: '3px 6px', borderRadius: 6, display: 'inline-block', width: 'fit-content' }}>
                     {c.tag}
                   </div>
                 </div>
@@ -231,30 +250,30 @@ export default function CreatorApp() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
+              style={{ display: 'flex', flexDirection: 'column', gap: 14 }}
             >
-              <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--color-sakura)' }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--color-sakura)' }}>
                 Languages & Frameworks
               </div>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {['JavaScript', 'TypeScript', 'React', 'Next.js', 'Python', 'C', 'HTML5', 'CSS3', 'Node.js', 'Express.js', 'SQL', 'Flutter', 'PHP'].map(t => (
                   <span key={t} style={{
-                    padding: '6px 14px', borderRadius: 8, background: 'rgba(232,130,155,0.1)',
-                    border: '1px solid rgba(232,130,155,0.2)', fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)',
+                    padding: '5px 12px', borderRadius: 8, background: 'rgba(232,130,155,0.1)',
+                    border: '1px solid rgba(232,130,155,0.2)', fontSize: 11, fontWeight: 600, color: 'var(--color-text-primary)',
                   }}>
                     {t}
                   </span>
                 ))}
               </div>
 
-              <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--color-miku)', marginTop: 12 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--color-miku)', marginTop: 8 }}>
                 Cloud, Security & Tools
               </div>
-              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                 {['Oracle Cloud', 'Google Cloud', 'AWS', 'Linux', 'Git', 'GitHub', 'VS Code', 'Kiro', 'API Security', 'TryHackMe', 'Figma', 'Databricks'].map(t => (
                   <span key={t} style={{
-                    padding: '6px 14px', borderRadius: 8, background: 'rgba(126,221,214,0.1)',
-                    border: '1px solid rgba(126,221,214,0.2)', fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)',
+                    padding: '5px 12px', borderRadius: 8, background: 'rgba(126,221,214,0.1)',
+                    border: '1px solid rgba(126,221,214,0.2)', fontSize: 11, fontWeight: 600, color: 'var(--color-text-primary)',
                   }}>
                     {t}
                   </span>
@@ -270,7 +289,7 @@ export default function CreatorApp() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.2 }}
-              style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 12 }}
+              style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10 }}
             >
               {[
                 { name: 'GitHub', handle: '@susantedit', url: 'https://github.com/susantedit', icon: GithubIcon, color: '#181717' },
@@ -288,20 +307,20 @@ export default function CreatorApp() {
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
-                      padding: 14, borderRadius: 10, background: 'var(--color-glass-card)',
+                      padding: 12, borderRadius: 10, background: 'var(--color-glass-card)',
                       border: '1px solid var(--color-glass-border)', textDecoration: 'none',
-                      display: 'flex', alignItems: 'center', gap: 12, transition: 'all 0.15s ease',
+                      display: 'flex', alignItems: 'center', gap: 10, transition: 'all 0.15s ease',
                     }}
                   >
                     <div style={{
-                      width: 36, height: 36, borderRadius: 8, background: 'rgba(255,255,255,0.06)',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-sakura)',
+                      width: 32, height: 32, borderRadius: 8, background: 'rgba(255,255,255,0.06)',
+                      display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--color-sakura)', flexShrink: 0,
                     }}>
-                      <Icon size={18} />
+                      <Icon size={16} />
                     </div>
-                    <div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>{s.name}</div>
-                      <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{s.handle}</div>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-text-primary)' }}>{s.name}</div>
+                      <div style={{ fontSize: 10, color: 'var(--color-text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{s.handle}</div>
                     </div>
                   </a>
                 )
