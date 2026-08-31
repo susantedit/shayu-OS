@@ -150,6 +150,18 @@ export default function Window({ window: win, children }: WindowProps) {
     return () => { window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp) }
   }, [resizing, win.id, updateWindowSize, updateWindowPosition])
 
+  // Esc key restores maximized window
+  useEffect(() => {
+    if (!isActive || !win.maximized) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        toggleMaximize(win.id)
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isActive, win.maximized, win.id, toggleMaximize])
+
   if (win.minimized) return null
 
   const shadow = isActive

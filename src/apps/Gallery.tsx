@@ -39,6 +39,24 @@ export default function Gallery() {
     localStorage.setItem('syau-os-gallery', JSON.stringify(items))
   }, [items])
 
+  // Escape key & arrow navigation for Lightbox
+  useEffect(() => {
+    if (lightbox === null) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setLightbox(null)
+      } else if (e.key === 'ArrowLeft') {
+        setZoomLevel(1)
+        setLightbox(prev => (prev !== null ? (prev - 1 + items.length) % items.length : null))
+      } else if (e.key === 'ArrowRight') {
+        setZoomLevel(1)
+        setLightbox(prev => (prev !== null ? (prev + 1) % items.length : null))
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [lightbox, items.length])
+
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -268,17 +286,22 @@ export default function Gallery() {
               🗑 Delete
             </button>
 
-            {/* Close Button */}
+            {/* Close / Esc Exit Button */}
             <button
               onClick={() => setLightbox(null)}
-              title="Close viewer"
+              title="Close viewer (or press Esc key)"
               style={{
-                width: 24, height: 24, borderRadius: '50%', background: 'rgba(255,255,255,0.15)',
-                color: 'white', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700,
-                display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: 4,
+                padding: '4px 12px', borderRadius: 14, fontSize: 11, fontWeight: 700,
+                background: 'rgba(239, 68, 68, 0.85)', color: 'white', border: 'none',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                boxShadow: '0 2px 10px rgba(239,68,68,0.4)',
               }}
             >
-              ✕
+              <span style={{
+                background: 'rgba(0,0,0,0.3)', padding: '1px 5px', borderRadius: 4,
+                fontSize: 9, textTransform: 'uppercase', letterSpacing: 0.5,
+              }}>ESC</span>
+              Exit
             </button>
           </div>
 
