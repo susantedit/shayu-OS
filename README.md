@@ -79,7 +79,7 @@ Built for the [Hack Club](https://hackclub.com) WebOS Jam
 | **Terminal** | Custom shell (`syau-sh`) with 20+ commands including `neofetch`, `cowsay`, `matrix`, `weather`, and more |
 | **Notes** | Text editor with auto-save to localStorage and word count |
 | **Calculator** | Basic calculator with keyboard support |
-| **Music Player** | 27-track playlist (anime, jazz, classical, pop) with Web Audio API visualizer |
+| **Music Player** | Spotify Web Player Hub with Nepali Hits, Lofi, Anime OSTs, Synthwave, Jazz, and custom Spotify link loader |
 | **Gallery** | 33-photo Google Drive gallery with hover tooltips, lightbox viewer, upload & deletion |
 | **Browser** | Embedded web browser with Google Translate and Wayback Machine proxy fallback |
 | **Settings** | Theme modes (Dark & White Light Mode), accent colors, wallpapers, widget toggle |

@@ -18,7 +18,7 @@ const sections = [
       { label: 'Terminal', desc: 'A custom shell (syau-sh) with 20+ commands. Try `help` to see them all.' },
       { label: 'Notes', desc: 'Quick notepad with auto-save to localStorage and a "✓ Saved" indicator.' },
       { label: 'Calculator', desc: 'Basic calculator with keyboard support. Type numbers and operators directly.' },
-      { label: 'Music Player', desc: '27 tracks across anime, jazz, classical, and more. Has a visualizer that reacts to the music.' },
+      { label: 'Music Player', desc: 'Spotify Web Embed Hub featuring Nepali Hits, Lofi, Anime OSTs, Synthwave, Jazz, Classical, and custom Spotify playlist link support.' },
       { label: 'Gallery', desc: '11 images in a grid. Click to select, double-click for fullscreen lightbox with ‹/› navigation.' },
       { label: 'Browser', desc: 'Embedded web browser with proxy support. If a site blocks embedding, try Google Translate or Wayback Machine.' },
       { label: 'Settings', desc: 'Change accent colors (6 options), background mode (solid/static/live wallpaper), and more.' },

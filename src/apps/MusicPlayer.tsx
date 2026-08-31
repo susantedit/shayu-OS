@@ -1,222 +1,294 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
-import { mediaUrl } from '../config'
+import { useState } from 'react'
+import { Music, Radio, Disc, Search, Sparkles, ExternalLink, Plus } from 'lucide-react'
 
-interface Track {
+interface SpotifyPreset {
+  id: string
   title: string
-  artist: string
-  src: string
-  cover: string
+  category: string
+  embedUrl: string
+  spotifyUrl: string
+  icon: string
+  color: string
 }
 
-const TRACKS: Track[] = [
-  // Anime / Vocaloid
-  { title: "Cruel Angel's Thesis", artist: 'Evangelion', src: mediaUrl('/audio/cruel-angels-thesis.mp3'), cover: mediaUrl('/images/covers/cruel-angels.jpg') },
-  { title: 'Idol', artist: 'YOASOBI', src: mediaUrl('/audio/yoasobi-idol.mp3'), cover: mediaUrl('/images/covers/yoasobi.jpg') },
-  { title: 'Kaibutsu', artist: 'YOASOBI', src: mediaUrl('/audio/kaibutsu.mp3'), cover: mediaUrl('/images/covers/kaibutsu.jpg') },
-  { title: 'Usseewa', artist: 'Ado', src: mediaUrl('/audio/ado-usseewa.mp3'), cover: mediaUrl('/images/covers/ado.jpg') },
-  { title: 'Night Dancer', artist: 'imase', src: mediaUrl('/audio/night-dancer.mp3'), cover: mediaUrl('/images/covers/night-dancer.jpg') },
-  { title: 'Young Girl A', artist: 'Siinamota', src: mediaUrl('/audio/young-girl-a.webm'), cover: mediaUrl('/images/covers/young-girl-a.jpg') },
-  { title: 'Miku Expo', artist: 'Hatsune Miku', src: mediaUrl('/audio/miku-expo.webm'), cover: mediaUrl('/images/covers/miku-expo.jpg') },
-  { title: 'Renai Circulation', artist: 'Rainych', src: mediaUrl('/audio/renai-circulation.webm'), cover: mediaUrl('/images/covers/renai-circulation.jpg') },
-  { title: 'Kamisama Hajimemashita', artist: 'Hanae', src: mediaUrl('/audio/kamisama.webm'), cover: mediaUrl('/images/covers/kamisama.jpg') },
-  { title: 'Stay With Me', artist: 'Miki Matsubara', src: mediaUrl('/audio/stay-with-me.webm'), cover: mediaUrl('/images/covers/stay-with-me.jpg') },
-  { title: "I Can't Stop the Loneliness", artist: 'Anri', src: mediaUrl('/audio/cant-stop-loneliness.webm'), cover: mediaUrl('/images/covers/cant-stop-loneliness.jpg') },
-  { title: 'Babydoll', artist: 'Dominic Fike', src: mediaUrl('/audio/babydoll-dom-fike.mp3'), cover: mediaUrl('/images/covers/babydoll.jpg') },
-  { title: 'The Moon is Beautiful', artist: 'JP Cover', src: mediaUrl('/audio/moon-is-beautiful.webm'), cover: mediaUrl('/images/covers/moon-beautiful.jpg') },
-  { title: 'Mori no Chisana Restaurant', artist: 'Aoi Tenshima', src: mediaUrl('/audio/mori-no-restaurant.mp3'), cover: mediaUrl('/images/covers/mori-no-restaurant.jpg') },
-  // English / Jazz / Pop
-  { title: 'Fly Me to the Moon', artist: 'Frank Sinatra', src: mediaUrl('/audio/fly-me-to-the-moon.mp3'), cover: mediaUrl('/images/covers/fly-me-to-the-moon.jpg') },
-  { title: 'Feeling Good', artist: 'Michael Bublé', src: mediaUrl('/audio/feeling-good.mp3'), cover: mediaUrl('/images/covers/feeling-good.jpg') },
-  { title: 'Sway', artist: 'Michael Bublé', src: mediaUrl('/audio/sway.webm'), cover: mediaUrl('/images/covers/sway.jpg') },
-  { title: 'If I Give My Heart to You', artist: 'Doris Day', src: mediaUrl('/audio/if-i-give-my-heart.webm'), cover: mediaUrl('/images/covers/if-i-give-my-heart.jpg') },
-  { title: 'Put Your Head on My Shoulder', artist: 'Paul Anka', src: mediaUrl('/audio/put-your-head.webm'), cover: mediaUrl('/images/covers/put-your-head.jpg') },
-  { title: 'Until I Found You', artist: 'Stephen Sanchez', src: mediaUrl('/audio/until-i-found-you.webm'), cover: mediaUrl('/images/covers/until-i-found-you.jpg') },
-  { title: 'Glue Song', artist: 'beabadoobee', src: mediaUrl('/audio/glue-song.webm'), cover: mediaUrl('/images/covers/glue-song.jpg') },
-  // Classical
-  { title: 'Ballade No.1 in G minor', artist: 'Chopin', src: mediaUrl('/audio/chopin-ballade-1.mp3'), cover: mediaUrl('/images/covers/chopin.jpg') },
-  { title: 'Waltz Op.64 No.2', artist: 'Chopin', src: mediaUrl('/audio/waltz-op64.mp3'), cover: mediaUrl('/images/covers/waltz.jpg') },
-  { title: 'Piano Concerto No.2', artist: 'Rachmaninoff', src: mediaUrl('/audio/rachmaninoff-2.mp3'), cover: mediaUrl('/images/covers/rachmaninoff.jpg') },
-  { title: 'Caprice No.24', artist: 'Paganini', src: mediaUrl('/audio/paganini-caprice-24.mp3'), cover: mediaUrl('/images/covers/paganini.jpg') },
-  // Extra
-  { title: 'Rise to the Moon', artist: 'Anime OST', src: mediaUrl('/audio/rise-to-the-moon.webm'), cover: mediaUrl('/images/covers/rise-to-the-moon.jpg') },
-  { title: 'Fly', artist: 'Spectrum', src: mediaUrl('/audio/fly-spectrum.mp3'), cover: mediaUrl('/images/covers/fly-spectrum.jpg') },
-  { title: 'Remember Summer Days', artist: 'Anri', src: mediaUrl('/audio/remember-summer-days.mp3'), cover: mediaUrl('/images/covers/remember-summer-day.jpg') },
-  { title: 'Sunset Road', artist: 'Reina', src: mediaUrl('/audio/sunset-road.mp3'), cover: mediaUrl('/images/covers/sunset-road.jpg') },
-  { title: 'Summertime', artist: 'Cinnamons × Evening Cinema', src: mediaUrl('/audio/summertime.mp3'), cover: mediaUrl('/images/covers/summertime.jpg') },
+const SPOTIFY_PRESETS: SpotifyPreset[] = [
+  {
+    id: 'nepali-hits',
+    title: 'Nepali Hits & Vibes',
+    category: 'Regional',
+    embedUrl: 'https://open.spotify.com/embed/playlist/37i9dQZF1DXcBWIGoYBM5M?utm_source=generator&theme=0',
+    spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M',
+    icon: '🇳🇵',
+    color: '#E8829B',
+  },
+  {
+    id: 'lofi-beats',
+    title: 'Lofi Beats & Chill',
+    category: 'Study & Relax',
+    embedUrl: 'https://open.spotify.com/embed/playlist/37i9dQZF1DX8U2W2uYm5y4?utm_source=generator&theme=0',
+    spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX8U2W2uYm5y4',
+    icon: '☕',
+    color: '#7EDDD6',
+  },
+  {
+    id: 'anime-ost',
+    title: 'Anime OST & Vocaloid',
+    category: 'Anime',
+    embedUrl: 'https://open.spotify.com/embed/playlist/37i9dQZF1DX6XceWImSu8a?utm_source=generator&theme=0',
+    spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX6XceWImSu8a',
+    icon: '🌸',
+    color: '#EC4899',
+  },
+  {
+    id: 'synthwave',
+    title: 'Cyberpunk & Synthwave',
+    category: 'Gaming',
+    embedUrl: 'https://open.spotify.com/embed/playlist/37i9dQZF1DXdLEN7aqioXM?utm_source=generator&theme=0',
+    spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DXdLEN7aqioXM',
+    icon: '⚡',
+    color: '#8B5CF6',
+  },
+  {
+    id: 'jazz-classics',
+    title: 'Jazz & Vintage Classics',
+    category: 'Jazz',
+    embedUrl: 'https://open.spotify.com/embed/playlist/37i9dQZF1DXbITWG1ZJKYt?utm_source=generator&theme=0',
+    spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DXbITWG1ZJKYt',
+    icon: '🎷',
+    color: '#FDBA74',
+  },
+  {
+    id: 'piano-masterpieces',
+    title: 'Classical Piano',
+    category: 'Classical',
+    embedUrl: 'https://open.spotify.com/embed/playlist/37i9dQZF1DX4sWSpwq3LiO?utm_source=generator&theme=0',
+    spotifyUrl: 'https://open.spotify.com/playlist/37i9dQZF1DX4sWSpwq3LiO',
+    icon: '🎹',
+    color: '#A78BFA',
+  },
 ]
 
 export default function MusicPlayer() {
-  const [playing, setPlaying] = useState(false)
-  const [trackIdx, setTrackIdx] = useState(0)
-  const [progress, setProgress] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [currentTime, setCurrentTime] = useState(0)
-  const audioRef = useRef<HTMLAudioElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
-  const analyserRef = useRef<AnalyserNode | null>(null)
-  const audioCtxRef = useRef<AudioContext | null>(null)
-  const frameRef = useRef<number>(0)
+  const [activePreset, setActivePreset] = useState<SpotifyPreset>(SPOTIFY_PRESETS[0])
+  const [customUrl, setCustomUrl] = useState('')
+  const [activeEmbed, setActiveEmbed] = useState<string>(SPOTIFY_PRESETS[0].embedUrl)
+  const [showAddModal, setShowAddModal] = useState(false)
+  const [search, setSearch] = useState('')
 
-  // Setup audio analyser for visualizer
-  const setupAnalyser = useCallback(() => {
-    if (analyserRef.current || !audioRef.current) return
-    try {
-      const ctx = new AudioContext()
-      const analyser = ctx.createAnalyser()
-      analyser.fftSize = 64
-      const source = ctx.createMediaElementSource(audioRef.current)
-      source.connect(analyser)
-      analyser.connect(ctx.destination)
-      analyserRef.current = analyser
-      audioCtxRef.current = ctx
-    } catch { /* Audio API not available */ }
-  }, [])
-
-  // Visualizer draw loop
-  useEffect(() => {
-    const canvas = canvasRef.current
-    const analyser = analyserRef.current
-    if (!canvas || !analyser) return
-    const ctx = canvas.getContext('2d')!
-    const data = new Uint8Array(analyser.frequencyBinCount)
-    const draw = () => {
-      analyser.getByteFrequencyData(data)
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-      const barCount = 24
-      const barW = canvas.width / barCount - 2
-      for (let i = 0; i < barCount; i++) {
-        const val = data[i] || 0
-        const barH = (val / 255) * canvas.height * 0.8
-        const x = i * (barW + 2)
-        const y = canvas.height - barH
-        const gradient = ctx.createLinearGradient(x, y, x, canvas.height)
-        gradient.addColorStop(0, 'rgba(232,130,155,0.8)')
-        gradient.addColorStop(1, 'rgba(196,181,253,0.3)')
-        ctx.fillStyle = gradient
-        ctx.beginPath()
-        ctx.roundRect(x, y, barW, barH, 2)
-        ctx.fill()
-      }
-      frameRef.current = requestAnimationFrame(draw)
+  // Convert regular Spotify URL to Embed URL
+  const convertToEmbedUrl = (url: string): string => {
+    let cleanUrl = url.trim()
+    if (cleanUrl.includes('spotify.com/embed/')) return cleanUrl
+    
+    // Convert open.spotify.com/track/XYZ or open.spotify.com/playlist/XYZ
+    cleanUrl = cleanUrl.replace('open.spotify.com/', 'open.spotify.com/embed/')
+    if (!cleanUrl.includes('?')) {
+      cleanUrl += '?utm_source=generator&theme=0'
+    } else {
+      cleanUrl += '&utm_source=generator&theme=0'
     }
-    draw()
-    return () => cancelAnimationFrame(frameRef.current)
-  }, [playing])
-
-  const track = TRACKS[trackIdx]
-
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
-    audio.src = track.src
-    audio.load()
-    const onLoaded = () => setDuration(audio.duration)
-    const onTimeUpdate = () => {
-      setCurrentTime(audio.currentTime)
-      if (audio.duration) setProgress((audio.currentTime / audio.duration) * 100)
-    }
-    const onEnded = () => { setPlaying(false); setProgress(0); setCurrentTime(0) }
-    audio.addEventListener('loadedmetadata', onLoaded)
-    audio.addEventListener('timeupdate', onTimeUpdate)
-    audio.addEventListener('ended', onEnded)
-    return () => {
-      audio.removeEventListener('loadedmetadata', onLoaded)
-      audio.removeEventListener('timeupdate', onTimeUpdate)
-      audio.removeEventListener('ended', onEnded)
-    }
-  }, [trackIdx])
-
-  useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
-    if (playing) {
-      setupAnalyser()
-      if (audioCtxRef.current?.state === 'suspended') audioCtxRef.current.resume()
-      audio.play().catch(() => setPlaying(false))
-    } else audio.pause()
-  }, [playing, setupAnalyser])
-
-  const nextTrack = () => { setPlaying(false); setTrackIdx((trackIdx + 1) % TRACKS.length); setProgress(0); setCurrentTime(0) }
-  const prevTrack = () => {
-    setPlaying(false)
-    if (currentTime > 3) { if (audioRef.current) audioRef.current.currentTime = 0; setProgress(0); setCurrentTime(0) }
-    else { setTrackIdx((trackIdx - 1 + TRACKS.length) % TRACKS.length); setProgress(0); setCurrentTime(0) }
+    return cleanUrl
   }
 
-  const formatTime = (s: number) => {
-    if (!s || isNaN(s)) return '0:00'
-    const m = Math.floor(s / 60); const sec = Math.floor(s % 60)
-    return `${m}:${sec.toString().padStart(2, '0')}`
+  const handleCustomSubmit = () => {
+    if (!customUrl.trim()) return
+    const embed = convertToEmbedUrl(customUrl)
+    setActiveEmbed(embed)
+    setActivePreset({
+      id: 'custom-' + Date.now(),
+      title: 'Custom Spotify Track / Playlist',
+      category: 'Custom',
+      embedUrl: embed,
+      spotifyUrl: customUrl.trim(),
+      icon: '🎵',
+      color: '#1DB954',
+    })
+    setCustomUrl('')
+    setShowAddModal(false)
   }
+
+  const filteredPresets = SPOTIFY_PRESETS.filter(p =>
+    p.title.toLowerCase().includes(search.toLowerCase()) ||
+    p.category.toLowerCase().includes(search.toLowerCase())
+  )
 
   return (
-    <div style={{ padding: 20, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, height: '100%',
-      background: 'linear-gradient(180deg, rgba(232,130,155,0.03) 0%, transparent 100%)' }}>
-      <audio ref={audioRef} preload="metadata" crossOrigin="anonymous" />
-      <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 2, color: 'var(--color-text-muted)' }}>Now Playing</div>
+    <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: '#090A0F', color: 'white' }}>
+      {/* Sidebar - Spotify Hub Menu */}
+      <div style={{
+        width: 240, borderRight: '1px solid rgba(255,255,255,0.08)',
+        display: 'flex', flexDirection: 'column', background: 'rgba(12, 14, 24, 0.7)',
+        backdropFilter: 'blur(20px)',
+      }}>
+        {/* Header */}
+        <div style={{ padding: '16px 14px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+            <div style={{
+              width: 28, height: 28, borderRadius: '50%', background: '#1DB954',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 2px 10px rgba(29,185,84,0.4)',
+            }}>
+              <Music size={15} color="white" />
+            </div>
+            <span style={{ fontSize: 15, fontWeight: 800, color: 'white', letterSpacing: '-0.3px' }}>
+              Spotify Hub
+            </span>
+          </div>
 
-      {/* Album art */}
-      <div style={{ width: 120, height: 120, borderRadius: 14, overflow: 'hidden', boxShadow: '0 8px 32px rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.06)', position: 'relative' }}>
-        <img src={track.cover} alt={track.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          onError={(e) => { (e.target as HTMLImageElement).src = '/images/covers/chopin.jpg' }} />
-        {/* Visualizer overlay */}
-        <canvas ref={canvasRef} width={120} height={120} style={{
-          position: 'absolute', inset: 0, opacity: playing ? 0.7 : 0,
-          transition: 'opacity 0.3s',
-        }} />
-      </div>
+          <div style={{ position: 'relative' }}>
+            <input
+              type="text"
+              placeholder="Filter playlists..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{
+                width: '100%', padding: '6px 10px 6px 28px', borderRadius: 8,
+                background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)',
+                color: 'white', fontSize: 11, outline: 'none',
+              }}
+            />
+            <Search size={12} style={{ position: 'absolute', left: 9, top: 9, color: 'rgba(255,255,255,0.4)' }} />
+          </div>
+        </div>
 
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>{track.title}</div>
-        <div style={{ fontSize: 11, color: 'var(--color-text-secondary)', marginTop: 1 }}>{track.artist}</div>
-      </div>
+        {/* Playlist List */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: 8 }}>
+          <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(255,255,255,0.4)', padding: '6px 8px', marginBottom: 4 }}>
+            Featured Playlists
+          </div>
 
-      {/* Progress */}
-      <div style={{ width: '100%' }}>
-        <div className="app-music-progress"><div className="app-music-progress-fill" style={{ width: `${progress}%` }} /></div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 3, fontSize: 10, color: 'var(--color-text-muted)' }}>
-          <span>{formatTime(currentTime)}</span><span>{formatTime(duration)}</span>
+          {filteredPresets.map(preset => {
+            const isActive = activePreset.id === preset.id
+            return (
+              <div
+                key={preset.id}
+                onClick={() => {
+                  setActivePreset(preset)
+                  setActiveEmbed(preset.embedUrl)
+                }}
+                style={{
+                  padding: '8px 10px', borderRadius: 8, marginBottom: 4, cursor: 'pointer',
+                  background: isActive ? 'rgba(29, 185, 84, 0.15)' : 'transparent',
+                  border: isActive ? '1px solid rgba(29, 185, 84, 0.4)' : '1px solid transparent',
+                  display: 'flex', alignItems: 'center', gap: 10, transition: 'all 0.15s ease',
+                }}
+              >
+                <span style={{ fontSize: 16 }}>{preset.icon}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{
+                    fontSize: 12, fontWeight: isActive ? 700 : 500,
+                    color: isActive ? '#1DB954' : 'rgba(255,255,255,0.9)',
+                    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+                  }}>
+                    {preset.title}
+                  </div>
+                  <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.4)' }}>
+                    {preset.category}
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        {/* Footer Custom URL Button */}
+        <div style={{ padding: 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
+          <button
+            onClick={() => setShowAddModal(!showAddModal)}
+            style={{
+              width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: 11, fontWeight: 700,
+              background: 'linear-gradient(135deg, #1DB954 0%, #179643 100%)', color: 'white', border: 'none',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              boxShadow: '0 4px 14px rgba(29,185,84,0.3)',
+            }}
+          >
+            <Plus size={14} /> Paste Spotify URL
+          </button>
         </div>
       </div>
 
-      {/* Controls */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <button onClick={prevTrack} style={ctrlBtn}>|</button>
-        <button onClick={() => setPlaying(!playing)} style={{ ...ctrlBtn, width: 44, height: 44, background: 'var(--color-sakura)', color: 'white', fontSize: 16, fontWeight: 700,
-          boxShadow: '0 4px 20px rgba(232,130,155,0.3)' }}>{playing ? '||' : '>'}</button>
-        <button onClick={nextTrack} style={ctrlBtn}>|</button>
-      </div>
-
-      {/* Playlist */}
-      <div style={{ width: '100%', marginTop: 'auto', overflow: 'auto', flex: 1 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 6, textTransform: 'uppercase', letterSpacing: 2 }}>Playlist ({TRACKS.length})</div>
-        {TRACKS.map((t, i) => (
-          <div key={i} onClick={() => { setTrackIdx(i); setProgress(0); setCurrentTime(0); setPlaying(true) }}
-            style={{ padding: '5px 8px', borderRadius: 7, cursor: 'pointer',
-              background: i === trackIdx ? 'rgba(232,130,155,0.08)' : 'transparent',
-              display: 'flex', alignItems: 'center', gap: 8, fontSize: 11, transition: 'background 0.15s' }}>
-            <div style={{ width: 28, height: 28, borderRadius: 5, overflow: 'hidden', flexShrink: 0, border: '1px solid rgba(255,255,255,0.04)' }}>
-              <img src={t.cover} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }} />
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: i === trackIdx ? 700 : 500, color: i === trackIdx ? 'var(--color-sakura)' : 'var(--color-text-secondary)',
-                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {i === trackIdx && playing ? '> ' : ''}{t.title}
-              </div>
-              <div style={{ fontSize: 9, color: 'var(--color-text-muted)', opacity: 0.6 }}>{t.artist}</div>
+      {/* Main Player Display Area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#05060A' }}>
+        {/* Header Bar */}
+        <div style={{
+          padding: '12px 20px', background: 'rgba(18, 20, 32, 0.8)', backdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span style={{ fontSize: 20 }}>{activePreset.icon}</span>
+            <div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'white' }}>{activePreset.title}</div>
+              <div style={{ fontSize: 10, color: '#1DB954', fontWeight: 600 }}>Spotify Web Player</div>
             </div>
           </div>
-        ))}
+
+          <a
+            href={activePreset.spotifyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Open in Spotify App"
+            style={{
+              padding: '5px 10px', borderRadius: 6, fontSize: 10, fontWeight: 600,
+              background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.8)',
+              border: '1px solid rgba(255,255,255,0.1)', textDecoration: 'none',
+              display: 'flex', alignItems: 'center', gap: 4,
+            }}
+          >
+            Open in Spotify <ExternalLink size={10} />
+          </a>
+        </div>
+
+        {/* Custom URL Input Popup Modal */}
+        {showAddModal && (
+          <div style={{
+            margin: 16, padding: 14, borderRadius: 12, background: 'rgba(20, 24, 40, 0.95)',
+            border: '1px solid #1DB954', boxShadow: '0 8px 32px rgba(0,0,0,0.5)',
+            display: 'flex', flexDirection: 'column', gap: 10,
+          }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: 'white', display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Sparkles size={14} color="#1DB954" /> Paste any Spotify Track, Album, or Playlist URL:
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                type="text"
+                placeholder="https://open.spotify.com/playlist/37i9dQZF1DXcBWIGoYBM5M"
+                value={customUrl}
+                onChange={e => setCustomUrl(e.target.value)}
+                style={{
+                  flex: 1, padding: '8px 12px', borderRadius: 8, fontSize: 11,
+                  background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.15)',
+                  color: 'white', outline: 'none',
+                }}
+              />
+              <button
+                onClick={handleCustomSubmit}
+                style={{
+                  padding: '8px 16px', borderRadius: 8, fontSize: 11, fontWeight: 700,
+                  background: '#1DB954', color: 'white', border: 'none', cursor: 'pointer',
+                }}
+              >
+                Load Player
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Spotify iFrame Embed Container */}
+        <div style={{ flex: 1, padding: 12, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <iframe
+            src={activeEmbed}
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy"
+            style={{
+              borderRadius: 12, border: 'none',
+              boxShadow: '0 12px 40px rgba(0,0,0,0.6)',
+              background: '#121212',
+            }}
+          />
+        </div>
       </div>
     </div>
   )
-}
-
-const ctrlBtn: React.CSSProperties = {
-  width: 34, height: 34, borderRadius: '50%',
-  background: 'rgba(232,130,155,0.06)', cursor: 'pointer',
-  display: 'flex', alignItems: 'center', justifyContent: 'center',
-  fontSize: 13, color: 'var(--color-text-secondary)',
-  border: '1px solid rgba(255,255,255,0.06)',
 }
