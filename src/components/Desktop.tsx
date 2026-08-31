@@ -140,7 +140,7 @@ export default function Desktop() {
       }}>
         {/* Custom स्याउ OS Logo */}
         <div style={{
-          width: 96, height: 96, borderRadius: 24,
+          width: 'clamp(56px, 16vw, 96px)', height: 'clamp(56px, 16vw, 96px)', borderRadius: 24,
           background: 'rgba(255, 255, 255, 0.05)',
           backdropFilter: 'blur(20px) saturate(1.8)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
@@ -156,7 +156,7 @@ export default function Desktop() {
         </div>
 
         <div style={{
-          fontSize: 64, fontWeight: 800, color: 'var(--color-text-primary)',
+          fontSize: 'clamp(32px, 10vw, 64px)', fontWeight: 800, color: 'var(--color-text-primary)',
           letterSpacing: '-1px', lineHeight: 1,
           textShadow: '0 0 60px rgba(232,130,155,0.2)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14,
@@ -164,7 +164,7 @@ export default function Desktop() {
           <span className="font-syau" style={{ fontWeight: 600 }}>स्याउ</span>
           <span className="font-os" style={{ fontWeight: 700, color: 'var(--color-sakura)', letterSpacing: '0.08em' }}>OS</span>
         </div>
-        <div style={{ fontSize: 13, color: 'var(--color-text-secondary)', marginTop: 4, fontWeight: 500 }}>
+        <div style={{ fontSize: 'clamp(11px, 3.2vw, 13px)', color: 'var(--color-text-secondary)', marginTop: 4, fontWeight: 500 }}>
           Created by <strong style={{ color: 'var(--color-text-primary)' }}>Kantaraj Luitel (Susant)</strong>
         </div>
         <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2, letterSpacing: 2 }}>

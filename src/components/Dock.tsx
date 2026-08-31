@@ -164,7 +164,7 @@ export default function Dock() {
           layout
           transition={{ layout: { type: 'spring', stiffness: 400, damping: 30 } }}
         >
-          <div style={{ width: 48, height: 48, borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 16px rgba(0,0,0,0.4)' }}
+          <div className="dock-icon-wrapper"
             dangerouslySetInnerHTML={{ __html: ICONS[item.icon] }} />
           <div className="dock-tooltip">
             {item.label}

@@ -81,16 +81,17 @@ export const useDesktopStore = create<DesktopStore>((set, get) => ({
     const workspaceWindows = windows.filter(w => w.workspace === currentWorkspace)
     const offsetX = (workspaceWindows.length % 5) * 30
     const offsetY = (workspaceWindows.length % 5) * 30
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
     const newWindow: WindowState = {
       id,
       appId,
       title,
-      x: Math.max(80, 120 + offsetX),
-      y: Math.max(60, 80 + offsetY),
-      width,
-      height,
+      x: isMobile ? 0 : Math.max(80, 120 + offsetX),
+      y: isMobile ? 32 : Math.max(60, 80 + offsetY),
+      width: isMobile ? window.innerWidth : width,
+      height: isMobile ? window.innerHeight - 32 : height,
       minimized: false,
-      maximized: false,
+      maximized: isMobile,
       zIndex: nextZIndex,
       workspace: currentWorkspace,
       origin,

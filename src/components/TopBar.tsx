@@ -115,6 +115,7 @@ export default function TopBar() {
         <button
           onClick={() => openWindow('devlogs', 'Devlogs', 840, 560)}
           title="Open स्याउ OS Devlogs"
+          className="topbar-hide-mobile"
           style={{
             display: 'flex', alignItems: 'center', gap: 4, padding: '2px 8px', borderRadius: 6,
             background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
@@ -157,7 +158,7 @@ export default function TopBar() {
         )}
 
         {/* Workspace indicator */}
-        <div style={{ display: 'flex', gap: 5, alignItems: 'center', padding: '0 2px' }}>
+        <div className="topbar-hide-mobile" style={{ display: 'flex', gap: 5, alignItems: 'center', padding: '0 2px' }}>
           {Array.from({ length: maxWorkspaces }, (_, i) => i + 1).map(ws => {
             const hasWindows = windows.some(w => w.workspace === ws)
             return (
@@ -181,20 +182,22 @@ export default function TopBar() {
           })}
         </div>
 
-        <motion.div animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}>
+        <motion.div className="topbar-hide-small-mobile" animate={{ opacity: [0.7, 1, 0.7] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}>
           <Battery size={13} />
         </motion.div>
-        <motion.div animate={{ opacity: [0.8, 1, 0.8] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
+        <motion.div className="topbar-hide-small-mobile" animate={{ opacity: [0.8, 1, 0.8] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}>
           <Wifi size={13} />
         </motion.div>
-        <Volume2 size={13} />
+        <div className="topbar-hide-small-mobile">
+          <Volume2 size={13} />
+        </div>
 
         {/* Nepali BS Date Badge */}
-        <span className="font-syau" style={{ fontSize: 11, color: 'var(--color-sakura)', background: 'rgba(232,130,155,0.1)', padding: '2px 6px', borderRadius: 4, fontWeight: 600 }}>
+        <span className="font-syau topbar-hide-mobile" style={{ fontSize: 11, color: 'var(--color-sakura)', background: 'rgba(232,130,155,0.1)', padding: '2px 6px', borderRadius: 4, fontWeight: 600 }}>
           २०८३ भाद्र १६
         </span>
 
-        <span>{formatDate(time)}</span>
+        <span className="topbar-hide-mobile">{formatDate(time)}</span>
         <motion.span
           key={time.getMinutes()}
           style={{ fontWeight: 600 }}
