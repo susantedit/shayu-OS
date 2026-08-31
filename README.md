@@ -1,0 +1,131 @@
+<div align="center">
+
+# स्याउ OS (Syau OS)
+
+**A high-performance web desktop operating system created by Kantaraj Luitel (Susant)**
+
+Built for the [Hack Club](https://hackclub.com) WebOS Jam
+
+[![Created by Kantaraj Luitel](https://img.shields.io/badge/Creator-Kantaraj_Luitel_(Susant)-8B5CF6?style=flat-square&logo=github)](https://github.com/susantedit)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite)](https://vite.dev)
+
+</div>
+
+---
+
+## 🙋 About the Creator
+
+**Kantaraj Luitel (Susant)** — Developer, Cybersecurity Enthusiast, Content Creator, and Hackathon Winner from Nepal 🇳🇵.
+- 🥈 **2nd Place** - Campfire Kathmandu 2026 (HackClub)
+- 🎓 **Oracle Cloud Certified** Generative AI Professional & AI Foundations Associate
+- 🔐 **APIsec Certified Practitioner**
+- 🌐 [GitHub Profile](https://github.com/susantedit) • [LinkedIn](https://linkedin.com/in/kantaraj-luitel) • [Buy Me a Coffee](https://buymeacoffee.com/Susantedit)
+
+---
+
+## 🍎 About स्याउ OS
+
+**स्याउ OS** (Syau OS) is a full-featured, client-side web desktop environment. It features a bilingual typography system (**Noto Sans Devanagari** + **Space Grotesk** + **Inter**), dual Dark & White Light theme mode engine, native Devlog viewer app, Bikram Sambat Nepali date converter widget, Meo AI OS assistant, and draggable windows.
+
+---
+
+## Features
+
+### Desktop Environment
+- **Windowing system** — drag, resize (8 directions), minimize, maximize, close with macOS-style traffic lights
+- **Dock** — macOS-style magnification, bounce animations, launch ripple effects, open-app indicators
+- **Top bar** — clock, battery/wifi/volume icons, logo dropdown menu, active app indicator
+- **Context menu** — right-click anywhere for quick app access
+- **Spotlight search** — press `Cmd+K` / `Ctrl+K` to search and launch apps
+- **Lock screen** — auto-locks after 5 minutes of inactivity, click to unlock
+- **Desktop widgets** — analog clock (canvas-drawn) and calendar, toggleable from Settings
+- **Notifications** — toast notifications for app launches and actions
+
+### Pixel Cat Pet
+- 16x16 pixel art sprite rendered on canvas at 3x scale
+- **Walk cycle** — animated legs when following cursor
+- **Idle** — gentle bounce, tail swish between frames
+- **Sleep** — eyes closed, "z" particles float up after 15s of no mouse movement
+- **Happy** — heart eyes, floating heart particles on click
+- **Blink** — periodic eye-close animation
+- **Pin/unpin** — click to pin in place, click again to resume following cursor
+
+### Visual Design
+- **Dark gothic-kawaii palette** — deep blacks, sakura pink, miku teal, lavender, mint, peach
+- **Glassmorphism** — blur, saturation, and subtle borders on every panel
+- **Cursor trail** — sakura-colored comet tail (canvas-based, zero lag)
+- **Parallax background** — glow orbs shift with mouse movement
+- **Shimmer effect** — subtle light sweep on windows every 20 seconds
+- **Boot sequence** — logo reveal with blur → welcome fade → terminal with BIOS/kernel/services → particle burst → staggered desktop assembly
+- **Boot chime** — C major chord via Web Audio API
+
+### Easter Eggs
+- **Konami Code** — press `↑↑↓↓←→←→BA` anywhere for a confetti explosion
+- **Rainbow mode** — click the "स्याउ OS" logo 10 times for a rainbow top bar
+- **Desktop pet** — the pet follows your cursor
+- **Terminal `sudo`** — try it and find out ;)
+
+---
+
+## Built-in Apps
+
+| App | Description |
+|-----|-------------|
+| **Creator Profile** | Interactive portfolio app for Kantaraj Luitel (Susant) with tabs for Bio, Certs, Stack & Socials |
+| **Devlogs** | Built-in Devlog viewer app with 3 progress entries and search filter |
+| **About Me** | Profile card with avatar, bio, tags, and creator profile button |
+| **Terminal** | Custom shell (`syau-sh`) with 20+ commands including `neofetch`, `cowsay`, `matrix`, `weather`, and more |
+| **Notes** | Text editor with auto-save to localStorage and word count |
+| **Calculator** | Basic calculator with keyboard support |
+| **Music Player** | 27-track playlist (anime, jazz, classical, pop) with Web Audio API visualizer |
+| **Gallery** | 11-image grid with lightbox viewer and keyboard navigation |
+| **Browser** | Embedded web browser with Google Translate and Wayback Machine proxy fallback |
+| **Doomscroll** | TikTok-style vertical video scroller with reels |
+| **Settings** | Theme modes (Dark & White Light Mode), accent colors, wallpapers, widget toggle |
+| **Guide** | Accordion-style guide covering every feature, command, and easter egg |
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | React 19 |
+| Language | TypeScript 6 |
+| Build Tool | Vite 8 |
+| Styling | Tailwind CSS 4 + Custom CSS Design Tokens |
+| Typography | Noto Sans Devanagari 600 + Space Grotesk 700 + Inter |
+| State | Zustand |
+| Animation | Framer Motion |
+| Icons | Lucide React |
+
+---
+
+## Getting Started
+
+```bash
+# Clone the repository
+git clone https://github.com/subhansh-dev/MewoOS.git
+cd os-hackclub
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+---
+
+<div align="center">
+
+**स्याउ OS (Syau OS) v1.0.0** — Created by Kantaraj Luitel (Susant) 🇳🇵
+
+</div>
+
+</div>
