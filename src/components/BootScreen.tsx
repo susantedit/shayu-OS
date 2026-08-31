@@ -248,28 +248,30 @@ export default function BootScreen() {
 
       {/* Logo phase */}
       {bootPhase === 'logo' && (
-        <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 16 }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 14, padding: 20 }}>
           <img
             src="/syauOS.png"
             alt="स्याउ OS"
             style={{
-              width: 72, height: 72, objectFit: 'contain',
+              width: typeof window !== 'undefined' && window.innerWidth < 768 ? 56 : 72,
+              height: typeof window !== 'undefined' && window.innerWidth < 768 ? 56 : 72,
+              objectFit: 'contain',
               filter: logoSharp ? 'drop-shadow(0 0 20px rgba(232,130,155,0.4))' : 'blur(12px)',
               opacity: logoSharp ? 1 : 0, transition: 'all 0.8s ease',
             }}
           />
           <div style={{
-            fontSize: 52, fontWeight: 700, color: '#E8D5E0', letterSpacing: -1,
+            fontSize: 'clamp(32px, 8vw, 52px)', fontWeight: 700, color: '#E8D5E0', letterSpacing: -1,
             textShadow: '0 0 40px rgba(232,130,155,0.2), 0 0 80px rgba(232,130,155,0.1)',
             filter: logoSharp ? 'blur(0)' : 'blur(12px)', opacity: logoSharp ? 1 : 0,
             transition: 'filter 0.8s ease, opacity 0.6s ease',
-            display: 'flex', alignItems: 'center', gap: 12,
+            display: 'flex', alignItems: 'center', gap: 10,
           }}>
             <span className="font-syau" style={{ fontWeight: 600 }}>स्याउ</span>
             <span className="font-os" style={{ fontWeight: 700, color: 'var(--color-sakura)', letterSpacing: '0.08em' }}>OS</span>
           </div>
           <div style={{
-            fontSize: 11, color: '#6B5070', letterSpacing: 3, fontWeight: 600,
+            fontSize: 'clamp(9px, 2.5vw, 11px)', color: '#6B5070', letterSpacing: 3, fontWeight: 600,
             opacity: logoSharp ? 0.6 : 0, transition: 'opacity 0.8s ease 0.3s',
           }}>
             LOADING SYSTEM
@@ -279,9 +281,9 @@ export default function BootScreen() {
 
       {/* Welcome phase */}
       {bootPhase === 'welcome' && (
-        <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', padding: 20 }}>
           <div style={{
-            fontSize: 42, fontWeight: 700, color: '#E8D5E0', letterSpacing: -1,
+            fontSize: 'clamp(28px, 8vw, 42px)', fontWeight: 700, color: '#E8D5E0', letterSpacing: -1,
             textShadow: '0 0 40px rgba(232,130,155,0.15), 0 0 80px rgba(196,181,253,0.08)',
             animation: 'welcome-fade 2s ease-in-out forwards',
           }}>
@@ -292,17 +294,40 @@ export default function BootScreen() {
 
       {/* Terminal phase */}
       {bootPhase === 'terminal' && (
-        <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 40, height: '100%', padding: 40 }}>
-          <div style={{ width: 560, maxHeight: '70vh', background: 'linear-gradient(135deg, rgba(8,10,18,0.85) 0%, rgba(4,5,10,0.9) 50%, rgba(10,12,20,0.85) 100%)', backdropFilter: 'blur(20px) saturate(1.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: 12, boxShadow: '0 8px 40px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06) inset, inset 2px 2px 1px rgba(255,255,255,0.08), inset -1px -1px 1px rgba(255,255,255,0.03)', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-            <div style={{ height: 32, display: 'flex', alignItems: 'center', padding: '0 12px', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.06)', gap: 8 }}>
-              <div style={{ display: 'flex', gap: 6 }}>
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#FF6B6B' }} />
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#FFD93D' }} />
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#6BCB77' }} />
+        <div style={{
+          position: 'relative', zIndex: 2, display: 'flex',
+          flexDirection: typeof window !== 'undefined' && window.innerWidth < 768 ? 'column' : 'row',
+          alignItems: 'center', justifyContent: 'center',
+          gap: typeof window !== 'undefined' && window.innerWidth < 768 ? 14 : 40,
+          height: '100%',
+          padding: typeof window !== 'undefined' && window.innerWidth < 768 ? '14px 12px' : 40,
+          boxSizing: 'border-box',
+        }}>
+          <div style={{
+            width: typeof window !== 'undefined' && window.innerWidth < 768 ? '100%' : 560,
+            maxWidth: '100%',
+            maxHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? '48dvh' : '70vh',
+            background: 'linear-gradient(135deg, rgba(8,10,18,0.85) 0%, rgba(4,5,10,0.9) 50%, rgba(10,12,20,0.85) 100%)',
+            backdropFilter: 'blur(20px) saturate(1.3)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderRadius: 12,
+            boxShadow: '0 8px 40px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06) inset, inset 2px 2px 1px rgba(255,255,255,0.08), inset -1px -1px 1px rgba(255,255,255,0.03)',
+            overflow: 'hidden', display: 'flex', flexDirection: 'column',
+          }}>
+            <div style={{ height: 30, display: 'flex', alignItems: 'center', padding: '0 10px', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.06)', gap: 8, flexShrink: 0 }}>
+              <div style={{ display: 'flex', gap: 5 }}>
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#FF6B6B' }} />
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#FFD93D' }} />
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#6BCB77' }} />
               </div>
-              <span style={{ flex: 1, textAlign: 'center', fontSize: 11, fontWeight: 600, color: '#6B5070', letterSpacing: 1, textTransform: 'uppercase' }}>system boot</span>
+              <span style={{ flex: 1, textAlign: 'center', fontSize: 10, fontWeight: 600, color: '#6B5070', letterSpacing: 1, textTransform: 'uppercase' }}>system boot</span>
             </div>
-            <div ref={termRef} style={{ flex: 1, padding: 16, overflowY: 'auto', fontSize: 12, lineHeight: 1.7, color: '#CDD6F4', maxHeight: '55vh' }}>
+            <div ref={termRef} style={{
+              flex: 1, padding: typeof window !== 'undefined' && window.innerWidth < 768 ? '10px 12px' : 16,
+              overflowY: 'auto', fontSize: typeof window !== 'undefined' && window.innerWidth < 768 ? 10 : 12,
+              lineHeight: 1.6, color: '#CDD6F4',
+              maxHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? '38dvh' : '55vh',
+            }}>
               {BOOT_LINES.slice(0, lines).map((line, i) => {
                 const isTransition = i === 12 || i === 23
                 return (
@@ -316,8 +341,19 @@ export default function BootScreen() {
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 24 }}>
-            <div style={{ width: 160, height: 160 }}>
+          <div style={{
+            display: 'flex',
+            flexDirection: typeof window !== 'undefined' && window.innerWidth < 768 ? 'row' : 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: typeof window !== 'undefined' && window.innerWidth < 768 ? 14 : 24,
+            flexWrap: 'wrap',
+          }}>
+            <div style={{
+              width: typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 160,
+              height: typeof window !== 'undefined' && window.innerWidth < 768 ? 80 : 160,
+              flexShrink: 0,
+            }}>
               <svg viewBox="0 0 120 120" style={{ width: '100%', height: '100%', filter: 'drop-shadow(0 0 20px rgba(232,130,155,0.15))' }}>
                 <defs>
                   <linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -331,15 +367,17 @@ export default function BootScreen() {
                 <text x="60" y="72" textAnchor="middle" style={{ fontFamily: 'var(--font-mono)', fontSize: 8, fontWeight: 600, fill: '#6B5070', letterSpacing: 2 }}>{terminalPhase}</text>
               </svg>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 200 }}>
-              {[['OS', 'स्याउ OS 1.0.0'], ['KERNEL', '6.9.0-syau'], ['THEME', 'syau-glassmorphic'], ['WM', 'framer-motion']].map(([k, v]) => (
-                <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 8px', background: 'rgba(255,255,255,0.02)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.03)' }}>
-                  <span style={{ fontSize: 9, fontWeight: 700, color: '#6B5070', letterSpacing: 1 }}>{k}</span>
-                  <span style={{ fontSize: 9, fontWeight: 500, color: '#9B889E' }}>{v}</span>
-                </div>
-              ))}
-            </div>
-            <div style={{ display: 'flex', gap: 8 }}>
+            {typeof window !== 'undefined' && window.innerWidth >= 768 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6, width: 200 }}>
+                {[['OS', 'स्याउ OS 1.0.0'], ['KERNEL', '6.9.0-syau'], ['THEME', 'syau-glassmorphic'], ['WM', 'framer-motion']].map(([k, v]) => (
+                  <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '4px 8px', background: 'rgba(255,255,255,0.02)', borderRadius: 4, border: '1px solid rgba(255,255,255,0.03)' }}>
+                    <span style={{ fontSize: 9, fontWeight: 700, color: '#6B5070', letterSpacing: 1 }}>{k}</span>
+                    <span style={{ fontSize: 9, fontWeight: 500, color: '#9B889E' }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
               {['POST', 'KERNEL', 'SERVICES', 'READY'].map((p, i) => {
                 const curIdx = ['POST', 'KERNEL', 'SERVICES', 'READY'].indexOf(terminalPhase)
                 return <div key={p} style={{ width: 6, height: 6, borderRadius: '50%', background: terminalPhase === p ? '#E8829B' : curIdx > i ? 'rgba(232,130,155,0.3)' : 'rgba(255,255,255,0.08)', boxShadow: terminalPhase === p ? '0 0 8px rgba(232,130,155,0.5)' : 'none', transform: terminalPhase === p ? 'scale(1.3)' : 'scale(1)', transition: 'all 0.3s ease' }} />
