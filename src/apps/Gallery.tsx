@@ -4,7 +4,7 @@ import { mediaUrl } from '../config'
 const DEFAULT_GALLERY = Array.from({ length: 33 }, (_, i) => {
   const num = i + 1
   const exts: Record<number, string> = {
-    1: 'png', 17: 'png', 18: 'png', 19: 'png', 20: 'png', 25: 'png', 26: 'gif'
+    1: 'png', 24: 'png', 25: 'png', 26: 'png', 27: 'png', 31: 'png', 32: 'gif'
   }
   const ext = exts[num] || 'jpg'
   return {
@@ -20,17 +20,18 @@ export default function Gallery() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved)
-        if (Array.isArray(parsed) && parsed.length > 0 && !JSON.stringify(parsed).includes('Gallery Item') && !JSON.stringify(parsed).includes('gallery-1.jpg')) {
+        if (Array.isArray(parsed) && parsed.length === 33 && !JSON.stringify(parsed).includes('syau-photo-17.png')) {
           return parsed
         }
       } catch {}
     }
+    localStorage.removeItem('syau-os-gallery')
     return DEFAULT_GALLERY
   })
 
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null)
-  const [selected, setSelected] = useState<number | null>(null)
   const [lightbox, setLightbox] = useState<number | null>(null)
+  const [zoomLevel, setZoomLevel] = useState<number>(1)
   const [urlInput, setUrlInput] = useState('')
   const [showAddModal, setShowAddModal] = useState(false)
 
@@ -63,7 +64,6 @@ export default function Gallery() {
 
   const handleDelete = (id: string, index: number) => {
     setItems(prev => prev.filter(item => item.id !== id))
-    if (selected === index) setSelected(null)
     if (lightbox === index) setLightbox(null)
   }
 
@@ -72,6 +72,13 @@ export default function Gallery() {
       setItems(DEFAULT_GALLERY)
       localStorage.removeItem('syau-os-gallery')
     }
+  }
+
+  const setAsWallpaper = (imgUrl: string) => {
+    localStorage.setItem('syau-os-wallpaper', imgUrl)
+    localStorage.setItem('syau-os-bg', 'image')
+    window.dispatchEvent(new CustomEvent('syau-os-bg-change'))
+    alert('Wallpaper updated successfully!')
   }
 
   return (
@@ -156,15 +163,14 @@ export default function Gallery() {
         {items.map((item, i) => (
           <div
             key={item.id}
-            title={item.name}
-            onClick={() => setSelected(selected === i ? null : i)}
-            onDoubleClick={() => setLightbox(i)}
+            title={`${item.name} - Click to view full image`}
+            onClick={() => { setZoomLevel(1); setLightbox(i); }}
             onMouseEnter={() => setHoveredIdx(i)}
             onMouseLeave={() => setHoveredIdx(null)}
             style={{
               aspectRatio: '1', borderRadius: 10, overflow: 'hidden', cursor: 'pointer',
-              position: 'relative', transition: 'all 0.15s ease',
-              border: selected === i ? '2px solid var(--color-sakura)' : '2px solid transparent',
+              position: 'relative', transition: 'transform 0.15s ease, border-color 0.15s ease',
+              border: '2px solid transparent',
               boxShadow: '0 2px 12px rgba(0,0,0,0.3)', background: 'rgba(0,0,0,0.2)',
             }}
           >
@@ -176,7 +182,7 @@ export default function Gallery() {
             />
 
             {/* Hover Tooltip Overlay */}
-            {(hoveredIdx === i || selected === i) && (
+            {hoveredIdx === i && (
               <div style={{
                 position: 'absolute', bottom: 0, left: 0, right: 0,
                 padding: '6px 8px', background: 'rgba(5, 5, 12, 0.85)',
@@ -186,104 +192,142 @@ export default function Gallery() {
                 borderTop: '1px solid rgba(255,255,255,0.08)',
                 transition: 'opacity 0.2s ease',
               }}>
-                {item.name}
+                🔍 {item.name}
               </div>
-            )}
-
-            {/* Delete button overlay on selection */}
-            {selected === i && (
-              <button
-                onClick={(e) => { e.stopPropagation(); handleDelete(item.id, i) }}
-                title="Delete this photo"
-                style={{
-                  position: 'absolute', top: 4, right: 4, width: 22, height: 22,
-                  borderRadius: '50%', background: 'rgba(239, 68, 68, 0.9)', color: 'white',
-                  border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10,
-                }}
-              >
-                ✕
-              </button>
             )}
           </div>
         ))}
       </div>
 
-      {/* Selected Preview Bar */}
-      {selected !== null && items[selected] && (
-        <div style={{
-          marginTop: 16, padding: 12, background: 'rgba(12,10,18,0.7)', backdropFilter: 'blur(16px)',
-          borderRadius: 12, textAlign: 'center', border: '1px solid rgba(255,255,255,0.06)',
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-        }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>
-            {items[selected].name}
-          </div>
-          <img
-            src={items[selected].img}
-            alt=""
-            style={{ width: '100%', maxHeight: 220, objectFit: 'cover', borderRadius: 8 }}
-            onDoubleClick={() => setLightbox(selected)}
-          />
-          <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-            <span style={{ fontSize: 11, color: 'var(--color-text-secondary)' }}>Double-click to expand</span>
-            <button
-              onClick={() => handleDelete(items[selected].id, selected)}
-              style={{
-                padding: '4px 10px', borderRadius: 6, fontSize: 10, fontWeight: 600,
-                background: 'rgba(239, 68, 68, 0.2)', color: '#EF4444', border: '1px solid rgba(239, 68, 68, 0.3)',
-                cursor: 'pointer',
-              }}
-            >
-              🗑 Delete Photo
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Lightbox overlay */}
+      {/* Lightbox overlay / Full-Screen Zoom Viewer */}
       {lightbox !== null && items[lightbox] && (
         <div
           onClick={() => setLightbox(null)}
           style={{
             position: 'fixed', inset: 0, zIndex: 500,
-            background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(20px)',
+            background: 'rgba(0,0,0,0.92)', backdropFilter: 'blur(24px)',
             display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', padding: 20,
+            cursor: 'default', padding: 20,
           }}
         >
-          <div style={{
-            position: 'absolute', top: 20, fontSize: 14, fontWeight: 700,
-            color: 'var(--color-text-primary)', background: 'rgba(255,255,255,0.1)',
-            padding: '6px 16px', borderRadius: 20, backdropFilter: 'blur(10px)',
-          }}>
-            {items[lightbox].name} ({lightbox + 1} / {items.length})
+          {/* Top Control Bar */}
+          <div
+            onClick={e => e.stopPropagation()}
+            style={{
+              position: 'absolute', top: 20, display: 'flex', alignItems: 'center', gap: 12,
+              background: 'rgba(255,255,255,0.08)', backdropFilter: 'blur(16px)',
+              padding: '8px 18px', borderRadius: 30, border: '1px solid rgba(255,255,255,0.12)',
+              boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 510,
+            }}
+          >
+            <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>
+              {items[lightbox].name}
+            </span>
+            <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>
+              ({lightbox + 1} / {items.length})
+            </span>
+
+            <div style={{ height: 14, width: 1, background: 'rgba(255,255,255,0.2)', margin: '0 4px' }} />
+
+            {/* Zoom Button */}
+            <button
+              onClick={() => setZoomLevel(prev => (prev === 1 ? 1.5 : prev === 1.5 ? 2 : 1))}
+              title="Toggle Zoom Level"
+              style={{
+                padding: '4px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                background: zoomLevel > 1 ? 'var(--color-sakura)' : 'rgba(255,255,255,0.1)',
+                color: 'white', border: 'none', cursor: 'pointer',
+              }}
+            >
+              🔍 {zoomLevel}x Zoom
+            </button>
+
+            {/* Set as Wallpaper Button */}
+            <button
+              onClick={() => setAsWallpaper(items[lightbox].img)}
+              title="Set image as desktop wallpaper"
+              style={{
+                padding: '4px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                background: 'rgba(255,255,255,0.1)', color: 'var(--color-text-primary)',
+                border: '1px solid rgba(255,255,255,0.15)', cursor: 'pointer',
+              }}
+            >
+              🖼 Wallpaper
+            </button>
+
+            {/* Delete Button */}
+            <button
+              onClick={() => handleDelete(items[lightbox].id, lightbox)}
+              title="Delete this photo"
+              style={{
+                padding: '4px 10px', borderRadius: 14, fontSize: 11, fontWeight: 600,
+                background: 'rgba(239, 68, 68, 0.2)', color: '#EF4444',
+                border: '1px solid rgba(239, 68, 68, 0.3)', cursor: 'pointer',
+              }}
+            >
+              🗑 Delete
+            </button>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setLightbox(null)}
+              title="Close viewer"
+              style={{
+                width: 24, height: 24, borderRadius: '50%', background: 'rgba(255,255,255,0.15)',
+                color: 'white', border: 'none', cursor: 'pointer', fontSize: 12, fontWeight: 700,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', marginLeft: 4,
+              }}
+            >
+              ✕
+            </button>
           </div>
 
-          <img
-            src={items[lightbox].img}
-            alt=""
+          {/* Main Full Image View */}
+          <div
+            onClick={e => e.stopPropagation()}
             style={{
-              maxWidth: '90%', maxHeight: '85%', objectFit: 'contain',
-              borderRadius: 8, boxShadow: '0 8px 40px rgba(0,0,0,0.5)',
+              width: '100%', height: '80%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              overflow: 'auto', padding: 20,
             }}
-          />
+          >
+            <img
+              src={items[lightbox].img}
+              alt={items[lightbox].name}
+              onClick={() => setZoomLevel(prev => (prev === 1 ? 1.5 : prev === 1.5 ? 2 : 1))}
+              style={{
+                maxWidth: zoomLevel === 1 ? '90%' : 'none',
+                maxHeight: zoomLevel === 1 ? '85%' : 'none',
+                transform: `scale(${zoomLevel})`,
+                transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                objectFit: 'contain',
+                borderRadius: 12,
+                boxShadow: '0 16px 60px rgba(0,0,0,0.6)',
+                cursor: zoomLevel > 1 ? 'zoom-out' : 'zoom-in',
+              }}
+            />
+          </div>
 
           {/* Nav arrows */}
           <div
-            onClick={e => { e.stopPropagation(); setLightbox((lightbox - 1 + items.length) % items.length) }}
+            onClick={e => { e.stopPropagation(); setZoomLevel(1); setLightbox((lightbox - 1 + items.length) % items.length) }}
             style={{
-              position: 'absolute', left: 20, top: '50%', transform: 'translateY(-50%)', fontSize: 32,
-              color: 'rgba(255,255,255,0.7)', cursor: 'pointer', padding: 10, userSelect: 'none',
+              position: 'absolute', left: 24, top: '50%', transform: 'translateY(-50%)', fontSize: 36,
+              color: 'rgba(255,255,255,0.8)', background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(10px)',
+              width: 50, height: 50, borderRadius: '50%', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', cursor: 'pointer', userSelect: 'none',
+              border: '1px solid rgba(255,255,255,0.1)',
             }}
           >
             ‹
           </div>
           <div
-            onClick={e => { e.stopPropagation(); setLightbox((lightbox + 1) % items.length) }}
+            onClick={e => { e.stopPropagation(); setZoomLevel(1); setLightbox((lightbox + 1) % items.length) }}
             style={{
-              position: 'absolute', right: 20, top: '50%', transform: 'translateY(-50%)', fontSize: 32,
-              color: 'rgba(255,255,255,0.7)', cursor: 'pointer', padding: 10, userSelect: 'none',
+              position: 'absolute', right: 24, top: '50%', transform: 'translateY(-50%)', fontSize: 36,
+              color: 'rgba(255,255,255,0.8)', background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(10px)',
+              width: 50, height: 50, borderRadius: '50%', display: 'flex', alignItems: 'center',
+              justifyContent: 'center', cursor: 'pointer', userSelect: 'none',
+              border: '1px solid rgba(255,255,255,0.1)',
             }}
           >
             ›

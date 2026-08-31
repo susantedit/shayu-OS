@@ -10,7 +10,6 @@ const APPS = [
   { id: 'music', title: 'Music Player', kw: 'music player songs', icon: '🎵' },
   { id: 'gallery', title: 'Gallery', kw: 'gallery images photos', icon: '🖼' },
   { id: 'browser', title: 'Browser', kw: 'browser web internet', icon: '🌐' },
-  { id: 'doomscroll', title: 'Doomscroll', kw: 'doomscroll reels tiktok', icon: '📱' },
   { id: 'guide', title: 'Guide', kw: 'guide help features', icon: '📖' },
   { id: 'settings', title: 'Settings', kw: 'settings preferences accent', icon: '⚙️' },
   { id: 'files', title: 'Files', kw: 'files file manager explorer folders', icon: '📁' },

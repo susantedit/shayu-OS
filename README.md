@@ -74,15 +74,14 @@ Built for the [Hack Club](https://hackclub.com) WebOS Jam
 | App | Description |
 |-----|-------------|
 | **Creator Profile** | Interactive portfolio app for Kantaraj Luitel (Susant) with tabs for Bio, Certs, Stack & Socials |
-| **Devlogs** | Built-in Devlog viewer app with 3 progress entries and search filter |
+| **Devlogs** | Built-in Devlog viewer app with comprehensive Devlog #1 and search filter |
 | **About Me** | Profile card with avatar, bio, tags, and creator profile button |
 | **Terminal** | Custom shell (`syau-sh`) with 20+ commands including `neofetch`, `cowsay`, `matrix`, `weather`, and more |
 | **Notes** | Text editor with auto-save to localStorage and word count |
 | **Calculator** | Basic calculator with keyboard support |
 | **Music Player** | 27-track playlist (anime, jazz, classical, pop) with Web Audio API visualizer |
-| **Gallery** | 11-image grid with lightbox viewer and keyboard navigation |
+| **Gallery** | 33-photo Google Drive gallery with hover tooltips, lightbox viewer, upload & deletion |
 | **Browser** | Embedded web browser with Google Translate and Wayback Machine proxy fallback |
-| **Doomscroll** | TikTok-style vertical video scroller with reels |
 | **Settings** | Theme modes (Dark & White Light Mode), accent colors, wallpapers, widget toggle |
 | **Guide** | Accordion-style guide covering every feature, command, and easter egg |
 
@@ -107,8 +106,8 @@ Built for the [Hack Club](https://hackclub.com) WebOS Jam
 
 ```bash
 # Clone the repository
-git clone https://github.com/subhansh-dev/MewoOS.git
-cd os-hackclub
+git clone https://github.com/susantedit/shayu-OS.git
+cd shayu-OS
 
 # Install dependencies
 npm install

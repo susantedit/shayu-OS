@@ -25,7 +25,6 @@ const Calculator = lazy(() => import('./apps/Calculator'))
 const MusicPlayer = lazy(() => import('./apps/MusicPlayer'))
 const Gallery = lazy(() => import('./apps/Gallery'))
 const Browser = lazy(() => import('./apps/Browser'))
-const Doomscroll = lazy(() => import('./apps/Doomscroll'))
 const Settings = lazy(() => import('./apps/Settings'))
 const Guide = lazy(() => import('./apps/Guide'))
 const FileManager = lazy(() => import('./apps/FileManager'))
@@ -51,7 +50,6 @@ const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.FC>> = {
   music: MusicPlayer,
   gallery: Gallery,
   browser: Browser,
-  doomscroll: Doomscroll,
   settings: Settings,
   guide: Guide,
   files: FileManager,

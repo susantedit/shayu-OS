@@ -133,23 +133,41 @@ export default function Desktop() {
 
       {/* Center greeting */}
       <div style={{
-        position: 'absolute', top: '32%', left: '50%',
+        position: 'absolute', top: '30%', left: '50%',
         transform: 'translate(-50%, -50%)',
         textAlign: 'center', pointerEvents: 'none', userSelect: 'none',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
       }}>
+        {/* Custom स्याउ OS Logo */}
+        <div style={{
+          width: 96, height: 96, borderRadius: 24,
+          background: 'rgba(255, 255, 255, 0.05)',
+          backdropFilter: 'blur(20px) saturate(1.8)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          boxShadow: '0 12px 40px rgba(232,130,155,0.2), inset 0 1px 0 rgba(255,255,255,0.2)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 12, marginBottom: 4,
+        }}>
+          <img
+            src={mediaUrl('/syauOS.png')}
+            alt="स्याउ OS Logo"
+            style={{ width: '100%', height: '100%', objectFit: 'contain', filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))' }}
+          />
+        </div>
+
         <div style={{
           fontSize: 64, fontWeight: 800, color: 'var(--color-text-primary)',
           letterSpacing: '-1px', lineHeight: 1,
-          textShadow: '0 0 60px rgba(232,130,155,0.15)',
+          textShadow: '0 0 60px rgba(232,130,155,0.2)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 14,
         }}>
           <span className="font-syau" style={{ fontWeight: 600 }}>स्याउ</span>
           <span className="font-os" style={{ fontWeight: 700, color: 'var(--color-sakura)', letterSpacing: '0.08em' }}>OS</span>
         </div>
-        <div style={{ fontSize: 13, color: 'var(--color-text-secondary)', marginTop: 14, fontWeight: 500 }}>
+        <div style={{ fontSize: 13, color: 'var(--color-text-secondary)', marginTop: 4, fontWeight: 500 }}>
           Created by <strong style={{ color: 'var(--color-text-primary)' }}>Kantaraj Luitel (Susant)</strong>
         </div>
-        <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 6, letterSpacing: 2 }}>
+        <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2, letterSpacing: 2 }}>
           right-click anywhere to open menu
         </div>
       </div>

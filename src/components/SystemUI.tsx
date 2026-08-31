@@ -135,7 +135,6 @@ export default function SystemUI() {
     { id: 'music', title: 'Music Player', kw: 'music player songs' },
     { id: 'gallery', title: 'Gallery', kw: 'gallery images photos' },
     { id: 'browser', title: 'Browser', kw: 'browser web internet' },
-    { id: 'doomscroll', title: 'Doomscroll', kw: 'doomscroll reels tiktok' },
     { id: 'settings', title: 'Settings', kw: 'settings preferences' },
   ]
   const filtered = spotQuery.trim()

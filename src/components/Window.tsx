@@ -16,7 +16,6 @@ const APP_SHADOW_COLORS: Record<string, string> = {
   music: 'rgba(232,130,155,0.15)',
   gallery: 'rgba(126,221,214,0.10)',
   browser: 'rgba(147,197,253,0.12)',
-  doomscroll: 'rgba(253,186,116,0.12)',
   files: 'rgba(147,197,253,0.12)',
   settings: 'rgba(155,136,158,0.10)',
   weather: 'rgba(147,197,253,0.12)',

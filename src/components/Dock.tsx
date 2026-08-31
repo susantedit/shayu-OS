@@ -19,7 +19,6 @@ const coreDockItems: DockItem[] = [
   { id: 'music', label: 'Music', color: 'var(--color-sakura)', icon: 'music' },
   { id: 'gallery', label: 'Gallery', color: 'var(--color-miku)', icon: 'gallery' },
   { id: 'browser', label: 'Browser', color: 'var(--color-sky)', icon: 'browser' },
-  { id: 'doomscroll', label: 'Doomscroll', color: 'var(--color-peach)', icon: 'reels' },
   { id: 'files', label: 'Files', color: 'var(--color-sky)', icon: 'files' },
   { id: 'store', label: 'Store', color: 'var(--color-sakura)', icon: 'store' },
   { id: 'guide', label: 'Guide', color: 'var(--color-mint)', icon: 'guide' },
@@ -39,7 +38,7 @@ const storeDockApps: Record<string, DockItem> = {
 
 const appTitles: Record<string, string> = {
   creator: 'Kantaraj Luitel (Susant) - Creator Profile', devlogs: 'स्याउ OS Devlogs', about: 'About Me', terminal: 'Terminal', notes: 'Notes', calculator: 'Calculator',
-  music: 'Music Player', gallery: 'Gallery', browser: 'Browser', doomscroll: 'Doomscroll',
+  music: 'Music Player', gallery: 'Gallery', browser: 'Browser',
   files: 'Files', guide: 'Guide', store: 'स्याउ Store', settings: 'Settings',
   weather: 'Weather', kanban: 'Kanban Board', timer: 'Focus Timer',
   'typing-speed': 'Type Racer', 'paint-studio': 'Paint Studio', 'image-editor': 'Image Editor',
@@ -47,7 +46,8 @@ const appTitles: Record<string, string> = {
 
 const appSizes: Record<string, [number, number]> = {
   creator: [860, 580], devlogs: [840, 560], about: [480, 540], terminal: [600, 400], notes: [500, 450], calculator: [320, 460],
-  music: [380, 520], gallery: [600, 480], browser: [800, 560], doomscroll: [420, 640],
+  music: [380, 520], gallery: [600, 480], browser: [800, 560],
+  files: [640, 480], store: [420, 580], guide: [500, 560], settings: [460, 520],
   files: [640, 480], store: [420, 580], guide: [500, 560], settings: [460, 520],
   weather: [360, 420], kanban: [520, 440], timer: [340, 520],
   'typing-speed': [480, 420], 'paint-studio': [560, 480], 'image-editor': [520, 460],

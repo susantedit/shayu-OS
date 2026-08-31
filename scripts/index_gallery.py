@@ -27,4 +27,7 @@ with open(gallery_tsx, 'r', encoding='utf-8') as file:
 pattern = r"const DEFAULT_GALLERY = \[[\s\S]*?\]"
 new_content = re.sub(pattern, items_js, content)
 
-with open(gallery_tsx, 'w', encoding='utf-8') as fil
+with open(gallery_tsx, 'w', encoding='utf-8') as file:
+    file.write(new_content)
+
+print("Updated Gallery.tsx successfully!")

@@ -21,7 +21,6 @@ const sections = [
       { label: 'Music Player', desc: '27 tracks across anime, jazz, classical, and more. Has a visualizer that reacts to the music.' },
       { label: 'Gallery', desc: '11 images in a grid. Click to select, double-click for fullscreen lightbox with ‹/› navigation.' },
       { label: 'Browser', desc: 'Embedded web browser with proxy support. If a site blocks embedding, try Google Translate or Wayback Machine.' },
-      { label: 'Doomscroll', desc: 'TikTok-style vertical video scroller. Scroll/swipe/arrow keys to navigate. Double-click to like with a heart animation.' },
       { label: 'Settings', desc: 'Change accent colors (6 options), background mode (solid/static/live wallpaper), and more.' },
     ],
   },

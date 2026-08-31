@@ -4,7 +4,7 @@ import { useDesktopStore } from '../store/desktopStore'
 
 const APP_ICONS: Record<string, string> = {
   about: '👤', terminal: '💻', notes: '📝', calculator: '🧮',
-  music: '🎵', gallery: '🖼', browser: '🌐', doomscroll: '📱',
+  music: '🎵', gallery: '🖼', browser: '🌐',
   guide: '📖', settings: '⚙️', files: '📁', store: '🛍️',
   weather: '🌤️', kanban: '📋', timer: '⏱️', 'typing-speed': '⌨️',
   'paint-studio': '🎨', 'image-editor': '🖼️',
