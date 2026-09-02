@@ -51,7 +51,7 @@ const appSizes: Record<string, [number, number]> = {
   creator: [860, 580], devlogs: [840, 560], about: [480, 540], capture: [820, 580],
   studio: [920, 600], terminal: [600, 400], notes: [500, 450], calculator: [320, 460],
   music: [720, 500], gallery: [600, 480], browser: [800, 560],
-  files: [640, 480], store: [420, 580], guide: [500, 560], settings: [460, 520],
+  files: [640, 480], store: [420, 580], guide: [500, 560], settings: [520, 600],
   weather: [360, 420], kanban: [520, 440], timer: [340, 520],
   'typing-speed': [480, 420], 'paint-studio': [560, 480], 'image-editor': [520, 460],
 }
@@ -153,12 +153,14 @@ export default function Dock() {
         <motion.div
           key={item.id}
           ref={el => { itemRefs.current[i] = el }}
-          className="dock-item"
+          className="dock-item cursor-pointer"
+          data-clickable="true"
           style={{
             background: 'transparent',
             border: 'none',
             backdropFilter: 'none',
             padding: 0,
+            cursor: 'pointer',
           }}
           onClick={(e) => handleClick(item, e)}
           animate={bouncing === item.id ? {

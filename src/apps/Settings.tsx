@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Wifi, WifiOff, Lock, Battery, BatteryCharging, Zap, Sun } from 'lucide-react'
+import { Wifi, WifiOff, Lock, Battery, BatteryCharging, Zap, Sun, MousePointer, Sparkles, RotateCcw, Flame, Sword, Waves, Laptop, MousePointerClick, Crosshair } from 'lucide-react'
 import { mediaUrl } from '../config'
 import { useThemeStore } from '../store/themeStore'
 import { useNetworkStore } from '../store/networkStore'
 import { useBatteryStore } from '../store/batteryStore'
+import { useCursorStore, type CursorTheme } from '../store/cursorStore'
 
 const ACCENTS: Record<string, { primary: string; dark: string }> = {
   sakura: { primary: '#E8829B', dark: '#C45A7C' },
@@ -40,6 +41,11 @@ export default function Settings() {
     level: batteryLevel, charging: isCharging, powerMode, setPowerMode,
     toggleCharging
   } = useBatteryStore()
+  const {
+    defaultCursor, pointerCursor, scale: cursorScale,
+    setDefaultCursor, setPointerCursor, setScale: setCursorScale,
+    setPreset: setCursorPreset, resetToDefault: resetCursor
+  } = useCursorStore()
   const [accent, setAccent] = useState(() => localStorage.getItem('syau-os-accent') || 'sakura')
   const [bgMode, setBgMode] = useState<'dark' | 'static' | 'live'>(() => (localStorage.getItem('syau-os-bg') as any) || 'dark')
   const [selectedWallpaper, setSelectedWallpaper] = useState(() => localStorage.getItem('syau-os-wallpaper') || 'wall-1')
@@ -468,6 +474,245 @@ export default function Settings() {
         </Section>
       )}
 
+      {/* Custom Anime Cursors & Precision Sizing */}
+      <Section title="Cursor & Mouse Customization">
+        <div style={{
+          background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
+          borderRadius: 12, padding: '14px 16px', marginBottom: 10,
+        }}>
+          {/* Header & Reset */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <MousePointer size={16} style={{ color: 'var(--color-sakura)' }} />
+              <div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>Anime & System Cursors</div>
+                <div style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>Customize default pointer, click cursor, and size</div>
+              </div>
+            </div>
+
+            <button
+              onClick={resetCursor}
+              title="Reset to default system cursor"
+              style={{
+                display: 'flex', alignItems: 'center', gap: 5, padding: '4px 9px', borderRadius: 6,
+                background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+                color: 'var(--color-text-secondary)', fontSize: 11, fontWeight: 600, cursor: 'pointer',
+              }}
+            >
+              <RotateCcw size={12} />
+              <span>Reset Default</span>
+            </button>
+          </div>
+
+          {/* Quick Presets */}
+          <div style={{ marginBottom: 14 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', color: 'var(--color-text-muted)', letterSpacing: 0.5, marginBottom: 6 }}>
+              Quick Presets
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: 6 }}>
+              {[
+                { label: 'Sukuna + Demon Slayer', def: 'sukuna', ptr: 'demonslayer', icon: Flame, icon2: Sword },
+                { label: 'Demon Slayer + Sukuna', def: 'demonslayer', ptr: 'sukuna', icon: Sword, icon2: Flame },
+                { label: 'All Sukuna Flame', def: 'sukuna', ptr: 'sukuna', icon: Flame },
+                { label: 'All Demon Slayer Blade', def: 'demonslayer', ptr: 'demonslayer', icon: Waves },
+                { label: 'Classic System OS', def: 'system', ptr: 'system', icon: Laptop },
+              ].map(p => {
+                const isActive = defaultCursor === p.def && pointerCursor === p.ptr
+                const Icon1 = p.icon
+                const Icon2 = p.icon2
+                return (
+                  <button
+                    key={p.label}
+                    onClick={() => setCursorPreset(p.def as CursorTheme, p.ptr as CursorTheme)}
+                    style={{
+                      padding: '7px 10px', borderRadius: 8, textAlign: 'left',
+                      background: isActive ? 'rgba(232,130,155,0.15)' : 'rgba(255,255,255,0.02)',
+                      border: '1px solid ' + (isActive ? 'var(--color-sakura)' : 'rgba(255,255,255,0.06)'),
+                      color: isActive ? 'var(--color-sakura)' : 'var(--color-text-primary)',
+                      fontSize: 11, fontWeight: isActive ? 700 : 500, cursor: 'pointer',
+                      display: 'flex', alignItems: 'center', gap: 6,
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0, opacity: isActive ? 1 : 0.7 }}>
+                      <Icon1 size={12} />
+                      {Icon2 && <Icon2 size={12} />}
+                    </div>
+                    <span>{p.label}</span>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Individual Pickers */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 12, marginBottom: 14 }}>
+            {/* Default Pointer Selection */}
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 6 }}>
+                1. Default Pointer (Moving)
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[
+                  { id: 'sukuna', label: 'Sukuna Flame Arrow', icon: '/cursors/sukuna-cursor-small.png', vectorIcon: Flame },
+                  { id: 'demonslayer', label: 'Demon Slayer Sword', icon: '/cursors/demonslayer-cursor-small.png', vectorIcon: Sword },
+                  { id: 'system', label: 'System Default Arrow', isSystem: true, vectorIcon: MousePointer },
+                ].map(opt => {
+                  const isSel = defaultCursor === opt.id
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => setDefaultCursor(opt.id as CursorTheme)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', borderRadius: 6,
+                        background: isSel ? 'rgba(232,130,155,0.15)' : 'rgba(255,255,255,0.03)',
+                        border: '1px solid ' + (isSel ? 'var(--color-sakura)' : 'rgba(255,255,255,0.06)'),
+                        color: isSel ? 'var(--color-sakura)' : 'var(--color-text-primary)',
+                        fontSize: 11, fontWeight: isSel ? 700 : 500, cursor: 'pointer',
+                      }}
+                    >
+                      {opt.icon ? (
+                        <img src={opt.icon} alt="" style={{ width: 16, height: 16 }} />
+                      ) : (
+                        <opt.vectorIcon size={14} />
+                      )}
+                      <span>{opt.label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Click Pointer Selection */}
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)', marginBottom: 6 }}>
+                2. Click Pointer (Buttons & Links)
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {[
+                  { id: 'demonslayer', label: 'Demon Slayer Sword', icon: '/cursors/demonslayer-pointer-small.png', vectorIcon: Sword },
+                  { id: 'sukuna', label: 'Sukuna Flame Arrow', icon: '/cursors/sukuna-pointer-small.png', vectorIcon: Flame },
+                  { id: 'system', label: 'System Hand Pointer', isSystem: true, vectorIcon: MousePointerClick },
+                ].map(opt => {
+                  const isSel = pointerCursor === opt.id
+                  return (
+                    <button
+                      key={opt.id}
+                      onClick={() => setPointerCursor(opt.id as CursorTheme)}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: 8, padding: '6px 10px', borderRadius: 6,
+                        background: isSel ? 'rgba(232,130,155,0.15)' : 'rgba(255,255,255,0.03)',
+                        border: '1px solid ' + (isSel ? 'var(--color-sakura)' : 'rgba(255,255,255,0.06)'),
+                        color: isSel ? 'var(--color-sakura)' : 'var(--color-text-primary)',
+                        fontSize: 11, fontWeight: isSel ? 700 : 500, cursor: 'pointer',
+                      }}
+                    >
+                      {opt.icon ? (
+                        <img src={opt.icon} alt="" style={{ width: 16, height: 16 }} />
+                      ) : (
+                        <opt.vectorIcon size={14} />
+                      )}
+                      <span>{opt.label}</span>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Cursor Sizing Controls */}
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+              <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-text-muted)' }}>3. Cursor Scale / Size</span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                <span style={{
+                  fontSize: 10, padding: '2px 6px', borderRadius: 4,
+                  background: 'rgba(232,130,155,0.15)', color: 'var(--color-sakura)',
+                  fontWeight: 700,
+                }}>
+                  {cursorScale}%
+                </span>
+                <span style={{ fontSize: 10, color: 'var(--color-text-muted)' }}>
+                  ({Math.round(32 * (cursorScale / 100))}px)
+                </span>
+              </div>
+            </div>
+
+            {/* Precision Slider 20% to 200% */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+              <span style={{ fontSize: 10, color: 'var(--color-text-muted)', minWidth: 26 }}>20%</span>
+              <input
+                type="range"
+                min={20}
+                max={200}
+                step={1}
+                value={cursorScale}
+                onChange={(e) => setCursorScale(Number(e.target.value))}
+                style={{
+                  flex: 1,
+                  accentColor: 'var(--color-sakura)',
+                  cursor: 'pointer',
+                  height: 6,
+                  borderRadius: 3,
+                }}
+              />
+              <span style={{ fontSize: 10, color: 'var(--color-text-muted)', minWidth: 30, textAlign: 'right' }}>200%</span>
+            </div>
+
+            {/* Quick Sizing Presets */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 5 }}>
+              {[
+                { label: '25%', scale: 25 },
+                { label: '50%', scale: 50 },
+                { label: '75%', scale: 75 },
+                { label: '100%', scale: 100, isDefault: true },
+                { label: '150%', scale: 150 },
+                { label: '200%', scale: 200 },
+              ].map(sz => {
+                const isSelected = Math.abs(cursorScale - sz.scale) <= 3
+                return (
+                  <button
+                    key={sz.scale}
+                    onClick={() => setCursorScale(sz.scale)}
+                    style={{
+                      padding: '5px 4px', borderRadius: 6, textAlign: 'center',
+                      background: isSelected ? 'var(--color-sakura)' : 'rgba(255,255,255,0.04)',
+                      border: '1px solid ' + (isSelected ? 'var(--color-sakura)' : 'rgba(255,255,255,0.08)'),
+                      color: isSelected ? 'white' : 'var(--color-text-secondary)',
+                      fontSize: 10, fontWeight: isSelected ? 700 : 500, cursor: 'pointer',
+                    }}
+                  >
+                    <div>{sz.label}</div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Interactive Live Test Box */}
+          <div style={{
+            marginTop: 12, padding: '10px 14px', borderRadius: 8,
+            background: 'rgba(255,255,255,0.02)', border: '1px dashed rgba(255,255,255,0.1)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, color: 'var(--color-text-muted)' }}>
+              <Crosshair size={13} style={{ color: 'var(--color-sakura)' }} />
+              <span>Move around this box & hover the button to test live:</span>
+            </div>
+            <button
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 5,
+                padding: '5px 12px', borderRadius: 6,
+                background: 'linear-gradient(135deg, var(--color-sakura), var(--color-miku))',
+                border: 'none', color: 'white', fontSize: 11, fontWeight: 700, cursor: 'pointer',
+              }}
+            >
+              <span>Hover & Click Test</span>
+              <Sparkles size={12} />
+            </button>
+          </div>
+        </div>
+      </Section>
+
       {/* Accent Color */}
       <Section title="Accent Color">
         <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -526,7 +771,7 @@ export default function Settings() {
       <Section title="About">
         <InfoRow label="OS Version" value="स्याउ OS 1.0.0" />
         <InfoRow label="Creator" value="Kantaraj Luitel (Susant)" />
-        <InfoRow label="Location" value="Nepal 🇳🇵" />
+        <InfoRow label="Location" value="Nepal" />
       </Section>
 
       <div style={{

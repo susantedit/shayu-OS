@@ -15,8 +15,8 @@ import MeoAssistant from './components/MeoAssistant'
 import WindowSwitcher from './components/WindowSwitcher'
 import ErrorBoundary from './components/ErrorBoundary'
 import { useFileSystem } from './store/fileSystem'
-
 import { useThemeStore } from './store/themeStore'
+import './store/cursorStore'
 
 const AboutMe = lazy(() => import('./apps/AboutMe'))
 const Terminal = lazy(() => import('./apps/Terminal'))

@@ -136,6 +136,65 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
   background: var(--color-cream);
   transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: url('/cursors/sukuna-cursor.png') 2 2, url('/cursors/sukuna-cursor.cur') 2 2, auto;
+}
+
+/* Custom Sukuna Flame Arrow for default pointing */
+*, *::before, *::after {
+  cursor: inherit;
+}
+
+/* Custom Demon Slayer Water Breathing Sword Cursor for ANY clickable button, link, dock item, or interactive element */
+button,
+button *,
+a,
+a *,
+.dock-item,
+.dock-item *,
+.dock-icon-wrapper,
+.dock-icon-wrapper *,
+.desktop-icon,
+.desktop-icon *,
+.window-header-btn,
+.window-header-btn *,
+.topbar-item,
+.topbar-item *,
+.traffic-light,
+.traffic-light *,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"],
+[role="button"] *,
+[role="tab"],
+[role="tab"] *,
+[role="menuitem"],
+[role="menuitem"] *,
+select,
+summary,
+label,
+.cursor-pointer,
+.cursor-pointer *,
+[data-clickable],
+[data-clickable] *,
+[style*="cursor: pointer"],
+[style*="cursor: pointer"] *,
+[style*="cursor:pointer"],
+[style*="cursor:pointer"] *,
+[onclick],
+[onclick] * {
+  cursor: url('/cursors/demonslayer-pointer.png') 3 2, url('/cursors/demonslayer-pointer.cur') 3 2, pointer !important;
+}
+
+/* Inputs & text selection */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="search"],
+input[type="number"],
+textarea,
+[contenteditable="true"] {
+  cursor: text !important;
 }
 
 #root {

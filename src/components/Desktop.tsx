@@ -60,7 +60,7 @@ export default function Desktop() {
     { label: 'Terminal', action: () => openWindow('terminal', 'Terminal', 600, 400) },
     { label: 'Notes', action: () => openWindow('notes', 'Notes', 500, 450) },
     { divider: true },
-    { label: 'Settings', action: () => openWindow('settings', 'Settings', 460, 520) },
+    { label: 'Settings', action: () => openWindow('settings', 'Settings', 520, 600) },
   ]
 
   return (
