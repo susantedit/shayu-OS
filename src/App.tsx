@@ -31,6 +31,8 @@ const FileManager = lazy(() => import('./apps/FileManager'))
 const Store = lazy(() => import('./apps/Store'))
 const Devlogs = lazy(() => import('./apps/Devlogs'))
 const Creator = lazy(() => import('./apps/Creator'))
+const Capture = lazy(() => import('./apps/Capture'))
+const Studio = lazy(() => import('./apps/Studio'))
 
 const STORE_APPS: Record<string, React.LazyExoticComponent<React.FC>> = {
   weather: lazy(() => import('./apps/StoreApps').then(m => ({ default: m.WeatherApp }))),
@@ -55,6 +57,11 @@ const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.FC>> = {
   files: FileManager,
   store: Store,
   devlogs: Devlogs,
+  capture: Capture,
+  recorder: Capture,
+  studio: Studio,
+  code: Studio,
+  ide: Studio,
   ...STORE_APPS,
 }
 
@@ -94,6 +101,11 @@ export default function App() {
         e.preventDefault()
         const max = useDesktopStore.getState().maxWorkspaces
         switchWorkspace(Math.min(max, currentWorkspace + 1))
+      }
+      // Ctrl+Shift+S or Cmd+Shift+4 / Cmd+Shift+S -> Quick Screen Capture
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === 'S' || e.key === 's' || e.key === '4')) {
+        e.preventDefault()
+        useDesktopStore.getState().openWindow('capture', 'Capture & Record', 780, 560)
       }
     }
     window.addEventListener('keydown', handler)

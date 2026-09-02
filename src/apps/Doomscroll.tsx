@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { mediaUrl } from '../config'
 
-// Dynamically load all reel files
 const REEL_COUNT = 34
 const REELS = Array.from({ length: REEL_COUNT }, (_, i) => mediaUrl(`/reels/reel-${i + 1}.mp4`))
 
@@ -98,7 +97,6 @@ export default function Doomscroll() {
       onTouchEnd={(e) => { const d = touchStart.current - e.changedTouches[0].clientY; if (d > 50) goNext(); if (d < -50) goPrev() }}
       style={{ height: '100%', width: '100%', background: '#000', position: 'relative', outline: 'none', overflow: 'hidden', display: 'flex' }}
     >
-      {/* Video — fullscreen with audio */}
       <div style={{ position: 'absolute', inset: 0 }} onDoubleClick={handleDoubleClick}>
         <video
           ref={videoRef}
@@ -109,14 +107,12 @@ export default function Doomscroll() {
           playsInline
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           onError={(e) => {
-            // If this reel doesn't exist, skip to next
             const target = e.target as HTMLVideoElement
             if (target.error) goNext()
           }}
         />
       </div>
 
-      {/* Heart animation */}
       {showHeart && (
         <div style={{
           position: 'absolute', top: heartPos.y + '%', left: heartPos.x + '%',
@@ -128,7 +124,6 @@ export default function Doomscroll() {
         }}>&#x2665;</div>
       )}
 
-      {/* Right sidebar */}
       <div style={{
         position: 'absolute', right: 0, top: 0, bottom: 0, width: 56,
         display: 'flex', flexDirection: 'column', alignItems: 'center',
@@ -158,7 +153,6 @@ export default function Doomscroll() {
         <div style={sideBtnStyle}><span style={{ fontSize: 24 }}>&#x25A3;</span><span style={{ fontSize: 9, fontWeight: 600 }}>Save</span></div>
       </div>
 
-      {/* Bottom info */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 56,
         padding: '40px 14px 12px',
@@ -169,7 +163,6 @@ export default function Doomscroll() {
         <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>syau vibes #aesthetic #syauOS</div>
       </div>
 
-      {/* Counter */}
       <div style={{
         position: 'absolute', top: 10, right: 64, fontSize: 10,
         color: 'rgba(255,255,255,0.4)', fontFamily: 'var(--font-mono)',
@@ -177,7 +170,6 @@ export default function Doomscroll() {
         background: 'rgba(0,0,0,0.3)', padding: '2px 8px', borderRadius: 10,
       }}>{currentIdx + 1}/{REELS.length}</div>
 
-      {/* Nav */}
       <div style={{
         position: 'absolute', right: 60, top: '50%', transform: 'translateY(-50%)',
         display: 'flex', flexDirection: 'column', gap: 8, zIndex: 10,

@@ -60,10 +60,10 @@ LinkedIn: linkedin.com/in/kantaraj-luitel`,
   ).join('\n'),
 
   weather: () => {
-    const conditions = ['☀️ Sunny', '🌤 Partly cloudy', '🌧 Rainy', '⛅ Cloudy', '🌈 Rainbow', '❄️ Snowy']
+    const conditions = ['Sunny', 'Partly Cloudy', 'Rainy', 'Cloudy', 'Clear Sky', 'Snowy']
     const cond = conditions[Math.floor(Math.random() * conditions.length)]
     const temp = Math.floor(Math.random() * 30 + 5)
-    return `स्याउ OS Weather Service\n${cond} | ${temp}°C\nHumidity: ${Math.floor(Math.random() * 60 + 30)}%\nWind: ${Math.floor(Math.random() * 20 + 1)} km/h`
+    return `स्याउ OS Weather Service\nCondition: ${cond} | ${temp}°C\nHumidity: ${Math.floor(Math.random() * 60 + 30)}%\nWind: ${Math.floor(Math.random() * 20 + 1)} km/h`
   },
 
   cowsay: (text?: string) => {

@@ -140,7 +140,6 @@ export default function Widgets() {
 
   return (
     <div className="desktop-widgets" style={{ position: 'fixed', top: 80, right: 16, zIndex: 2, display: 'flex', flexDirection: 'column', gap: 10, pointerEvents: 'auto', transition: 'opacity 0.2s ease' }}>
-      {/* Analog clock */}
       <div style={{ ...glassStyle, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <canvas ref={canvasRef} style={{ width: 140, height: 140 }} />
         <div style={{ fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2, fontFamily: 'var(--font-mono)', letterSpacing: 1 }}>
@@ -148,9 +147,7 @@ export default function Widgets() {
         </div>
       </div>
 
-      {/* Calendar */}
       <div style={{ ...glassStyle, minWidth: 220 }}>
-        {/* Header with nav */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
           <button onClick={prevMonth} style={{ background: 'none', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer', fontSize: 14, padding: '0 4px' }}>‹</button>
           <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>
@@ -159,14 +156,12 @@ export default function Widgets() {
           <button onClick={nextMonth} style={{ background: 'none', border: 'none', color: 'var(--color-text-muted)', cursor: 'pointer', fontSize: 14, padding: '0 4px' }}>›</button>
         </div>
 
-        {/* Day headers */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1, marginBottom: 4 }}>
           {days.map(d => (
             <div key={d} style={{ textAlign: 'center', fontSize: 9, fontWeight: 700, color: 'var(--color-text-muted)', padding: '2px 0' }}>{d}</div>
           ))}
         </div>
 
-        {/* Date grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 1 }}>
           {calendarDays.map((d, i) => {
             const isToday = d === today.getDate() && isCurrentMonth

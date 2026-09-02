@@ -38,6 +38,10 @@
   --radius-pill: 999px;
 }
 
+:root {
+  --os-brightness: 100%;
+}
+
 :root, [data-theme="dark"] {
   --color-cream: #050508;
   --color-cream-dark: #030305;
@@ -132,6 +136,11 @@ html, body, #root {
   -webkit-font-smoothing: antialiased;
   background: var(--color-cream);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  filter: brightness(var(--os-brightness, 100%));
+  transition: filter 0.15s ease-out;
 }
 
 /* Smooth accent color transitions on all elements using CSS vars */

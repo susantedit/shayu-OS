@@ -1,4 +1,5 @@
 import { Component, type ReactNode } from 'react'
+import { AlertTriangle } from 'lucide-react'
 
 interface Props { children: ReactNode; fallback?: ReactNode }
 interface State { hasError: boolean }
@@ -29,7 +30,7 @@ export default class ErrorBoundary extends Component<Props, State> {
           textAlign: 'center',
           gap: 8,
         }}>
-          <span style={{ fontSize: 24 }}>💥</span>
+          <AlertTriangle size={28} style={{ color: '#EF4444' }} />
           <span>Something went wrong</span>
           <button
             onClick={() => this.setState({ hasError: false })}

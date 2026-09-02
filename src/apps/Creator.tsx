@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Award, Code, Mail, Globe, Sparkles, MessageSquare, Coffee
+  Award, Code, Mail, Globe, Sparkles, MessageSquare, MapPin
 } from 'lucide-react'
 
 const GithubIcon = ({ size = 16 }: { size?: number }) => (
@@ -68,10 +68,13 @@ export default function CreatorApp() {
             </div>
 
             <p style={{ fontSize: isMobile ? 11 : 13, color: 'var(--color-text-secondary)', marginTop: 4, margin: 0, fontWeight: 500, lineHeight: 1.4 }}>
-              💻 Developer • 🔐 Cybersecurity Enthusiast • 🎬 Content Creator • 🏆 Hackathon Winner
+              Developer • Cybersecurity Enthusiast • Content Creator • Hackathon Winner
             </p>
             <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2, display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
-              <span>📍 Nepal 🇳🇵</span> • <span>Cosmic International Academy</span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <MapPin size={12} style={{ color: 'var(--color-sakura)' }} />
+                <span>Nepal</span>
+              </span> • <span>Cosmic International Academy</span>
             </div>
           </div>
         </div>
@@ -90,21 +93,36 @@ export default function CreatorApp() {
               transition: 'all 0.2s ease', whiteSpace: 'nowrap',
             }}
           >
-            <GithubIcon size={14} /> GitHub
+            <GithubIcon size={14} />
+            <span>GitHub</span>
           </a>
           <a
-            href="https://buymeacoffee.com/Susantedit"
+            href="https://linkedin.com/in/susantedit"
             target="_blank"
             rel="noopener noreferrer"
             style={{
               flex: isMobile ? 1 : 'initial', justifyContent: 'center',
-              padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 700,
-              background: 'linear-gradient(135deg, #FFDD00 0%, #F59E0B 100%)',
-              color: '#1E1B4B', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6,
-              boxShadow: '0 4px 12px rgba(245,158,11,0.3)', whiteSpace: 'nowrap',
+              padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+              background: 'rgba(10, 102, 194, 0.15)', border: '1px solid rgba(10, 102, 194, 0.3)',
+              color: '#38BDF8', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6,
+              transition: 'all 0.2s ease', whiteSpace: 'nowrap',
             }}
           >
-            <Coffee size={14} /> Buy Coffee
+            <LinkedinIcon size={14} />
+            <span>LinkedIn</span>
+          </a>
+          <a
+            href="mailto:contact@susantedit.com"
+            style={{
+              flex: isMobile ? 1 : 'initial', justifyContent: 'center',
+              padding: '7px 14px', borderRadius: 8, fontSize: 12, fontWeight: 600,
+              background: 'rgba(232, 130, 155, 0.15)', border: '1px solid rgba(232, 130, 155, 0.3)',
+              color: 'var(--color-sakura)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 6,
+              transition: 'all 0.2s ease', whiteSpace: 'nowrap',
+            }}
+          >
+            <Mail size={14} />
+            <span>Email</span>
           </a>
         </div>
       </div>
@@ -154,7 +172,22 @@ export default function CreatorApp() {
               transition={{ duration: 0.2 }}
               style={{ display: 'flex', flexDirection: 'column', gap: 16 }}
             >
-              {/* Highlight Banner */}
+              {/* Bio Card */}
+              <div style={{
+                padding: 16, borderRadius: 12,
+                background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
+                lineHeight: 1.6, fontSize: isMobile ? 12 : 13, color: 'var(--color-text-secondary)',
+              }}>
+              <p style={{ margin: 0, marginBottom: 10 }}>
+                Hi! I'm <strong style={{ color: 'var(--color-text-primary)' }}>Kantaraj Luitel (Susant)</strong>, a high school developer, creator, and AI builder from Nepal studying at Cosmic International Academy.
+              </p>
+              <p style={{ margin: 0 }}>
+                I built <strong style={{ color: 'var(--color-sakura)' }}>स्याउ OS</strong> to combine modern aesthetic computing with authentic Nepali identity, responsive engineering, and rich interactive applications.
+              </p>
+            </div>
+
+            {/* Quick Highlights Grid */}
+            <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(2, 1fr)', gap: 12 }}>
               <div style={{
                 padding: 14, borderRadius: 12,
                 background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
@@ -163,7 +196,7 @@ export default function CreatorApp() {
                 <Award size={26} style={{ color: 'var(--color-peach)', flexShrink: 0 }} />
                 <div>
                   <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--color-text-primary)' }}>
-                    🥈 2nd Place - Campfire Kathmandu 2026 (HackClub)
+                    2nd Place - Campfire Kathmandu 2026 (HackClub)
                   </div>
                   <div style={{ fontSize: 11, color: 'var(--color-text-secondary)', marginTop: 2, lineHeight: 1.4 }}>
                     Honored to receive 2nd Place at Campfire Kathmandu 2026. Grateful to be part of an inspiring community building cool projects!
@@ -180,29 +213,30 @@ export default function CreatorApp() {
                 <div style={{ color: '#94A3B8', marginBottom: 6 }}>// Creator Data Object</div>
                 <div><span style={{ color: '#F43F5E' }}>const</span> <span style={{ color: '#38BDF8' }}>kantaraj</span> = &#123;</div>
                 <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>name</span>: <span style={{ color: '#4ADE80' }}>"Kantaraj Luitel (Susant)"</span>,</div>
-                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>location</span>: <span style={{ color: '#4ADE80' }}>"Nepal 🇳🇵"</span>,</div>
+                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>location</span>: <span style={{ color: '#4ADE80' }}>"Nepal"</span>,</div>
                 <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>role</span>: <span style={{ color: '#4ADE80' }}>"Student • Developer • AI Enthusiast"</span>,</div>
                 <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>education</span>: <span style={{ color: '#4ADE80' }}>"Cosmic International Academy"</span>,</div>
                 <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>achievements</span>: [</div>
-                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"🏆 2nd Place - Campfire Kathmandu 2026",</div>
-                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"🎓 Oracle Certified - GenAI Professional",</div>
-                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"🎓 Oracle Certified - AI Associate",</div>
-                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"🔐 APIsec Certified Practitioner"</div>
+                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"2nd Place - Campfire Kathmandu 2026",</div>
+                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"Oracle Certified - GenAI Professional",</div>
+                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"Oracle Certified - AI Associate",</div>
+                <div style={{ paddingLeft: 32, color: '#FDE047' }}>"APIsec Certified Practitioner"</div>
                 <div style={{ paddingLeft: 16 }}>],</div>
-                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>goal</span>: <span style={{ color: '#4ADE80' }}>"Build powerful AI & cybersecurity projects 🚀"</span></div>
+                <div style={{ paddingLeft: 16 }}><span style={{ color: '#A855F7' }}>goal</span>: <span style={{ color: '#4ADE80' }}>"Build powerful AI & cybersecurity projects"</span></div>
                 <div>&#125;;</div>
               </div>
+            </div>
 
-              {/* Quote Card */}
-              <div style={{
-                padding: 14, borderRadius: 12, textAlign: 'center',
-                background: 'linear-gradient(135deg, rgba(232,130,155,0.08) 0%, rgba(126,221,214,0.08) 100%)',
-                border: '1px solid var(--color-glass-border)', fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)',
-              }}>
-                ✨ "Code. Break. Learn. Build again. Every expert was once a beginner."
-              </div>
-            </motion.div>
-          )}
+            {/* Quote Card */}
+            <div style={{
+              padding: 14, borderRadius: 12, textAlign: 'center',
+              background: 'linear-gradient(135deg, rgba(232,130,155,0.08) 0%, rgba(126,221,214,0.08) 100%)',
+              border: '1px solid var(--color-glass-border)', fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)',
+            }}>
+              "Code. Break. Learn. Build again. Every expert was once a beginner."
+            </div>
+          </motion.div>
+        )}
 
           {activeTab === 'certifications' && (
             <motion.div

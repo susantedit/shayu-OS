@@ -240,7 +240,6 @@ export default function Window({ window: win, children }: WindowProps) {
       </div>
       <div className="window-content">{children}</div>
 
-      {/* Resize handles */}
       {!win.maximized && !isMobile && (
         <>
           <div className="resize-handle resize-handle-e" onMouseDown={e => onResizeStart(e, 'e')} />

@@ -15,17 +15,17 @@ Built for the [Hack Club](https://hackclub.com) WebOS Jam
 
 ---
 
-## 🙋 About the Creator
+##  About the Creator
 
 **Kantaraj Luitel (Susant)** — Developer, Cybersecurity Enthusiast, Content Creator, and Hackathon Winner from Nepal 🇳🇵.
-- 🥈 **2nd Place** - Campfire Kathmandu 2026 (HackClub)
-- 🎓 **Oracle Cloud Certified** Generative AI Professional & AI Foundations Associate
-- 🔐 **APIsec Certified Practitioner**
-- 🌐 [GitHub Profile](https://github.com/susantedit) • [LinkedIn](https://linkedin.com/in/kantaraj-luitel) • [Buy Me a Coffee](https://buymeacoffee.com/Susantedit)
+- **2nd Place** - Campfire Kathmandu 2026 (HackClub)
+-  **Oracle Cloud Certified** Generative AI Professional & AI Foundations Associate
+-  **APIsec Certified Practitioner**
+-  [GitHub Profile](https://github.com/susantedit) • [LinkedIn](https://linkedin.com/in/kantaraj-luitel) • [Buy Me a Coffee](https://buymeacoffee.com/Susantedit)
 
 ---
 
-## 🍎 About स्याउ OS
+##  About स्याउ OS
 
 **स्याउ OS** (Syau OS) is a full-featured, client-side web desktop environment. It features a bilingual typography system (**Noto Sans Devanagari** + **Space Grotesk** + **Inter**), dual Dark & White Light theme mode engine, native Devlog viewer app, Bikram Sambat Nepali date converter widget, Meo AI OS assistant, and draggable windows.
 
@@ -74,7 +74,7 @@ Built for the [Hack Club](https://hackclub.com) WebOS Jam
 | App | Description |
 |-----|-------------|
 | **Creator Profile** | Interactive portfolio app for Kantaraj Luitel (Susant) with tabs for Bio, Certs, Stack & Socials |
-| **Devlogs** | Built-in Devlog viewer app with comprehensive Devlog #1 and search filter |
+| **Devlogs** | Built-in Devlog viewer app with search filter covering Architecture, Dual Themes & Web Responsiveness |
 | **About Me** | Profile card with avatar, bio, tags, and creator profile button |
 | **Terminal** | Custom shell (`syau-sh`) with 20+ commands including `neofetch`, `cowsay`, `matrix`, `weather`, and more |
 | **Notes** | Text editor with auto-save to localStorage and word count |
@@ -121,9 +121,17 @@ npm run build
 
 ---
 
+##  Development Journey & Acknowledgments
+
+This project started from a simple, minimal concept. To turn it into a full fledged web operating system, I took a step back to research deeply, watch tutorials, and learn new architectural concepts from non blocking state management to windowing mathematics and canvas rendering. 
+
+While I built and experimented with many parts myself, I believe in full transparency: I actively collaborated with AI tools throughout the journey. AI assisted me as a learning partner, helping debug tricky logic, brainstorm features, and rewrite/polish my content and documentation into clean, grammatically sound English. This project represents both my hands on learning curve and the modern workflow of building with AI assistance.
+
+---
+
 <div align="center">
 
-**स्याउ OS (Syau OS) v1.0.0** — Created by Kantaraj Luitel (Susant) 🇳🇵
+**स्याउ OS (Syau OS) v1.3.0** — Created by Kantaraj Luitel (Susant) 🇳🇵
 
 </div>
 

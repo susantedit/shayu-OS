@@ -92,7 +92,6 @@ export default function BootScreen() {
   const termRef = useRef<HTMLDivElement>(null)
   const burstParticles = useRef<Array<{ x: number; y: number; vx: number; vy: number; life: number; r: number; c: string }>>([])
 
-  // Canvas particles
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -146,25 +145,18 @@ export default function BootScreen() {
     return () => { cancelAnimationFrame(frame); window.removeEventListener('resize', resize) }
   }, [])
 
-  // Single sequential boot controller
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = []
-
-    // Phase 1: Logo (0 → 2s)
     timers.push(setTimeout(() => setLogoSharp(true), 100))
     timers.push(setTimeout(() => setBootPhase('welcome'), 2000))
-
-    // Phase 2: Welcome (2s → 4s)
     timers.push(setTimeout(() => {
       playBootChime()
       setBootPhase('welcome')
     }, 2000))
     timers.push(setTimeout(() => setBootPhase('terminal'), 4000))
-
     return () => timers.forEach(clearTimeout)
   }, [])
 
-  // Phase 3: Terminal lines (only runs when phase === 'terminal')
   useEffect(() => {
     if (bootPhase !== 'terminal') return
     let idx = 0
@@ -200,7 +192,6 @@ export default function BootScreen() {
     return () => clearTimeout(timer)
   }, [bootPhase])
 
-  // Phase 4: Fadeout → done
   useEffect(() => {
     if (bootPhase !== 'fadeout') return
     const t = setTimeout(() => setBootDone(true), 1000)
@@ -219,7 +210,6 @@ export default function BootScreen() {
     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#030305', overflow: 'hidden', fontFamily: 'var(--font-mono)', opacity: bootPhase === 'fadeout' ? 0 : 1, transition: 'opacity 0.8s ease-in-out' }}>
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.6 }} />
 
-      {/* Gallery images as background patches */}
       {BG_IMAGES.map((img, i) => (
         <div key={i} style={{
           position: 'absolute', top: img.top, bottom: img.bottom, left: img.left, right: img.right,
@@ -231,22 +221,17 @@ export default function BootScreen() {
         </div>
       ))}
 
-      {/* Glow orbs */}
       <div style={{ position: 'absolute', width: 400, height: 400, top: '10%', left: '15%', borderRadius: '50%', background: 'radial-gradient(circle, rgba(232,130,155,0.06) 0%, transparent 70%)', filter: 'blur(80px)', animation: 'slow-drift 20s ease-in-out infinite, glow-pulse 4s ease-in-out infinite', pointerEvents: 'none' }} />
       <div style={{ position: 'absolute', width: 350, height: 350, bottom: '15%', right: '20%', borderRadius: '50%', background: 'radial-gradient(circle, rgba(126,221,214,0.04) 0%, transparent 70%)', filter: 'blur(80px)', animation: 'slow-drift 25s ease-in-out infinite reverse, glow-pulse 5s ease-in-out infinite', pointerEvents: 'none' }} />
 
-      {/* Grid */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(232,130,155,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(232,130,155,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', opacity: 0.5 }} />
 
-      {/* Scanlines */}
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)', zIndex: 1 }} />
 
-      {/* Glitch overlay */}
       {glitch && (
         <div style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'none', background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(232,130,155,0.03) 2px, rgba(232,130,155,0.03) 4px)', animation: 'glitch-1 0.3s linear' }} />
       )}
 
-      {/* Logo phase */}
       {bootPhase === 'logo' && (
         <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 14, padding: 20 }}>
           <img
@@ -279,7 +264,6 @@ export default function BootScreen() {
         </div>
       )}
 
-      {/* Welcome phase */}
       {bootPhase === 'welcome' && (
         <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none', padding: 20 }}>
           <div style={{
@@ -292,7 +276,6 @@ export default function BootScreen() {
         </div>
       )}
 
-      {/* Terminal phase */}
       {bootPhase === 'terminal' && (
         <div style={{
           position: 'relative', zIndex: 2, display: 'flex',

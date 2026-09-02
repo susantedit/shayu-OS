@@ -104,7 +104,6 @@ export default function SearchBar() {
         transition: 'all 0.25s cubic-bezier(0.22, 1, 0.36, 1)',
       }}
     >
-      {/* Search input */}
       <div style={{
         background: focused
           ? 'linear-gradient(135deg, rgba(8,10,20,0.85) 0%, rgba(4,5,12,0.92) 50%, rgba(10,12,22,0.85) 100%)'
@@ -119,7 +118,6 @@ export default function SearchBar() {
         overflow: 'hidden',
         position: 'relative',
       }}>
-        {/* Shimmer sweep */}
         <div style={{
           position: 'absolute', inset: 0, pointerEvents: 'none',
           background: 'linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.02) 42%, rgba(255,255,255,0.04) 50%, rgba(255,255,255,0.02) 58%, transparent 65%)',
@@ -170,7 +168,6 @@ export default function SearchBar() {
           )}
         </div>
 
-        {/* Results dropdown */}
         <AnimatePresence>
           {focused && (
             <motion.div

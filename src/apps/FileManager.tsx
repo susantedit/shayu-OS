@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import {
+  Folder, File, FolderPlus, FilePlus, Edit3, FolderOpen, FileText
+} from 'lucide-react'
 import { useFileSystem } from '../store/fileSystem'
 import type { FSNode } from '../store/fileSystem'
 
@@ -10,10 +13,6 @@ function formatSize(bytes: number): string {
   if (bytes < 1024) return bytes + ' B'
   if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB'
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB'
-}
-
-function formatDate(ts: number): string {
-  return new Date(ts).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
 }
 
 export default function FileManager() {
@@ -54,13 +53,11 @@ export default function FileManager() {
     await updateContent(editingNode.id, editorText)
     setEditorDirty(false)
     setSaving(false)
-    // Update the local reference so the editor stays in sync
     setEditingNode(prev => prev ? { ...prev, content: editorText } : null)
   }
 
   const handleCloseEditor = () => {
     if (editorDirty) {
-      // Auto-save before closing
       handleSaveEditor().then(() => setEditingNode(null))
     } else {
       setEditingNode(null)
@@ -83,7 +80,9 @@ export default function FileManager() {
   if (!loaded) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--color-text-muted)', fontSize: 13, fontFamily: 'var(--font-sans)' }}>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: 24, marginBottom: 8, opacity: 0.5 }}>📂</div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 8, opacity: 0.5 }}>
+          <FolderOpen size={28} />
+        </div>
         Loading file system...
       </div>
     </div>
@@ -93,7 +92,6 @@ export default function FileManager() {
     <div style={{ display: 'flex', flexDirection: 'column', height: '100%', position: 'relative', fontFamily: 'var(--font-sans)' }}
       onClick={() => { setContextMenu(null); setShowCreate(false) }}>
 
-      {/* Toolbar */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px',
         borderBottom: '1px solid var(--color-border)',
@@ -139,8 +137,8 @@ export default function FileManager() {
                     borderRadius: 10, padding: 4, minWidth: 160,
                     boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 1px rgba(232,130,155,0.1)',
                   }} onClick={e => e.stopPropagation()}>
-                  <DropdownItem icon="📁" label="New Folder" onClick={() => { setCreatingType('folder'); setShowCreate(false); setNewName('') }} />
-                  <DropdownItem icon="📄" label="New File" onClick={() => { setCreatingType('file'); setShowCreate(false); setNewName('') }} />
+                  <DropdownItem icon={<FolderPlus size={14} style={{ color: '#FBBF24' }} />} label="New Folder" onClick={() => { setCreatingType('folder'); setShowCreate(false); setNewName('') }} />
+                  <DropdownItem icon={<FilePlus size={14} style={{ color: '#60A5FA' }} />} label="New File" onClick={() => { setCreatingType('file'); setShowCreate(false); setNewName('') }} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -148,13 +146,14 @@ export default function FileManager() {
         </div>
       </div>
 
-      {/* Create input */}
       <AnimatePresence>
         {creatingType && (
           <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}
             style={{ overflow: 'hidden', borderBottom: '1px solid var(--color-border)' }}>
             <div style={{ padding: '8px 14px', display: 'flex', gap: 8, alignItems: 'center' }}>
-              <span style={{ fontSize: 13, opacity: 0.5 }}>{creatingType === 'folder' ? '📁' : '📄'}</span>
+              <span style={{ display: 'flex', alignItems: 'center', opacity: 0.7 }}>
+                {creatingType === 'folder' ? <Folder size={14} style={{ color: '#FBBF24' }} /> : <File size={14} style={{ color: '#60A5FA' }} />}
+              </span>
               <input ref={inputRef} value={newName} onChange={e => setNewName(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') handleCreate(); if (e.key === 'Escape') { setCreatingType(null); setNewName('') } }}
                 placeholder={creatingType === 'folder' ? 'Folder name...' : 'File name...'}
@@ -164,11 +163,12 @@ export default function FileManager() {
         )}
       </AnimatePresence>
 
-      {/* Content */}
       <div style={{ flex: 1, overflowY: 'auto', padding: viewMode === 'grid' ? 14 : '0 14px' }}>
         {children.length === 0 && !creatingType ? (
           <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--color-text-muted)', fontSize: 13 }}>
-            <div style={{ fontSize: 36, marginBottom: 10, opacity: 0.4 }}>📂</div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 10, opacity: 0.4 }}>
+              <FolderOpen size={36} />
+            </div>
             <div style={{ fontWeight: 600, marginBottom: 4 }}>Empty folder</div>
             <div style={{ fontSize: 12, opacity: 0.6 }}>Create a file or folder to get started</div>
           </div>
@@ -198,21 +198,9 @@ export default function FileManager() {
                   <>
                     <div style={{ width: 36, height: 36, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       {node.type === 'folder' ? (
-                        <svg width="32" height="32" viewBox="0 0 56 56">
-                          <defs><linearGradient id={`fg-${node.id}`} x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-                            <stop offset="0%" stopColor="#FBBF24"/><stop offset="100%" stopColor="#F59E0B"/>
-                          </linearGradient></defs>
-                          <rect width="56" height="56" rx="12" fill={`url(#fg-${node.id})`} opacity="0.15"/>
-                          <path d="M14 16h12l4 4h12a2 2 0 012 2v16a2 2 0 01-2 2H14a2 2 0 01-2-2V18a2 2 0 012-2z" fill="#FBBF24" opacity="0.8"/>
-                        </svg>
+                        <Folder size={32} style={{ color: '#FBBF24' }} />
                       ) : (
-                        <svg width="32" height="32" viewBox="0 0 56 56">
-                          <rect width="56" height="56" rx="12" fill="rgba(147,197,253,0.1)"/>
-                          <rect x="14" y="8" width="28" height="40" rx="3" fill="none" stroke="var(--color-sky)" strokeWidth="2" opacity="0.5"/>
-                          <line x1="20" y1="20" x2="36" y2="20" stroke="var(--color-sky)" strokeWidth="1.5" opacity="0.3" strokeLinecap="round"/>
-                          <line x1="20" y1="26" x2="32" y2="26" stroke="var(--color-sky)" strokeWidth="1.5" opacity="0.2" strokeLinecap="round"/>
-                          <line x1="20" y1="32" x2="34" y2="32" stroke="var(--color-sky)" strokeWidth="1.5" opacity="0.2" strokeLinecap="round"/>
-                        </svg>
+                        <FileText size={30} style={{ color: '#60A5FA' }} />
                       )}
                     </div>
                     <span style={{
@@ -226,61 +214,35 @@ export default function FileManager() {
             ))}
           </div>
         ) : (
-          <div>
-            <div style={{
-              display: 'grid', gridTemplateColumns: '1fr 80px 120px',
-              padding: '8px 8px 6px', fontSize: 10, color: 'var(--color-text-muted)',
-              fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.8,
-              borderBottom: '1px solid var(--color-border)',
-            }}>
-              <span>Name</span><span>Size</span><span>Modified</span>
-            </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
             {children.map(node => (
               <div key={node.id}
                 onClick={e => { e.stopPropagation(); setSelected(node.id) }}
                 onDoubleClick={() => handleDoubleClick(node)}
                 onContextMenu={e => { e.preventDefault(); e.stopPropagation(); setContextMenu({ x: e.clientX, y: e.clientY, nodeId: node.id }) }}
                 style={{
-                  display: 'grid', gridTemplateColumns: '1fr 80px 120px', alignItems: 'center',
-                  padding: '7px 8px', borderRadius: 8, cursor: 'pointer',
-                  background: selected === node.id ? 'rgba(147,197,253,0.08)' : 'transparent',
-                  transition: 'background 0.15s',
-                  borderBottom: '1px solid transparent',
-                }}
-                onMouseEnter={e => { if (selected !== node.id) e.currentTarget.style.background = 'rgba(255,255,255,0.02)' }}
-                onMouseLeave={e => { if (selected !== node.id) e.currentTarget.style.background = 'transparent' }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, overflow: 'hidden' }}>
-                  {node.type === 'folder' ? (
-                    <svg width="18" height="18" viewBox="0 0 56 56" style={{ flexShrink: 0 }}>
-                      <rect width="56" height="56" rx="12" fill="rgba(251,191,36,0.12)"/>
-                      <path d="M14 16h12l4 4h12a2 2 0 012 2v16a2 2 0 01-2 2H14a2 2 0 01-2-2V18a2 2 0 012-2z" fill="#FBBF24" opacity="0.8"/>
-                    </svg>
-                  ) : (
-                    <svg width="18" height="18" viewBox="0 0 56 56" style={{ flexShrink: 0 }}>
-                      <rect width="56" height="56" rx="12" fill="rgba(147,197,253,0.1)"/>
-                      <rect x="14" y="8" width="28" height="40" rx="3" fill="none" stroke="var(--color-sky)" strokeWidth="2.5" opacity="0.5"/>
-                    </svg>
-                  )}
-                  {renamingId === node.id ? (
-                    <input ref={renameRef} value={renameValue} onChange={e => setRenameValue(e.target.value)}
-                      onKeyDown={e => { if (e.key === 'Enter') handleRename(node.id); if (e.key === 'Escape') setRenamingId(null) }}
-                      onBlur={() => handleRename(node.id)}
-                      style={{ ...inputStyle, width: 180, fontSize: 12, padding: '3px 8px' }}
-                      onClick={e => e.stopPropagation()} />
-                  ) : (
-                    <span style={{ fontSize: 12, color: 'var(--color-text-primary)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{node.name}</span>
-                  )}
-                </div>
-                <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{node.type === 'folder' ? '--' : formatSize(node.size)}</span>
-                <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>{formatDate(node.modified)}</span>
+                  display: 'flex', alignItems: 'center', gap: 10, padding: '7px 8px',
+                  borderRadius: 6, cursor: 'pointer',
+                  background: selected === node.id ? 'rgba(147,197,253,0.1)' : 'transparent',
+                  transition: 'background 0.1s',
+                }}>
+                {node.type === 'folder' ? (
+                  <Folder size={16} style={{ color: '#FBBF24' }} />
+                ) : (
+                  <FileText size={16} style={{ color: '#60A5FA' }} />
+                )}
+                <span style={{ flex: 1, fontSize: 12, color: selected === node.id ? 'var(--color-sky)' : 'var(--color-text-primary)' }}>
+                  {node.name}
+                </span>
+                <span style={{ fontSize: 10, color: 'var(--color-text-muted)', fontFamily: 'var(--font-mono)' }}>
+                  {formatSize(node.size || 0)}
+                </span>
               </div>
             ))}
           </div>
         )}
       </div>
 
-      {/* Status bar */}
       <div style={{
         padding: '5px 14px', borderTop: '1px solid var(--color-border)',
         background: 'var(--color-window-header)',
@@ -291,7 +253,6 @@ export default function FileManager() {
         {selected && <span style={{ opacity: 0.7 }}>{getPath(selected)}</span>}
       </div>
 
-      {/* Context menu */}
       <AnimatePresence>
         {contextMenu && (() => {
           const node = getNode(contextMenu.nodeId)
@@ -306,18 +267,17 @@ export default function FileManager() {
                 boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 1px rgba(232,130,155,0.1)',
               }}>
               {node.type === 'folder' && (
-                <DropdownItem icon="📂" label="Open" onClick={() => { setCurrentFolder(node.id); setContextMenu(null) }} />
+                <DropdownItem icon={<FolderOpen size={14} style={{ color: '#FBBF24' }} />} label="Open" onClick={() => { setCurrentFolder(node.id); setContextMenu(null) }} />
               )}
               {node.type === 'file' && (
-                <DropdownItem icon="📝" label="Open" onClick={() => { setEditingNode(node); setEditorText(node.content || ''); setEditorDirty(false); setContextMenu(null) }} />
+                <DropdownItem icon={<FileText size={14} style={{ color: '#60A5FA' }} />} label="Open" onClick={() => { setEditingNode(node); setEditorText(node.content || ''); setEditorDirty(false); setContextMenu(null) }} />
               )}
-              <DropdownItem icon="✏️" label="Rename" onClick={() => { setRenamingId(node.id); setRenameValue(node.name); setContextMenu(null) }} />
+              <DropdownItem icon={<Edit3 size={14} style={{ color: 'var(--color-sakura)' }} />} label="Rename" onClick={() => { setRenamingId(node.id); setRenameValue(node.name); setContextMenu(null) }} />
             </motion.div>
           )
         })()}
       </AnimatePresence>
 
-      {/* Editor panel */}
       <AnimatePresence>
         {editingNode && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -349,14 +309,11 @@ export default function FileManager() {
               value={editorText}
               onChange={e => { setEditorText(e.target.value); setEditorDirty(true) }}
               onKeyDown={e => {
-                // Ctrl+S to save
                 if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                   e.preventDefault()
                   handleSaveEditor()
                 }
-                // Escape to close
                 if (e.key === 'Escape') handleCloseEditor()
-                // Tab inserts spaces instead of changing focus
                 if (e.key === 'Tab') {
                   e.preventDefault()
                   const ta = e.currentTarget
@@ -367,7 +324,7 @@ export default function FileManager() {
                   setTimeout(() => { ta.selectionStart = ta.selectionEnd = start + 2 }, 0)
                 }
               }}
-              placeholder="Start typing..."
+              placeholder="Type content here..."
               spellCheck={false}
               style={{
                 flex: 1, resize: 'none', padding: '16px 20px',
@@ -410,7 +367,7 @@ const ToolbarBtn = ({ onClick, title, disabled, accent, children }: {
   >{children}</button>
 )
 
-const DropdownItem = ({ icon, label, onClick, danger }: { icon: string; label: string; onClick: () => void; danger?: boolean }) => (
+const DropdownItem = ({ icon, label, onClick, danger }: { icon: React.ReactNode; label: string; onClick: () => void; danger?: boolean }) => (
   <button onClick={onClick} style={{
     display: 'flex', alignItems: 'center', gap: 8, width: '100%',
     padding: '7px 10px', border: 'none', borderRadius: 6,
@@ -420,7 +377,10 @@ const DropdownItem = ({ icon, label, onClick, danger }: { icon: string; label: s
   }}
     onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
     onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
-  ><span style={{ fontSize: 13 }}>{icon}</span>{label}</button>
+  >
+    <span style={{ display: 'flex', alignItems: 'center' }}>{icon}</span>
+    <span>{label}</span>
+  </button>
 )
 
 const inputStyle: React.CSSProperties = {

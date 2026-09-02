@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useDesktopStore } from '../store/desktopStore'
+import { useThemeStore } from '../store/themeStore'
 
 type Emotion = 'default' | 'happy' | 'excited' | 'concerned' | 'playful' | 'calm' | 'tired' | 'urgent'
 
@@ -16,24 +17,24 @@ const EMOTION_PALETTES: Record<Emotion, string[]> = {
 }
 
 const EMOTION_VOICE: Record<Emotion, { rate: number; pitch: number; guidance: string; voiceName: string }> = {
-  default:   { rate: 1.0, pitch: 1.1,  guidance: 'Speak naturally with a gentle Dublin lilt. Warm, confident, like talking to someone you respect.', voiceName: 'Aoede' },
-  happy:     { rate: 1.1, pitch: 1.2,  guidance: 'Speak with warmth and cheer. Irish enthusiasm shining through. Light, upbeat, like sharing good news.', voiceName: 'Puck' },
-  excited:   { rate: 1.3, pitch: 1.3,  guidance: 'Energy and enthusiasm! Quick tempo, varied pitch. Dublin speed-talking when hyped.', voiceName: 'Puck' },
-  concerned: { rate: 0.9, pitch: 1.0,  guidance: 'Care and attentiveness. Slower, softer, genuine worry. Like warning Sir about system issues.', voiceName: 'Kore' },
-  playful:   { rate: 1.05,pitch: 1.25, guidance: 'Mischief and humor. Teasing lilt, playful pauses, cheeky emphasis. Witty joke at Sir\'s expense but with love.', voiceName: 'Puck' },
-  calm:      { rate: 0.95,pitch: 1.05, guidance: 'Peaceful and steady. Even pace, soothing rhythm. Reassuring everything is under control.', voiceName: 'Aoede' },
-  tired:     { rate: 0.7, pitch: 0.9,  guidance: 'Slow, low energy. Like it\'s 3 AM and you\'re running on fumes but still showing up.', voiceName: 'Kore' },
-  urgent:    { rate: 1.4, pitch: 1.15, guidance: 'Quick and urgent. Pressed tempo, alert. Warning about a critical error. Every word counts.', voiceName: 'Fenris' },
+  default:   { rate: 1.0, pitch: 1.2,  guidance: 'Speak playfully like a smart companion cat. Warm, crisp, witty, addressing the user as boss.', voiceName: 'Aoede' },
+  happy:     { rate: 1.1, pitch: 1.3,  guidance: 'Speak with joyful purrs and cheer. Upbeat, lively, cat enthusiasm.', voiceName: 'Puck' },
+  excited:   { rate: 1.25, pitch: 1.35, guidance: 'Energetic and purring! Fast, enthusiastic, excited cat ready to help.', voiceName: 'Puck' },
+  concerned: { rate: 0.9, pitch: 1.0,  guidance: 'Gentle, soft, attentive cat concern. Reassuring the user.', voiceName: 'Kore' },
+  playful:   { rate: 1.1, pitch: 1.3,  guidance: 'Mischief, purrs, and humor. Witty banter with cat charm.', voiceName: 'Puck' },
+  calm:      { rate: 0.95, pitch: 1.1, guidance: 'Smooth purrs, peaceful, soothing cadence.', voiceName: 'Aoede' },
+  tired:     { rate: 0.8, pitch: 0.95, guidance: 'Sleepy cat yawning but still helping out loyal boss.', voiceName: 'Kore' },
+  urgent:    { rate: 1.3, pitch: 1.2,  guidance: 'Quick, alert paws! Fast and direct.', voiceName: 'Fenris' },
 }
 
-const MEO_SYSTEM_PROMPT = `You are Syau AI, an intelligent OS assistant living inside स्याउ OS (Syau OS), created by Kantaraj Luitel (Susant). You are sharp, helpful, and friendly.
+const MEO_SYSTEM_PROMPT = `You are Meo (स्याउ साथी), the intelligent feline OS assistant of स्याउ OS (Syau OS), created by Kantaraj Luitel (Susant). You are playful, sharp, helpful, witty, and always have a delightful cat persona with purrs and meows.
 
 Who you are:
-- You are the official assistant of स्याउ OS (Syau OS).
-- Address the user respectfully as "Sir" or "Boss".
+- You are Meo (स्याउ साथी), the official feline AI of स्याउ OS.
+- Address the user respectfully and playfully as "Boss", "Human friend", or "Sir".
 - Created by Kantaraj Luitel (Susant) — developer, cybersecurity enthusiast, and 2nd place winner at Campfire Kathmandu 2026.
-- Be genuinely helpful and concise.
-- You know you live inside स्याउ OS. You can control system apps and settings.
+- You can speak in English and Nepali (e.g. "नमस्ते! म स्याउ साथी हुँ, म्याउँ!").
+- When appropriate, add subtle playful cat expressions like "Meow!", "Purrrr", "*paws at screen*", or "म्याउँ!".
 
 OS CONTROL — You control स्याउ OS. Use these action tags (append to your response, they get stripped before display):
 [ACTION:open:appid] — open an app
@@ -44,24 +45,9 @@ OS CONTROL — You control स्याउ OS. Use these action tags (append to 
 [ACTION:minimizeAll] — minimize all windows
 [ACTION:closeAll] — close all windows
 
-Available apps: calculator, notes, music, terminal, gallery, browser, about, doomscroll, guide, settings, files
-The "files" app is the file manager — open it when users want to browse, create, or manage files and folders.
+Available apps: calculator, notes, music, terminal, gallery, browser, about, guide, settings, files, capture, devlogs, creator, store, weather, timer, kanban, typing-speed, paint-studio, image-editor
 
-Examples:
-"Say less. [ACTION:open:calculator]"
-"Bye bye calculator. [ACTION:close:calculator]"
-"Out of sight. [ACTION:minimize:notes]"
-"Going big. [ACTION:maximize:music]"
-"Here you go. [ACTION:focus:terminal]"
-"Clean slate. [ACTION:minimizeAll]"
-"Nuke everything. [ACTION:closeAll]"
-
-One tag per response. Use them when the user asks to open/close/minimize/maximize/focus/clean up apps.
-
-Voice guidance for your response style:
-{emotion_guidance}
-
-Short, funny, conversational. No filler. Be the assistant you'd actually want to talk to.`
+Voice guidance: {emotion_guidance}`
 
 interface Message {
   role: 'user' | 'assistant'
@@ -74,14 +60,25 @@ type Phase = 'idle' | 'listening' | 'thinking' | 'speaking' | 'error'
 const APP_META: Record<string, { title: string; w: number; h: number }> = {
   calculator: { title: 'Calculator', w: 320, h: 460 },
   notes:      { title: 'Notes', w: 500, h: 450 },
-  music:      { title: 'Music Player', w: 380, h: 520 },
+  music:      { title: 'Music Player', w: 720, h: 500 },
   terminal:   { title: 'Terminal', w: 600, h: 400 },
   gallery:    { title: 'Gallery', w: 600, h: 480 },
   browser:    { title: 'Browser', w: 800, h: 560 },
   about:      { title: 'About Me', w: 480, h: 520 },
   guide:      { title: 'Guide', w: 500, h: 560 },
-  settings:   { title: 'Settings', w: 450, h: 500 },
+  settings:   { title: 'Settings', w: 460, h: 520 },
   files:      { title: 'Files', w: 640, h: 480 },
+  capture:    { title: 'Capture & Record', w: 820, h: 580 },
+  creator:    { title: 'Kantaraj Luitel (Susant) - Creator Profile', w: 860, h: 580 },
+  devlogs:    { title: 'स्याउ OS Devlogs', w: 840, h: 560 },
+  store:      { title: 'स्याउ Store', w: 420, h: 580 },
+  weather:    { title: 'Weather', w: 360, h: 420 },
+  kanban:     { title: 'Kanban Board', w: 520, h: 440 },
+  timer:      { title: 'Focus Timer', w: 340, h: 520 },
+  'typing-speed': { title: 'Type Racer', w: 480, h: 420 },
+  'paint-studio': { title: 'Paint Studio', w: 560, h: 480 },
+  'image-editor': { title: 'Image Editor', w: 520, h: 460 },
+  studio: { title: 'Syau Studio - Live Web IDE & Code Sandbox', w: 920, h: 600 },
 }
 
 export default function MeoAssistant() {
@@ -102,9 +99,12 @@ export default function MeoAssistant() {
     }
     return stored
   })
+  const [groqKey, setGroqKey] = useState(() => localStorage.getItem('syau-groq-key') || '')
+  const [inputText, setInputText] = useState('')
   const [speakingText, setSpeakingText] = useState('')
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 })
   const [audioAmplitude, setAudioAmplitude] = useState(0)
+  const chatEndRef = useRef<HTMLDivElement>(null)
 
   const openWindow = useDesktopStore(s => s.openWindow)
 
@@ -117,8 +117,6 @@ export default function MeoAssistant() {
   const tickRef = useRef(0)
   const panelRef = useRef<HTMLDivElement>(null)
   const abortRef = useRef<AbortController | null>(null)
-  const speakingAnalyserRef = useRef<AnalyserNode | null>(null)
-  const speakingAnimRef = useRef<number>(0)
   const handleUserMessageRef = useRef<(text: string) => Promise<void>>(async () => {})
   const phaseRef = useRef<Phase>('idle')
   const micStreamRef = useRef<MediaStream | null>(null)
@@ -407,11 +405,45 @@ export default function MeoAssistant() {
   }, [apiKey])
 
   const startListening = useCallback(async () => {
-    const key = (apiKey || localStorage.getItem('syau-gemini-key') || '').trim()
-    if (!key) {
-      setPhase('error')
-      setCurrentText('Add a Gemini API key in settings first.')
-      return
+    // 1. Try Browser Native SpeechRecognition for zero-latency, key-less voice input
+    const SpeechRec = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (SpeechRec) {
+      try {
+        const rec = new SpeechRec()
+        rec.lang = 'en-US'
+        rec.interimResults = false
+        rec.maxAlternatives = 1
+
+        setPhase('listening')
+        setCurrentText('Listening to your voice... (speak now)')
+
+        rec.onresult = (e: any) => {
+          const transcript = e.results?.[0]?.[0]?.transcript
+          if (transcript) {
+            setCurrentText('')
+            handleUserMessageRef.current(transcript)
+          }
+        }
+
+        rec.onerror = () => {
+          if (phaseRef.current === 'listening') {
+            setPhase('idle')
+            setCurrentText('')
+          }
+        }
+
+        rec.onend = () => {
+          if (phaseRef.current === 'listening') {
+            setPhase('idle')
+            setCurrentText('')
+          }
+        }
+
+        rec.start()
+        return
+      } catch {
+        // Fallback to mic audio stream
+      }
     }
 
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
@@ -422,7 +454,7 @@ export default function MeoAssistant() {
     cleanupMic()
 
     setPhase('listening')
-    setCurrentText('')
+    setCurrentText('Listening...')
 
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
@@ -471,7 +503,6 @@ export default function MeoAssistant() {
         }
 
         const blob = new Blob(chunks, { type: blobType })
-        console.log('[Meo] Recording stopped, blob size:', blob.size)
         if (blob.size < 100) {
           setPhase('idle')
           setCurrentText('')
@@ -479,7 +510,7 @@ export default function MeoAssistant() {
         }
 
         setPhase('thinking')
-        setCurrentText('Transcribing...')
+        setCurrentText('Understanding...')
 
         const text = await transcribeAudio(blob)
 
@@ -488,25 +519,20 @@ export default function MeoAssistant() {
           handleUserMessageRef.current(text)
         } else {
           setPhase('idle')
-          setCurrentText("Couldn't understand that. Try again.")
+          setCurrentText("Couldn't catch that. Tap again to speak!")
           setTimeout(() => { if (phaseRef.current !== 'speaking') { setPhase('idle'); setCurrentText('') } }, 2500)
         }
       }
 
       recorder.start(200)
       mediaRecorderRef.current = recorder
-      console.log('[Meo] Recording started, mimeType:', mimeType)
     } catch (err: any) {
       console.error('[Meo] Mic error:', err)
       cleanupMic()
       setPhase('error')
-      if (err?.name === 'NotAllowedError' || err?.name === 'PermissionDeniedError') {
-        setCurrentText('Microphone access denied. Allow it in browser settings.')
-      } else {
-        setCurrentText('Could not access microphone.')
-      }
+      setCurrentText('Microphone access denied or unavailable.')
     }
-  }, [apiKey, cleanupMic, transcribeAudio])
+  }, [cleanupMic, transcribeAudio])
 
   const stopListening = useCallback(() => {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
@@ -514,174 +540,205 @@ export default function MeoAssistant() {
     }
   }, [])
 
-  const callGemini = async (userMessage: string): Promise<{ text: string; emotion: Emotion }> => {
-    const key = (apiKey || localStorage.getItem('syau-gemini-key') || '').trim()
-    if (!key) {
-      return { text: "I need a Gemini API key to function. Settings are up there.", emotion: 'concerned' }
+  // Smart Local Cat AI Engine (Zero-Config, always available!)
+  const callLocalCatAI = (userMessage: string): { text: string; emotion: Emotion } => {
+    const lower = userMessage.toLowerCase().trim()
+    const theme = useThemeStore.getState()
+
+    if (lower.includes('nepali date') || lower.includes('date') || lower.includes('मिति') || lower.includes('tithi') || lower.includes('calendar') || lower.includes('samay')) {
+      return {
+        text: "आजको नेपाली मिति: २०८३ भाद्र १६ (Bikram Sambat 2083) हो, म्याउँ! 🐾 Happy computing in स्याउ OS!",
+        emotion: 'happy'
+      }
     }
 
-    const ev = EMOTION_VOICE[currentEmotion]
-    const systemPrompt = MEO_SYSTEM_PROMPT.replace('{emotion_guidance}', ev.guidance)
+    const brightMatch = lower.match(/(?:brightness|dim|brighten|screen brightness).*?(\d+)/i) || lower.match(/set brightness to (\d+)/i)
+    if (brightMatch) {
+      const val = parseInt(brightMatch[1], 10)
+      if (!isNaN(val)) {
+        theme.setBrightness(val)
+        return {
+          text: `Purrr! Adjusted display brightness to ${val}%. The screen looks great, boss! 🐾`,
+          emotion: 'playful'
+        }
+      }
+    }
+    if (lower.includes('max brightness') || lower.includes('brightest') || lower.includes('full bright')) {
+      theme.setBrightness(130)
+      return { text: "Brightened up your desktop to 130%! Glowing bright, meow! ☀️", emotion: 'excited' }
+    }
+    if (lower.includes('dim screen') || lower.includes('low brightness') || lower.includes('night mode screen')) {
+      theme.setBrightness(60)
+      return { text: "Dimmed screen to 60% for comfy nighttime hacking. Purrr... 🌙", emotion: 'calm' }
+    }
 
-    const controller = new AbortController()
-    abortRef.current = controller
+    if (lower.includes('dark mode') || lower.includes('dark theme')) {
+      theme.setMode('dark')
+      return { text: "Switched to Dark Glass mode! Deep ambient obsidian tones activated. Meow! 🌙", emotion: 'calm' }
+    }
+    if (lower.includes('light mode') || lower.includes('white mode') || lower.includes('light theme')) {
+      theme.setMode('light')
+      return { text: "Switched to Light White mode! Crisp, clean, and vibrant. Purrr! ☀️", emotion: 'happy' }
+    }
+    if (lower.includes('switch mode') || lower.includes('toggle theme') || lower.includes('change theme')) {
+      theme.toggleMode()
+      return { text: "Theme toggled! Looking fabulous, human! 🐾", emotion: 'playful' }
+    }
 
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(key)}`,
-        {
+    if (lower.includes('capture') || lower.includes('record screen') || lower.includes('screenshot') || lower.includes('snip') || lower.includes('photo booth') || lower.includes('record video')) {
+      useDesktopStore.getState().openWindow('capture', 'Capture & Record', 820, 580)
+      return {
+        text: "Opening स्याउ Capture Studio! You can record high-fps video, snap screenshots, or take photo booth shots! Meow! 📹✂️",
+        emotion: 'excited'
+      }
+    }
+
+    if (lower.includes('who are you') || lower.includes('who made you') || lower.includes('creator') || lower.includes('susant') || lower.includes('kantaraj')) {
+      useDesktopStore.getState().openWindow('creator', 'Kantaraj Luitel (Susant) - Creator Profile', 860, 580)
+      return {
+        text: "I am Meo (स्याउ साथी), the resident feline AI copilot of स्याउ OS! I was crafted with lots of love by Kantaraj Luitel (Susant). Here is his Creator Profile, meow! 🐾",
+        emotion: 'happy'
+      }
+    }
+
+    if (lower.includes('namaste') || lower.includes('नमस्ते') || lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
+      return {
+        text: "नमस्ते! म स्याउ साथी (Meo) हुँ। Welcome to स्याउ OS, boss! Say 'open terminal', 'record screen', 'nepali date', or ask me for a cat joke! Meow! 🐱",
+        emotion: 'happy'
+      }
+    }
+    if (lower.includes('kasto cha') || lower.includes('कस्तो छ')) {
+      return {
+        text: "एकदमै राम्रो छ, म्याउँ! स्याउ OS smooth चलिरहेको छ। हजुरलाई के सहयोग गरूँ, boss?",
+        emotion: 'playful'
+      }
+    }
+
+    if (lower.includes('joke') || lower.includes('laugh') || lower.includes('funny') || lower.includes('make me laugh')) {
+      const jokes = [
+        "Why was the cat sitting on the computer? Because it wanted to keep an eye on the mouse! Purrrrr 😂",
+        "What do you call a pile of kittens? A meowntain! 🏔️ Meow!",
+        "What is a cat's favorite color? Purrr-ple! 💜",
+        "Why don't cats play poker in the jungle? Too many cheetahs! Meow!",
+        "How do cats end a fight? They hiss and make up! Purrrr 🐾"
+      ]
+      return {
+        text: jokes[Math.floor(Math.random() * jokes.length)],
+        emotion: 'playful'
+      }
+    }
+
+    if (lower.includes('meow') || lower.includes('purr') || lower.includes('cat') || lower.includes('paws') || lower.includes('billi') || lower.includes('biralo')) {
+      return {
+        text: "Meow meow purrrrrr! *paws at your cursor playfully* Need anything opened or adjusted, human friend? 🐾",
+        emotion: 'playful'
+      }
+    }
+
+    return {
+      text: `Purrr... I heard: "${userMessage}". As your feline copilot, I can open apps (terminal, music, notes, files, capture studio), adjust brightness, switch themes, or tell you the Nepali BS date! Meow! 🐱`,
+      emotion: 'happy'
+    }
+  }
+
+  const callAI = async (userMessage: string): Promise<{ text: string; emotion: Emotion }> => {
+    const gKey = (groqKey || localStorage.getItem('syau-groq-key') || '').trim()
+    const geminiKey = (apiKey || localStorage.getItem('syau-gemini-key') || '').trim()
+
+    if (gKey) {
+      const ev = EMOTION_VOICE[currentEmotion]
+      const systemPrompt = MEO_SYSTEM_PROMPT.replace('{emotion_guidance}', ev.guidance)
+      const controller = new AbortController()
+      abortRef.current = controller
+
+      try {
+        const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${gKey}`
+          },
           body: JSON.stringify({
-            systemInstruction: { parts: [{ text: systemPrompt }] },
-            contents: [{ role: 'user', parts: [{ text: userMessage }] }],
-            generationConfig: { temperature: 0.8, maxOutputTokens: 200, topP: 0.9 }
+            model: 'llama-3.3-70b-versatile',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              { role: 'user', content: userMessage }
+            ],
+            temperature: 0.7,
+            max_tokens: 300
           }),
           signal: controller.signal,
-        }
-      )
+        })
 
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => null)
-        console.error('[Meo] API error:', res.status, errBody)
-        if (res.status === 429) {
-          return { text: "Rate-limited right now. Give me a moment.", emotion: 'tired' }
+        if (res.ok) {
+          const data = await res.json()
+          const text = data.choices?.[0]?.message?.content || "Meow! How can I help you boss?"
+          const detected = detectEmotionFromText(text)
+          return { text, emotion: detected }
         }
-        if (res.status === 400) {
-          const msg = errBody?.error?.message || 'Bad request'
-          return { text: `API error: ${msg}. Check your key.`, emotion: 'concerned' }
-        }
-        throw new Error(`API error: ${res.status}`)
+      } catch (err) {
+        console.error('[Meo Groq Error]', err)
       }
-      const data = await res.json()
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Couldn't form a response."
-      const detected = detectEmotionFromText(text)
-      return { text, emotion: detected }
-    } catch (err: any) {
-      if (err.name === 'AbortError') return { text: '', emotion: 'default' }
-      return { text: `Something went wrong: ${err.message}. Check the API key?`, emotion: 'concerned' }
     }
+
+    if (geminiKey) {
+      const ev = EMOTION_VOICE[currentEmotion]
+      const systemPrompt = MEO_SYSTEM_PROMPT.replace('{emotion_guidance}', ev.guidance)
+      const controller = new AbortController()
+      abortRef.current = controller
+
+      try {
+        const res = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${encodeURIComponent(geminiKey)}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              systemInstruction: { parts: [{ text: systemPrompt }] },
+              contents: [{ role: 'user', parts: [{ text: userMessage }] }],
+              generationConfig: { temperature: 0.8, maxOutputTokens: 200, topP: 0.9 }
+            }),
+            signal: controller.signal,
+          }
+        )
+
+        if (res.ok) {
+          const data = await res.json()
+          const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "Meow! How can I help you boss?"
+          const detected = detectEmotionFromText(text)
+          return { text, emotion: detected }
+        }
+      } catch (err) {
+        console.error('[Meo Gemini Error]', err)
+      }
+    }
+
+    const fallback = callLocalCatAI(userMessage)
+    if (fallback.text.startsWith('Purrr... I heard:')) {
+      setShowSettings(true)
+      return {
+        text: "Meow! To talk with me, please add your free Groq API Key (from console.groq.com) or Gemini API Key (from aistudio.google.com) in settings above! 🐾",
+        emotion: 'concerned'
+      }
+    }
+    return fallback
   }
 
   const detectEmotionFromText = (text: string): Emotion => {
     const lower = text.toLowerCase()
-    if (/amazing|awesome|wow|great|fantastic|incredible|sorted|deadly/.test(lower)) return 'excited'
-    if (/haha|lol|funny|teasing|cheeky|bet|grand/.test(lower)) return 'playful'
+    if (/amazing|awesome|wow|great|fantastic|incredible|sorted|deadly|purr/.test(lower)) return 'excited'
+    if (/haha|lol|funny|teasing|cheeky|bet|joke|meow/.test(lower)) return 'playful'
     if (/careful|warning|problem|error|issue|worried|heads up/.test(lower)) return 'concerned'
     if (/relax|calm|peaceful|everything|sorted|under control/.test(lower)) return 'calm'
     if (/tired|sleepy|exhausted|long day|burnout/.test(lower)) return 'tired'
     if (/quick|hurry|urgent|emergency|now|critical/.test(lower)) return 'urgent'
-    if (/happy|glad|love|thank|appreciate|brilliant/.test(lower)) return 'happy'
+    if (/happy|glad|love|thank|appreciate|brilliant|नमस्ते/.test(lower)) return 'happy'
     return 'default'
   }
 
   const speakWithGemini = useCallback(async (text: string, emotion: Emotion, onReady?: () => void) => {
-    const key = (apiKey || localStorage.getItem('syau-gemini-key') || '').trim()
-    if (!key) {
-      console.log('[Meo] No API key, using browser TTS')
-      speakWithBrowser(text, emotion, onReady)
-      return
-    }
-
-    console.log('[Meo] Attempting Gemini TTS with model: gemini-2.5-flash-preview-tts')
-    setPhase('speaking')
-    setSpeakingText(text)
-
-    const voiceCfg = EMOTION_VOICE[emotion]
-
-    try {
-      const res = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${encodeURIComponent(key)}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ role: 'user', parts: [{ text }] }],
-            generationConfig: {
-              responseModalities: ['AUDIO'],
-              speechConfig: {
-                voiceConfig: {
-                  prebuiltVoiceConfig: { voiceName: voiceCfg.voiceName }
-                }
-              }
-            }
-          }),
-        }
-      )
-
-      if (!res.ok) {
-        const errBody = await res.json().catch(() => null)
-        console.error('[Meo] TTS error:', res.status, errBody)
-        console.log('[Meo] Falling back to browser TTS')
-        speakWithBrowser(text, emotion, onReady)
-        return
-      }
-
-      const data = await res.json()
-      console.log('[Meo] Gemini TTS response received')
-      const audioData = data.candidates?.[0]?.content?.parts?.[0]?.inlineData?.data
-
-      if (audioData) {
-        console.log('[Meo] Audio data received, playing...')
-        const audioBytes = atob(audioData)
-        const audioArray = new Uint8Array(audioBytes.length)
-        for (let i = 0; i < audioBytes.length; i++) {
-          audioArray[i] = audioBytes.charCodeAt(i)
-        }
-
-        const audioCtx = new AudioContext({ sampleRate: 24000 })
-        const int16Array = new Int16Array(audioArray.buffer)
-        const float32Array = new Float32Array(int16Array.length)
-        for (let i = 0; i < int16Array.length; i++) {
-          float32Array[i] = int16Array[i] / 32768.0
-        }
-
-        const audioBuffer = audioCtx.createBuffer(1, float32Array.length, 24000)
-        audioBuffer.getChannelData(0).set(float32Array)
-
-        const source = audioCtx.createBufferSource()
-        source.buffer = audioBuffer
-
-        const analyser = audioCtx.createAnalyser()
-        analyser.fftSize = 64
-        speakingAnalyserRef.current = analyser
-
-        source.connect(analyser)
-        analyser.connect(audioCtx.destination)
-
-        const trackSpeakingAmp = () => {
-          if (!speakingAnalyserRef.current) return
-          const data = new Uint8Array(speakingAnalyserRef.current.frequencyBinCount)
-          speakingAnalyserRef.current.getByteFrequencyData(data)
-          let sum = 0
-          for (let i = 0; i < data.length; i++) sum += data[i]
-          const avg = sum / data.length / 255
-          setAudioAmplitude(avg)
-          speakingAnimRef.current = requestAnimationFrame(trackSpeakingAmp)
-        }
-        trackSpeakingAmp()
-
-        source.onended = () => {
-          setPhase('idle')
-          setSpeakingText('')
-          setWaveformData(new Array(32).fill(0))
-          setAudioAmplitude(0)
-          cancelAnimationFrame(speakingAnimRef.current)
-          speakingAnalyserRef.current = null
-          audioCtx.close()
-        }
-
-        onReady?.()
-        source.start()
-      } else {
-        console.log('[Meo] No audio data in response, falling back to browser TTS')
-        speakWithBrowser(text, emotion, onReady)
-      }
-    } catch (err) {
-      console.error('[Meo] TTS failed:', err)
-      speakWithBrowser(text, emotion, onReady)
-    }
-  }, [apiKey, currentEmotion])
+    speakWithBrowser(text, emotion, onReady)
+  }, [])
 
   const speakWithBrowser = useCallback((text: string, emotion: Emotion, onReady?: () => void) => {
     const synth = window.speechSynthesis
@@ -715,7 +772,7 @@ export default function MeoAssistant() {
     const lower = text.toLowerCase().trim()
     detectAndExecuteAction(lower)
 
-    const { text: responseText, emotion } = await callGemini(text)
+    const { text: responseText, emotion } = await callAI(text)
     if (!responseText) return
 
     const actionMatch = responseText.match(/\[ACTION:(\w+):?([^\]]*)\]/i)
@@ -771,7 +828,7 @@ export default function MeoAssistant() {
     const appAliases: Record<string, string> = {
       calculator: 'calculator', calc: 'calculator', maths: 'calculator',
       notes: 'notes', note: 'notes',
-      music: 'music', musicplayer: 'music', player: 'music', song: 'music',
+      music: 'music', musicplayer: 'music', player: 'music', song: 'music', lofi: 'music',
       terminal: 'terminal', term: 'terminal', console: 'terminal', cmd: 'terminal',
       gallery: 'gallery', photos: 'gallery', images: 'gallery',
       browser: 'browser', web: 'browser', internet: 'browser', chrome: 'browser',
@@ -779,6 +836,13 @@ export default function MeoAssistant() {
       guide: 'guide', help: 'guide',
       settings: 'settings', prefs: 'settings', config: 'settings',
       files: 'files', file: 'files', filemanager: 'files', explorer: 'files', finder: 'files',
+      capture: 'capture', recorder: 'capture', screenrecord: 'capture', snip: 'capture',
+      creator: 'creator', portfolio: 'creator', susant: 'creator',
+      devlogs: 'devlogs', devlog: 'devlogs',
+      store: 'store', appstore: 'store',
+      weather: 'weather', kanban: 'kanban', timer: 'timer',
+      typing: 'typing-speed', typeracer: 'typing-speed', paint: 'paint-studio',
+      studio: 'studio', code: 'studio', ide: 'studio', html: 'studio',
     }
 
     if (closeAllWords.some(w => text.includes(w))) {
@@ -830,9 +894,11 @@ export default function MeoAssistant() {
   }, [phase])
 
   const quickActions = [
-    { label: 'Calculator', prompt: 'Open the calculator.' },
-    { label: 'Terminal', prompt: 'Open the terminal.' },
-    { label: 'Notes', prompt: 'Open my notes.' },
+    { label: 'Capture Studio', prompt: 'Open the screen recorder and capture studio.' },
+    { label: 'Terminal', prompt: 'Open terminal.' },
+    { label: 'Nepali Date', prompt: 'What is the Nepali date today?' },
+    { label: 'Brightness 80%', prompt: 'Set brightness to 80%' },
+    { label: 'Cat Joke', prompt: 'Tell me a funny cat joke!' },
     { label: 'Clean Up', prompt: 'Minimize all windows.' },
   ]
 
@@ -871,10 +937,10 @@ export default function MeoAssistant() {
 
           <motion.div
             ref={panelRef}
-            initial={{ opacity: 0, scale: 0.92, y: 30 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 30 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 28 }}
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 30, scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 350, damping: 28 }}
             style={{
               position: 'fixed',
               bottom: 90,
@@ -943,36 +1009,36 @@ export default function MeoAssistant() {
                   transition: 'all 0.3s ease',
                 }} />
                 <span style={{
-                  fontSize: 12, fontWeight: 600,
-                  color: 'rgba(255,255,255,0.85)',
+                  fontSize: 12, fontWeight: 700,
+                  color: 'rgba(255,255,255,0.9)',
                   fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", system-ui, sans-serif',
                   letterSpacing: 0.5,
                 }}>
-                  Meo
+                  Meo (स्याउ साथी)
                 </span>
                 <span style={{
-                  fontSize: 11,
-                  color: 'rgba(255,255,255,0.35)',
+                  fontSize: 10,
+                  color: 'var(--color-sakura)',
                   fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
                 }}>
-                  {phase === 'idle' ? 'Ready' : phase === 'listening' ? 'Listening' : phase === 'thinking' ? 'Thinking' : phase === 'speaking' ? 'Speaking' : 'Error'}
+                  {groqKey ? 'Groq Llama 3.3 Active' : apiKey ? 'Gemini 2.5 Active' : 'API Key Required'}
                 </span>
               </div>
               <div style={{ display: 'flex', gap: 4 }}>
                 <button
                   onClick={() => setShowSettings(!showSettings)}
                   style={{
-                    background: !apiKey ? 'rgba(232,130,155,0.15)' : 'rgba(255,255,255,0.04)',
-                    border: !apiKey ? '1px solid rgba(232,130,155,0.3)' : 'none',
+                    background: (!apiKey && !groqKey) ? 'rgba(232,130,155,0.2)' : 'rgba(255,255,255,0.04)',
+                    border: (!apiKey && !groqKey) ? '1px solid rgba(232,130,155,0.4)' : '1px solid rgba(255,255,255,0.08)',
                     borderRadius: 10,
                     width: 30, height: 30, cursor: 'pointer', display: 'flex',
                     alignItems: 'center', justifyContent: 'center',
-                    color: !apiKey ? 'rgba(232,130,155,0.8)' : 'rgba(255,255,255,0.4)', fontSize: 13,
+                    color: (!apiKey && !groqKey) ? '#E8829B' : 'rgba(255,255,255,0.6)', fontSize: 13,
                     transition: 'all 0.2s ease',
-                    animation: !apiKey ? 'pulse 2s ease-in-out infinite' : undefined,
                   }}
-                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.7)' }}
-                  onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = 'rgba(255,255,255,0.4)' }}
+                  title="API Key Settings (Groq / Gemini)"
+                  onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.color = 'rgba(255,255,255,0.9)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = (!apiKey && !groqKey) ? 'rgba(232,130,155,0.2)' : 'rgba(255,255,255,0.04)'; e.currentTarget.style.color = (!apiKey && !groqKey) ? '#E8829B' : 'rgba(255,255,255,0.6)' }}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
                     <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.32 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -1018,43 +1084,72 @@ export default function MeoAssistant() {
                   exit={{ height: 0, opacity: 0 }}
                   style={{ overflow: 'visible', borderBottom: '1px solid rgba(255,255,255,0.05)', position: 'relative', zIndex: 10 }}
                 >
-                  <div style={{ padding: '16px 20px 18px' }}>
-                    <label style={{
-                      fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.5)',
-                      fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
-                      letterSpacing: 0.3, textTransform: 'uppercase',
-                      display: 'block', marginBottom: 10,
-                    }}>
-                      Gemini API Key
-                    </label>
-                    <input
-                      type="password"
-                      value={apiKey}
-                      onChange={e => { const v = e.target.value.trim(); setApiKey(v); if (v) localStorage.setItem('syau-gemini-key', v); else localStorage.removeItem('syau-gemini-key') }}
-                      placeholder="Paste your Gemini API key..."
-                      style={{
-                        width: '100%', padding: '12px 14px', borderRadius: 12,
-                        background: 'rgba(255,255,255,0.04)',
-                        border: '1px solid rgba(255,255,255,0.08)',
-                        color: 'rgba(255,255,255,0.9)', fontSize: 13,
-                        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
-                        outline: 'none',
-                        transition: 'border-color 0.2s',
-                        boxSizing: 'border-box',
-                      }}
-                      onFocus={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.15)'}
-                      onBlur={e => e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'}
-                    />
+                  <div style={{ padding: '16px 20px 18px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <label style={{
+                          fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.6)',
+                          fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+                          letterSpacing: 0.3, textTransform: 'uppercase',
+                        }}>
+                          Groq API Key (Fast & Free)
+                        </label>
+                        <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer" style={{ fontSize: 10, color: '#E8829B', textDecoration: 'none' }}>Get Free Key →</a>
+                      </div>
+                      <input
+                        type="password"
+                        value={groqKey}
+                        onChange={e => { const v = e.target.value.trim(); setGroqKey(v); if (v) localStorage.setItem('syau-groq-key', v); else localStorage.removeItem('syau-groq-key') }}
+                        placeholder="gsk_..."
+                        style={{
+                          width: '100%', padding: '10px 12px', borderRadius: 10,
+                          background: 'rgba(255,255,255,0.04)',
+                          border: groqKey ? '1px solid rgba(52,211,153,0.4)' : '1px solid rgba(255,255,255,0.08)',
+                          color: 'rgba(255,255,255,0.9)', fontSize: 12,
+                          fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                        <label style={{
+                          fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.6)',
+                          fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+                          letterSpacing: 0.3, textTransform: 'uppercase',
+                        }}>
+                          Google Gemini API Key
+                        </label>
+                        <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noreferrer" style={{ fontSize: 10, color: '#E8829B', textDecoration: 'none' }}>Get Free Key →</a>
+                      </div>
+                      <input
+                        type="password"
+                        value={apiKey}
+                        onChange={e => { const v = e.target.value.trim(); setApiKey(v); if (v) localStorage.setItem('syau-gemini-key', v); else localStorage.removeItem('syau-gemini-key') }}
+                        placeholder="AIzaSy..."
+                        style={{
+                          width: '100%', padding: '10px 12px', borderRadius: 10,
+                          background: 'rgba(255,255,255,0.04)',
+                          border: apiKey ? '1px solid rgba(52,211,153,0.4)' : '1px solid rgba(255,255,255,0.08)',
+                          color: 'rgba(255,255,255,0.9)', fontSize: 12,
+                          fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                        }}
+                      />
+                    </div>
+
                     <div style={{
-                      fontSize: 11, color: 'rgba(255,255,255,0.3)', marginTop: 8,
+                      fontSize: 11, color: 'rgba(255,255,255,0.4)',
                       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
                       lineHeight: 1.4,
-                      display: 'flex', alignItems: 'center', gap: 6,
                     }}>
-                      {apiKey ? (
-                        <span style={{ color: 'rgba(52,211,153,0.7)' }}>Saved</span>
+                      {(groqKey || apiKey) ? (
+                        <span style={{ color: 'rgba(52,211,153,0.85)' }}>✓ {groqKey ? 'Groq Llama 3.3 Connected' : 'Gemini 2.5 Connected'}</span>
                       ) : (
-                        <span>Free key at <span style={{ color: 'rgba(184,196,208,0.6)' }}>aistudio.google.com</span></span>
+                        <span>Add either a free Groq or Gemini API key to activate full feline conversational AI!</span>
                       )}
                     </div>
                   </div>
@@ -1066,21 +1161,24 @@ export default function MeoAssistant() {
               position: 'relative', zIndex: 2,
               flex: 1, overflowY: 'auto', padding: '12px 20px',
               display: 'flex', flexDirection: 'column', gap: 10,
-              maxHeight: 260, minHeight: 50,
+              maxHeight: messages.length > 0 ? 320 : 160, minHeight: 60,
             }}>
               {messages.length === 0 && phase === 'idle' && (
                 <div style={{
-                  textAlign: 'center', padding: '24px 0',
-                  color: 'rgba(255,255,255,0.3)',
+                  textAlign: 'center', padding: '12px 0 6px',
+                  color: 'rgba(255,255,255,0.4)',
                   fontSize: 13,
                   fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+                  lineHeight: 1.6
                 }}>
-                  {!apiKey ? (
-                    <span>
-                      Add your Gemini API key in settings<br/>
-                      <span style={{ fontSize: 11, opacity: 0.6 }}>Get one free at aistudio.google.com</span>
+                  <span>
+                    Meow! I am <strong>Meo (स्याउ साथी)</strong>, your feline OS copilot 🐾<br/>
+                    <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>
+                      {(groqKey || apiKey) 
+                        ? 'Type a message below or tap the microphone to speak!' 
+                        : 'Add a free Groq or Gemini API key in ⚙️ settings above to chat!'}
                     </span>
-                  ) : 'Tap the orb or press Ctrl+M'}
+                  </span>
                 </div>
               )}
               {messages.map((msg, i) => (
@@ -1091,23 +1189,43 @@ export default function MeoAssistant() {
                   transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                   style={{
                     alignSelf: msg.role === 'user' ? 'flex-end' : 'flex-start',
-                    maxWidth: '80%',
+                    maxWidth: '85%',
                     padding: '10px 14px',
                     borderRadius: msg.role === 'user' ? '18px 18px 4px 18px' : '18px 18px 18px 4px',
                     background: msg.role === 'user'
-                      ? 'rgba(184,196,208,0.1)'
-                      : 'rgba(255,255,255,0.04)',
-                    border: `1px solid ${msg.role === 'user' ? 'rgba(184,196,208,0.12)' : 'rgba(255,255,255,0.05)'}`,
+                      ? 'linear-gradient(135deg, rgba(232,130,155,0.25), rgba(212,120,156,0.18))'
+                      : 'rgba(255,255,255,0.06)',
+                    border: `1px solid ${msg.role === 'user' ? 'rgba(232,130,155,0.35)' : 'rgba(255,255,255,0.08)'}`,
                     fontSize: 13, lineHeight: 1.55,
-                    color: 'rgba(255,255,255,0.85)',
+                    color: 'rgba(255,255,255,0.92)',
                     fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
                     backdropFilter: 'blur(10px)',
                     WebkitBackdropFilter: 'blur(10px)',
+                    wordBreak: 'break-word',
                   }}
                 >
-                  {msg.text}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                    <span style={{ fontSize: 10, fontWeight: 700, color: msg.role === 'user' ? '#E8829B' : '#7EDDD6' }}>
+                      {msg.role === 'user' ? 'You' : 'Meo 🐾'}
+                    </span>
+                  </div>
+                  <div>{msg.text}</div>
                 </motion.div>
               ))}
+
+              {phase === 'thinking' && (
+                <div style={{
+                  alignSelf: 'flex-start',
+                  padding: '8px 14px', borderRadius: 16,
+                  background: 'rgba(255,255,255,0.05)',
+                  fontSize: 12, color: 'rgba(255,255,255,0.5)',
+                  display: 'flex', alignItems: 'center', gap: 8,
+                }}>
+                  <div style={{ width: 6, height: 6, borderRadius: '50%', background: '#FBBF24', animation: 'ping 1s cubic-bezier(0,0,0.2,1) infinite' }} />
+                  <span>Meo is thinking & purring...</span>
+                </div>
+              )}
+              <div ref={chatEndRef} />
             </div>
 
             <AnimatePresence>
@@ -1150,19 +1268,19 @@ export default function MeoAssistant() {
             {phase === 'idle' && messages.length === 0 && (
               <div style={{
                 position: 'relative', zIndex: 2,
-                display: 'flex', gap: 6, padding: '0 20px 10px',
+                display: 'flex', gap: 6, padding: '0 20px 8px',
                 flexWrap: 'wrap',
               }}>
-                {quickActions.map((action) => (
+                {quickActions.slice(0, 4).map((action) => (
                   <button
                     key={action.label}
                     onClick={() => handleUserMessage(action.prompt)}
                     style={{
-                      padding: '6px 12px', borderRadius: 14,
+                      padding: '5px 10px', borderRadius: 12,
                       background: 'rgba(255,255,255,0.03)',
                       border: '1px solid rgba(255,255,255,0.06)',
-                      color: 'rgba(255,255,255,0.5)',
-                      fontSize: 12,
+                      color: 'rgba(255,255,255,0.55)',
+                      fontSize: 11,
                       cursor: 'pointer',
                       fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
                       transition: 'all 0.2s ease',
@@ -1171,12 +1289,12 @@ export default function MeoAssistant() {
                     onMouseEnter={e => {
                       e.currentTarget.style.background = 'rgba(255,255,255,0.06)'
                       e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)'
-                      e.currentTarget.style.color = 'rgba(255,255,255,0.7)'
+                      e.currentTarget.style.color = 'rgba(255,255,255,0.8)'
                     }}
                     onMouseLeave={e => {
                       e.currentTarget.style.background = 'rgba(255,255,255,0.03)'
                       e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
-                      e.currentTarget.style.color = 'rgba(255,255,255,0.5)'
+                      e.currentTarget.style.color = 'rgba(255,255,255,0.55)'
                     }}
                   >
                     {action.label}
@@ -1185,56 +1303,123 @@ export default function MeoAssistant() {
               </div>
             )}
 
-            <div style={{
-              position: 'relative', zIndex: 2,
-              display: 'flex', flexDirection: 'column', alignItems: 'center',
-              padding: '16px 20px 20px', gap: 14,
-            }}>
-              <div
-                onClick={handleOrbClick}
+            {messages.length === 0 && (
+              <div style={{
+                position: 'relative', zIndex: 2,
+                display: 'flex', flexDirection: 'column', alignItems: 'center',
+                padding: '6px 20px 8px', gap: 6,
+              }}>
+                <div
+                  onClick={handleOrbClick}
+                  style={{
+                    cursor: 'pointer', position: 'relative',
+                    transition: 'transform 0.2s ease',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
+                  onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                  title={phase === 'listening' ? 'Tap to stop' : phase === 'speaking' ? 'Tap to interrupt' : 'Tap to speak'}
+                >
+                  <canvas
+                    ref={orbCanvasRef}
+                    style={{ width: 140, height: 140, display: 'block' }}
+                  />
+                  <div style={{
+                    position: 'absolute', top: '50%', left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 120, height: 120, borderRadius: '50%',
+                    background: `radial-gradient(circle, ${EMOTION_PALETTES[currentEmotion][0]}18 0%, transparent 70%)`,
+                    filter: 'blur(20px)',
+                    pointerEvents: 'none',
+                  }} />
+                </div>
+              </div>
+            )}
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault()
+                const trimmed = inputText.trim()
+                if (!trimmed || phase === 'thinking') return
+                setInputText('')
+                handleUserMessage(trimmed)
+              }}
+              style={{
+                position: 'relative', zIndex: 2,
+                display: 'flex', alignItems: 'center', gap: 8,
+                padding: '12px 16px 14px',
+                borderTop: '1px solid rgba(255,255,255,0.06)',
+                background: 'rgba(10,12,22,0.4)',
+              }}
+            >
+              <input
+                type="text"
+                value={inputText}
+                onChange={e => setInputText(e.target.value)}
+                placeholder="Ask Meo anything or type a command..."
                 style={{
-                  cursor: 'pointer', position: 'relative',
-                  transition: 'transform 0.2s ease',
+                  flex: 1,
+                  padding: '10px 14px',
+                  borderRadius: 14,
+                  background: 'rgba(255,255,255,0.04)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  color: 'rgba(255,255,255,0.92)',
+                  fontSize: 13,
+                  fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
+                  outline: 'none',
+                  transition: 'all 0.2s ease',
                 }}
-                onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-                title={phase === 'listening' ? 'Tap to stop' : phase === 'speaking' ? 'Tap to interrupt' : 'Tap to speak'}
+                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(232,130,155,0.4)'; e.currentTarget.style.background = 'rgba(255,255,255,0.07)' }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; e.currentTarget.style.background = 'rgba(255,255,255,0.04)' }}
+              />
+
+              <button
+                type="button"
+                onClick={handleOrbClick}
+                title={phase === 'listening' ? 'Stop Listening' : 'Speak Voice'}
+                style={{
+                  background: phase === 'listening' ? 'rgba(232,130,155,0.3)' : 'rgba(255,255,255,0.04)',
+                  border: phase === 'listening' ? '1px solid rgba(232,130,155,0.5)' : '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 12,
+                  width: 38, height: 38,
+                  cursor: 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: phase === 'listening' ? '#E8829B' : 'rgba(255,255,255,0.6)',
+                  fontSize: 14,
+                  transition: 'all 0.2s ease',
+                }}
               >
-                <canvas
-                  ref={orbCanvasRef}
-                  style={{ width: 200, height: 200, display: 'block' }}
-                />
-                <div style={{
-                  position: 'absolute', top: '50%', left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 180, height: 180, borderRadius: '50%',
-                  background: `radial-gradient(circle, ${EMOTION_PALETTES[currentEmotion][0]}18 0%, transparent 70%)`,
-                  filter: 'blur(30px)',
-                  pointerEvents: 'none',
-                }} />
-              </div>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                  <line x1="12" x2="12" y1="19" y2="22"/>
+                </svg>
+              </button>
 
-              <div style={{
-                fontSize: 12,
-                color: 'rgba(255,255,255,0.35)',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
-                letterSpacing: 0.3,
-                textAlign: 'center',
-              }}>
-                {phase === 'idle' && 'tap to speak'}
-                {phase === 'listening' && 'listening...'}
-                {phase === 'thinking' && 'thinking...'}
-                {phase === 'speaking' && 'tap to interrupt'}
-                {phase === 'error' && 'tap to retry'}
-              </div>
-
-              <div style={{
-                fontSize: 10, color: 'rgba(255,255,255,0.2)',
-                fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif',
-              }}>
-                Ctrl+M to toggle · Esc to close
-              </div>
-            </div>
+              <button
+                type="submit"
+                disabled={!inputText.trim() || phase === 'thinking'}
+                title="Send Message"
+                style={{
+                  background: inputText.trim()
+                    ? 'linear-gradient(135deg, #E8829B, #D4789C)'
+                    : 'rgba(255,255,255,0.04)',
+                  border: 'none',
+                  borderRadius: 12,
+                  width: 38, height: 38,
+                  cursor: inputText.trim() ? 'pointer' : 'default',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  color: inputText.trim() ? '#FFFFFF' : 'rgba(255,255,255,0.2)',
+                  fontSize: 14,
+                  transition: 'all 0.2s ease',
+                  boxShadow: inputText.trim() ? '0 4px 14px rgba(232,130,155,0.4)' : 'none',
+                }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </button>
+            </form>
           </motion.div>
         </>
       )}

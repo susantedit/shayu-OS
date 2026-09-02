@@ -201,7 +201,7 @@ interface NotificationStore {
 }
 export const useNotificationStore = create<NotificationStore>((set) => ({
   notifications: [],
-  add: (message, icon = '🔔', duration = 3000) => {
+  add: (message, icon = 'bell', duration = 3000) => {
     const id = `notif-${Date.now()}-${Math.random()}`
     set(s => ({ notifications: [...s.notifications, { id, message, icon, duration }] }))
     setTimeout(() => set(s => ({ notifications: s.notifications.filter(n => n.id !== id) })), duration)

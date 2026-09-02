@@ -219,7 +219,6 @@ export default function MusicPlayer() {
           )}
         </div>
 
-        {/* Playlist List */}
         <div style={{ flex: 1, overflowY: 'auto', padding: isCollapsed ? 6 : 8 }}>
           {!isCollapsed && (
             <div style={{ fontSize: 10, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'rgba(255,255,255,0.4)', padding: '6px 8px', marginBottom: 4 }}>
@@ -267,7 +266,6 @@ export default function MusicPlayer() {
           })}
         </div>
 
-        {/* Footer Custom URL Button */}
         <div style={{ padding: isCollapsed ? 8 : 12, borderTop: '1px solid rgba(255,255,255,0.08)' }}>
           <button
             onClick={() => setShowAddModal(!showAddModal)}
@@ -284,9 +282,7 @@ export default function MusicPlayer() {
         </div>
       </div>
 
-      {/* Main Player Display Area */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#05060A', minWidth: 0 }}>
-        {/* Header Bar */}
         <div style={{
           padding: '10px 14px', background: 'rgba(18, 20, 32, 0.8)', backdropFilter: 'blur(16px)',
           borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -323,7 +319,6 @@ export default function MusicPlayer() {
           </a>
         </div>
 
-        {/* Custom URL Input Popup Modal */}
         {showAddModal && (
           <div style={{
             margin: 12, padding: 12, borderRadius: 12, background: 'rgba(20, 24, 40, 0.95)',
@@ -358,7 +353,6 @@ export default function MusicPlayer() {
           </div>
         )}
 
-        {/* Spotify iFrame Embed Container */}
         <div style={{ flex: 1, padding: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', minWidth: 0, overflow: 'hidden' }}>
           <iframe
             src={activeEmbed}

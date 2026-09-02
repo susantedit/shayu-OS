@@ -1,22 +1,37 @@
 import { useState, useEffect, useRef } from 'react'
+import {
+  Sun, CloudSun, CloudRain, Cloud, CloudLightning, Droplets, Wind, Thermometer
+} from 'lucide-react'
 
-// ─── Weather ────────────────────────────────────────────────────────────
+type WeatherIconType = 'sun' | 'cloud-sun' | 'rain' | 'cloud' | 'storm'
+
+const renderWeatherIcon = (type: WeatherIconType, size = 20) => {
+  switch (type) {
+    case 'sun': return <Sun size={size} style={{ color: '#FDBA74' }} />
+    case 'cloud-sun': return <CloudSun size={size} style={{ color: '#93C5FD' }} />
+    case 'rain': return <CloudRain size={size} style={{ color: '#60A5FA' }} />
+    case 'cloud': return <Cloud size={size} style={{ color: '#94A3B8' }} />
+    case 'storm': return <CloudLightning size={size} style={{ color: '#C084FC' }} />
+    default: return <Sun size={size} style={{ color: '#FDBA74' }} />
+  }
+}
+
 const WEATHER_DATA = [
-  { city: 'Tokyo', temp: 28, condition: 'Partly Cloudy', humidity: 62, wind: 12, icon: '⛅', high: 31, low: 24 },
-  { city: 'London', temp: 16, condition: 'Rainy', humidity: 84, wind: 22, icon: '🌧️', high: 18, low: 12 },
-  { city: 'New York', temp: 22, condition: 'Sunny', humidity: 45, wind: 8, icon: '☀️', high: 25, low: 18 },
-  { city: 'Dublin', temp: 14, condition: 'Overcast', humidity: 78, wind: 28, icon: '☁️', high: 16, low: 10 },
-  { city: 'Mumbai', temp: 33, condition: 'Humid', humidity: 88, wind: 6, icon: '🌤️', high: 35, low: 27 },
+  { city: 'Tokyo', temp: 28, condition: 'Partly Cloudy', humidity: 62, wind: 12, icon: 'cloud-sun' as WeatherIconType, high: 31, low: 24 },
+  { city: 'London', temp: 16, condition: 'Rainy', humidity: 84, wind: 22, icon: 'rain' as WeatherIconType, high: 18, low: 12 },
+  { city: 'New York', temp: 22, condition: 'Sunny', humidity: 45, wind: 8, icon: 'sun' as WeatherIconType, high: 25, low: 18 },
+  { city: 'Dublin', temp: 14, condition: 'Overcast', humidity: 78, wind: 28, icon: 'cloud' as WeatherIconType, high: 16, low: 10 },
+  { city: 'Mumbai', temp: 33, condition: 'Humid', humidity: 88, wind: 6, icon: 'cloud-sun' as WeatherIconType, high: 35, low: 27 },
 ]
 
 const FORECAST = [
-  { day: 'Mon', icon: '☀️', high: 26, low: 18 },
-  { day: 'Tue', icon: '⛅', high: 24, low: 17 },
-  { day: 'Wed', icon: '🌧️', high: 19, low: 14 },
-  { day: 'Thu', icon: '⛈️', high: 17, low: 13 },
-  { day: 'Fri', icon: '🌤️', high: 22, low: 16 },
-  { day: 'Sat', icon: '☀️', high: 27, low: 19 },
-  { day: 'Sun', icon: '⛅', high: 25, low: 17 },
+  { day: 'Mon', icon: 'sun' as WeatherIconType, high: 26, low: 18 },
+  { day: 'Tue', icon: 'cloud-sun' as WeatherIconType, high: 24, low: 17 },
+  { day: 'Wed', icon: 'rain' as WeatherIconType, high: 19, low: 14 },
+  { day: 'Thu', icon: 'storm' as WeatherIconType, high: 17, low: 13 },
+  { day: 'Fri', icon: 'cloud-sun' as WeatherIconType, high: 22, low: 16 },
+  { day: 'Sat', icon: 'sun' as WeatherIconType, high: 27, low: 19 },
+  { day: 'Sun', icon: 'cloud-sun' as WeatherIconType, high: 25, low: 17 },
 ]
 
 export function WeatherApp() {
@@ -25,11 +40,12 @@ export function WeatherApp() {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'rgba(10,7,9,0.95)', overflow: 'auto' }}>
-      {/* Header */}
       <div style={{ padding: '16px 20px', background: 'linear-gradient(180deg, rgba(147,197,253,0.08) 0%, transparent 100%)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-mono)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 4 }}>स्याउ Weather</div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <span style={{ fontSize: 42 }}>{w.icon}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {renderWeatherIcon(w.icon, 36)}
+          </div>
           <div>
             <div style={{ fontSize: 36, fontWeight: 700, color: 'rgba(255,255,255,0.9)', lineHeight: 1 }}>{w.temp}°</div>
             <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.5)' }}>{w.condition}</div>
@@ -39,29 +55,29 @@ export function WeatherApp() {
         <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-mono)' }}>H:{w.high}° L:{w.low}°</div>
       </div>
 
-      {/* Stats */}
-      <div style={{ display: 'flex', gap: 1, padding: '12px 16px', flexShrink: 0 }}>
+      <div style={{ display: 'flex', gap: 6, padding: '12px 16px', flexShrink: 0 }}>
         {[
-          { label: 'Humidity', value: `${w.humidity}%`, icon: '💧' },
-          { label: 'Wind', value: `${w.wind} km/h`, icon: '💨' },
-          { label: 'Feels Like', value: `${w.temp - 2}°`, icon: '🌡️' },
+          { label: 'Humidity', value: `${w.humidity}%`, iconNode: <Droplets size={16} style={{ color: '#60A5FA' }} /> },
+          { label: 'Wind', value: `${w.wind} km/h`, iconNode: <Wind size={16} style={{ color: '#93C5FD' }} /> },
+          { label: 'Feels Like', value: `${w.temp - 2}°`, iconNode: <Thermometer size={16} style={{ color: '#FDBA74' }} /> },
         ].map(s => (
           <div key={s.label} style={{ flex: 1, padding: '10px 8px', background: 'rgba(255,255,255,0.03)', borderRadius: 10, textAlign: 'center' }}>
-            <div style={{ fontSize: 14, marginBottom: 4 }}>{s.icon}</div>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 4 }}>{s.iconNode}</div>
             <div style={{ fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.85)' }}>{s.value}</div>
             <div style={{ fontSize: 8, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-mono)', textTransform: 'uppercase', letterSpacing: 0.5 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
-      {/* 7-day forecast */}
       <div style={{ padding: '0 16px 12px', flex: 1 }}>
         <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.35)', fontFamily: 'var(--font-mono)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 8 }}>7-Day Forecast</div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {FORECAST.map(f => (
             <div key={f.day} style={{ display: 'flex', alignItems: 'center', padding: '8px 10px', background: 'rgba(255,255,255,0.02)', borderRadius: 8, gap: 10 }}>
               <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', width: 32, fontFamily: 'var(--font-mono)' }}>{f.day}</span>
-              <span style={{ fontSize: 16 }}>{f.icon}</span>
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 20 }}>
+                {renderWeatherIcon(f.icon, 15)}
+              </span>
               <div style={{ flex: 1, height: 3, borderRadius: 2, background: 'rgba(255,255,255,0.06)', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', left: `${((f.low - 10) / 25) * 100}%`, right: `${100 - ((f.high - 10) / 25) * 100}%`, height: '100%', borderRadius: 2, background: 'linear-gradient(90deg, #93C5FD, #FDBA74)' }} />
               </div>
@@ -71,7 +87,6 @@ export function WeatherApp() {
         </div>
       </div>
 
-      {/* City selector */}
       <div style={{ display: 'flex', gap: 4, padding: '0 16px 12px', overflowX: 'auto', flexShrink: 0 }}>
         {WEATHER_DATA.map((c, i) => (
           <button key={c.city} onClick={() => setSelected(i)} style={{
@@ -85,7 +100,6 @@ export function WeatherApp() {
   )
 }
 
-// ─── Kanban Board ───────────────────────────────────────────────────────
 interface KanbanTask { id: number; title: string; tag: string; tagColor: string }
 
 const INITIAL_TASKS: Record<string, KanbanTask[]> = {
@@ -159,10 +173,8 @@ export function KanbanApp() {
                   onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.1)' }}
                   onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.05)' }}
                 >
-                  {task.title}
-                  <div style={{ marginTop: 6 }}>
-                    <span style={{ fontSize: 8, padding: '2px 6px', borderRadius: 4, background: `${task.tagColor}18`, color: task.tagColor, fontFamily: 'var(--font-mono)' }}>{task.tag}</span>
-                  </div>
+                  <div style={{ marginBottom: 6 }}>{task.title}</div>
+                  <span style={{ fontSize: 8, fontFamily: 'var(--font-mono)', padding: '2px 6px', borderRadius: 4, background: `${task.tagColor}15`, color: task.tagColor }}>{task.tag}</span>
                 </div>
               ))}
             </div>
@@ -173,7 +185,6 @@ export function KanbanApp() {
   )
 }
 
-// ─── Focus Timer ────────────────────────────────────────────────────────
 export function TimerApp() {
   const [seconds, setSeconds] = useState(25 * 60)
   const [running, setRunning] = useState(false)
@@ -202,7 +213,6 @@ export function TimerApp() {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,7,9,0.95)', gap: 24 }}>
-      {/* Mode switcher */}
       <div style={{ display: 'flex', gap: 6 }}>
         {(['work', 'short', 'long'] as const).map(m => (
           <button key={m} onClick={() => switchMode(m)} style={{
@@ -213,7 +223,6 @@ export function TimerApp() {
         ))}
       </div>
 
-      {/* Timer ring */}
       <div style={{ position: 'relative', width: 180, height: 180 }}>
         <svg width="180" height="180" style={{ transform: 'rotate(-90deg)' }}>
           <circle cx="90" cy="90" r="80" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
@@ -229,7 +238,6 @@ export function TimerApp() {
         </div>
       </div>
 
-      {/* Controls */}
       <div style={{ display: 'flex', gap: 12 }}>
         <button onClick={() => setRunning(!running)} style={{
           padding: '10px 32px', borderRadius: 10, border: 'none', fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'var(--font-sans)',
@@ -242,7 +250,6 @@ export function TimerApp() {
         }}>Reset</button>
       </div>
 
-      {/* Stats */}
       <div style={{ display: 'flex', gap: 16, marginTop: 8 }}>
         {[{ label: 'Sessions', val: '4' }, { label: 'Total Focus', val: '1h 40m' }, { label: 'Streak', val: '3 days' }].map(s => (
           <div key={s.label} style={{ textAlign: 'center' }}>
@@ -255,7 +262,8 @@ export function TimerApp() {
   )
 }
 
-// ─── Type Racer ─────────────────────────────────────────────────────────
+export const PomodoroApp = TimerApp
+
 const TYPING_TEXTS = [
   "the quick brown fox jumps over the lazy dog near the riverbank",
   "pack my box with five dozen liquor jugs how quickly can you type",
@@ -319,7 +327,6 @@ export function TypingSpeedApp() {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'rgba(10,7,9,0.95)', padding: 20, gap: 16 }}>
-      {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <div style={{ fontWeight: 700, fontSize: 14, color: 'rgba(255,255,255,0.9)' }}>Type Racer</div>
@@ -339,7 +346,6 @@ export function TypingSpeedApp() {
         </div>
       </div>
 
-      {/* Text display */}
       <div style={{
         padding: '16px', borderRadius: 12,
         background: 'rgba(255,255,255,0.03)',
@@ -353,7 +359,6 @@ export function TypingSpeedApp() {
         ))}
       </div>
 
-      {/* Input */}
       {!finished ? (
         <input ref={inputRef} value={input} onChange={e => handleInput(e.target.value)}
           placeholder={started ? 'Start typing...' : 'Press Start to begin'}
@@ -380,7 +385,6 @@ export function TypingSpeedApp() {
         </div>
       )}
 
-      {/* Start / Restart */}
       <button onClick={start} style={{
         width: '100%', padding: '10px 0', borderRadius: 10, border: 'none',
         background: finished ? 'rgba(255,255,255,0.06)' : 'linear-gradient(135deg, #C4B5FD, #8B5CF6)',
@@ -392,7 +396,6 @@ export function TypingSpeedApp() {
   )
 }
 
-// ─── Paint Studio ───────────────────────────────────────────────────────
 export function PaintApp() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [drawing, setDrawing] = useState(false)
@@ -450,7 +453,6 @@ export function PaintApp() {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'rgba(10,7,9,0.95)' }}>
-      {/* Toolbar */}
       <div style={{ padding: '8px 12px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
         <div style={{ display: 'flex', gap: 3 }}>
           {colors.map(c => (
@@ -467,7 +469,6 @@ export function PaintApp() {
         <div style={{ flex: 1 }} />
         <button onClick={clear} style={{ padding: '4px 10px', borderRadius: 6, border: '1px solid rgba(255,255,255,0.08)', background: 'rgba(255,255,255,0.03)', color: 'rgba(255,255,255,0.4)', fontSize: 10, cursor: 'pointer' }}>Clear</button>
       </div>
-      {/* Canvas */}
       <div style={{ flex: 1, overflow: 'hidden', cursor: 'crosshair' }}>
         <canvas ref={canvasRef} style={{ width: '100%', height: '100%', display: 'block' }}
           onMouseDown={startDraw} onMouseMove={draw} onMouseUp={() => setDrawing(false)} onMouseLeave={() => setDrawing(false)} />
@@ -476,7 +477,6 @@ export function PaintApp() {
   )
 }
 
-// ─── Image Editor ───────────────────────────────────────────────────────
 export function ImageEditorApp() {
   const [brightness, setBrightness] = useState(100)
   const [contrast, setContrast] = useState(100)
@@ -504,7 +504,6 @@ export function ImageEditorApp() {
 
   return (
     <div style={{ height: '100%', display: 'flex', flexDirection: 'column', background: 'rgba(10,7,9,0.95)' }}>
-      {/* Preview */}
       <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, overflow: 'hidden' }}>
         <div style={{
           width: '100%', maxWidth: 320, aspectRatio: '4/3', borderRadius: 12, overflow: 'hidden',
@@ -515,7 +514,6 @@ export function ImageEditorApp() {
         </div>
       </div>
 
-      {/* Filters */}
       <div style={{ padding: '8px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', flexShrink: 0 }}>
         <div style={{ fontSize: 9, color: 'rgba(255,255,255,0.3)', fontFamily: 'var(--font-mono)', letterSpacing: 1, textTransform: 'uppercase', marginBottom: 6 }}>Filters</div>
         <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 4 }}>
@@ -529,7 +527,6 @@ export function ImageEditorApp() {
         </div>
       </div>
 
-      {/* Adjustments */}
       <div style={{ padding: '8px 12px 12px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', flexDirection: 'column', gap: 6, flexShrink: 0 }}>
         {[
           { label: 'Brightness', val: brightness, set: setBrightness, max: 200 },

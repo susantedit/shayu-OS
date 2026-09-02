@@ -1,8 +1,13 @@
 import { useState } from 'react'
+import {
+  Rocket, Layout, Terminal as TerminalIcon, Sparkles, Palette,
+  Settings as SettingsIcon, BookOpen, ChevronRight, ChevronDown
+} from 'lucide-react'
 
 const sections = [
   {
-    title: '🚀 Getting Started',
+    title: 'Getting Started',
+    icon: Rocket,
     items: [
       { label: 'Open Apps', desc: 'Click any icon in the dock at the bottom of the screen, or right-click the desktop for quick access to About Me, Terminal, Notes, and Settings.' },
       { label: 'Move Windows', desc: 'Drag windows by their title bar. Windows snap to screen edges — drag left/right for half-screen, drag to the top to maximize.' },
@@ -12,20 +17,22 @@ const sections = [
     ],
   },
   {
-    title: '🖥️ Built-in Apps',
+    title: 'Built-in Apps',
+    icon: Layout,
     items: [
       { label: 'About Me', desc: 'Profile card with links to GitHub, Discord, email, and portfolio.' },
       { label: 'Terminal', desc: 'A custom shell (syau-sh) with 20+ commands. Try `help` to see them all.' },
-      { label: 'Notes', desc: 'Quick notepad with auto-save to localStorage and a "✓ Saved" indicator.' },
+      { label: 'Notes', desc: 'Quick notepad with auto-save to localStorage and a "Saved" indicator.' },
       { label: 'Calculator', desc: 'Basic calculator with keyboard support. Type numbers and operators directly.' },
       { label: 'Music Player', desc: 'Spotify Web Embed Hub featuring Nepali Hits, Lofi, Anime OSTs, Synthwave, Jazz, Classical, and custom Spotify playlist link support.' },
-      { label: 'Gallery', desc: '11 images in a grid. Click to select, double-click for fullscreen lightbox with ‹/› navigation.' },
-      { label: 'Browser', desc: 'Embedded web browser with proxy support. If a site blocks embedding, try Google Translate or Wayback Machine.' },
-      { label: 'Settings', desc: 'Change accent colors (6 options), background mode (solid/static/live wallpaper), and more.' },
+      { label: 'Gallery', desc: '11 images in a grid. Click to select, double-click for fullscreen lightbox with navigation.' },
+      { label: 'Browser', desc: 'Embedded web browser with proxy support, GitHub Explorer, and live Reddit integration.' },
+      { label: 'Settings', desc: 'Change accent colors (6 options), background mode (solid/static/live wallpaper), Wi-Fi, battery, and display brightness.' },
     ],
   },
   {
-    title: '💻 Terminal Commands',
+    title: 'Terminal Commands',
+    icon: TerminalIcon,
     items: [
       { label: 'help', desc: 'Show all available commands.' },
       { label: 'whoami', desc: 'Who is Kantaraj Luitel (Susant)?' },
@@ -44,7 +51,8 @@ const sections = [
     ],
   },
   {
-    title: '🥚 Easter Eggs & Modes',
+    title: 'Easter Eggs & Modes',
+    icon: Sparkles,
     items: [
       { label: 'Theme Mode', desc: 'Toggle Dark Mode and White Light Mode in TopBar or Settings.' },
       { label: 'Rainbow Mode', desc: 'Click the "स्याउ OS" logo in the top bar 10 times. The top bar turns rainbow for 5 seconds.' },
@@ -52,7 +60,8 @@ const sections = [
     ],
   },
   {
-    title: '🎨 Visual & Audio',
+    title: 'Visual & Audio',
+    icon: Palette,
     items: [
       { label: 'Glass Morphism', desc: 'All panels, dock, and windows use glassmorphism with blur, saturation, and subtle borders.' },
       { label: 'Boot Sequence', desc: 'Cinematic boot: logo reveal with blur → terminal with BIOS/kernel/services → desktop assembles piece by piece.' },
@@ -62,7 +71,8 @@ const sections = [
     ],
   },
   {
-    title: '⚙️ System Features',
+    title: 'System Features',
+    icon: SettingsIcon,
     items: [
       { label: 'Lock Screen', desc: 'After 5 minutes of inactivity, a lock screen appears with the time. Click or press any key to unlock.' },
       { label: 'Window Snapping', desc: 'Drag a window to the left/right edge for half-screen. Drag to the top to maximize.' },
@@ -79,8 +89,9 @@ export default function Guide() {
   return (
     <div style={{ padding: 20, height: '100%', overflow: 'auto' }}>
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: 4 }}>
-          📖 स्याउ OS Guide
+        <div style={{ fontSize: 20, fontWeight: 800, color: 'var(--color-text-primary)', marginBottom: 4, display: 'flex', alignItems: 'center', gap: 8 }}>
+          <BookOpen size={22} style={{ color: 'var(--color-sakura)' }} />
+          <span>स्याउ OS Guide</span>
         </div>
         <div style={{ fontSize: 12, color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
           Everything you need to know about स्याउ OS — features, commands, easter eggs, and creator info.
@@ -101,8 +112,11 @@ export default function Guide() {
               transition: 'all 0.15s',
             }}
           >
-            <span>{section.title}</span>
-            <span style={{ fontSize: 12, opacity: 0.5 }}>{openSection === si ? '−' : '+'}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <section.icon size={16} style={{ color: openSection === si ? 'var(--color-sakura)' : 'var(--color-text-muted)' }} />
+              <span>{section.title}</span>
+            </div>
+            {openSection === si ? <ChevronDown size={15} style={{ opacity: 0.7 }} /> : <ChevronRight size={15} style={{ opacity: 0.5 }} />}
           </button>
 
           {openSection === si && (

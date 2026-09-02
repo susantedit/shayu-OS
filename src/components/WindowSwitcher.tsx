@@ -1,13 +1,35 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import {
+  User, Terminal, FileText, Calculator, Music, Image, Globe,
+  BookOpen, Settings as SettingsIcon, Folder, ShoppingBag, CloudSun,
+  Kanban, Timer, Keyboard, Palette, File, Video
+} from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 
-const APP_ICONS: Record<string, string> = {
-  about: '👤', terminal: '💻', notes: '📝', calculator: '🧮',
-  music: '🎵', gallery: '🖼', browser: '🌐',
-  guide: '📖', settings: '⚙️', files: '📁', store: '🛍️',
-  weather: '🌤️', kanban: '📋', timer: '⏱️', 'typing-speed': '⌨️',
-  'paint-studio': '🎨', 'image-editor': '🖼️',
+const renderAppIcon = (appId: string, size = 22) => {
+  switch (appId) {
+    case 'about': return <User size={size} style={{ color: 'var(--color-sakura)' }} />
+    case 'capture':
+    case 'recorder': return <Video size={size} style={{ color: '#E8829B' }} />
+    case 'terminal': return <Terminal size={size} style={{ color: '#86EFAC' }} />
+    case 'notes': return <FileText size={size} style={{ color: '#FDBA74' }} />
+    case 'calculator': return <Calculator size={size} style={{ color: '#7EDDD6' }} />
+    case 'music': return <Music size={size} style={{ color: '#C4B5FD' }} />
+    case 'gallery': return <Image size={size} style={{ color: '#F472B6' }} />
+    case 'browser': return <Globe size={size} style={{ color: '#38BDF8' }} />
+    case 'guide': return <BookOpen size={size} style={{ color: '#FBBF24' }} />
+    case 'settings': return <SettingsIcon size={size} style={{ color: '#94A3B8' }} />
+    case 'files': return <Folder size={size} style={{ color: '#FBBF24' }} />
+    case 'store': return <ShoppingBag size={size} style={{ color: '#EC4899' }} />
+    case 'weather': return <CloudSun size={size} style={{ color: '#38BDF8' }} />
+    case 'kanban': return <Kanban size={size} style={{ color: '#A78BFA' }} />
+    case 'timer': return <Timer size={size} style={{ color: '#F87171' }} />
+    case 'typing-speed': return <Keyboard size={size} style={{ color: '#34D399' }} />
+    case 'paint-studio': return <Palette size={size} style={{ color: '#F43F5E' }} />
+    case 'image-editor': return <Image size={size} style={{ color: '#06B6D4' }} />
+    default: return <File size={size} style={{ color: 'var(--color-text-secondary)' }} />
+  }
 }
 
 export default function WindowSwitcher() {
@@ -75,7 +97,6 @@ export default function WindowSwitcher() {
     <AnimatePresence>
       {active && visibleWindows.length > 0 && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -88,7 +109,6 @@ export default function WindowSwitcher() {
             }}
           />
 
-          {/* Switcher panel */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -126,11 +146,10 @@ export default function WindowSwitcher() {
                   width: 48, height: 48, borderRadius: 10,
                   background: 'rgba(255,255,255,0.04)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: 22,
                   border: `1px solid ${i === selectedIdx ? 'rgba(232,130,155,0.2)' : 'rgba(255,255,255,0.05)'}`,
                   transition: 'all 0.12s ease',
                 }}>
-                  {APP_ICONS[win.appId] || '📄'}
+                  {renderAppIcon(win.appId, 22)}
                 </div>
                 <div style={{
                   fontSize: 11, color: i === selectedIdx ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.5)',
@@ -145,7 +164,6 @@ export default function WindowSwitcher() {
             ))}
           </motion.div>
 
-          {/* Shortcut hint */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

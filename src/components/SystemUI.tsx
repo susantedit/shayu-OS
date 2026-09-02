@@ -1,6 +1,38 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import {
+  Bell, Wifi, WifiOff, Globe, AlertTriangle, Battery,
+  BatteryWarning, Zap, Trash2, Radio, CheckCircle2, Cpu
+} from 'lucide-react'
 import { useDesktopStore, useNotificationStore } from '../store/desktopStore'
+
+function renderNotificationIcon(icon?: string) {
+  switch (icon) {
+    case 'wifi':
+    case '📶': return <Wifi size={16} style={{ color: 'var(--color-sakura)' }} />
+    case 'wifi-off':
+    case '📵': return <WifiOff size={16} style={{ color: '#EF4444' }} />
+    case 'globe':
+    case '🌐': return <Globe size={16} style={{ color: 'var(--color-miku)' }} />
+    case 'alert':
+    case '⚠️': return <AlertTriangle size={16} style={{ color: '#FBBF24' }} />
+    case 'battery':
+    case '🔋': return <Battery size={16} style={{ color: 'var(--color-sakura)' }} />
+    case 'battery-charging':
+    case '⚡': return <Zap size={16} style={{ color: '#4ADE80' }} />
+    case 'battery-low':
+    case '🪫': return <BatteryWarning size={16} style={{ color: '#EF4444' }} />
+    case 'trash':
+    case '🗑️': return <Trash2 size={16} style={{ color: '#F87171' }} />
+    case 'radar':
+    case '📡': return <Radio size={16} style={{ color: 'var(--color-miku)' }} />
+    case 'rocket':
+    case '🚀': return <Cpu size={16} style={{ color: 'var(--color-sakura)' }} />
+    case 'check':
+    case '✅': return <CheckCircle2 size={16} style={{ color: '#4ADE80' }} />
+    default: return <Bell size={16} style={{ color: 'var(--color-sakura)' }} />
+  }
+}
 
 // === Click Sounds (Web Audio API) ===
 let audioCtx: AudioContext | null = null
@@ -157,7 +189,6 @@ export default function SystemUI() {
 
   return (
     <>
-      {/* Notification toasts */}
       <div style={{ position: 'fixed', top: 42, right: 12, zIndex: 500, display: 'flex', flexDirection: 'column', gap: 8 }}>
         <AnimatePresence>
           {notifications.map(n => (
@@ -177,14 +208,15 @@ export default function SystemUI() {
                 maxWidth: 300, cursor: 'pointer',
               }}
             >
-              <span style={{ fontSize: 16 }}>{n.icon}</span>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                {renderNotificationIcon(n.icon)}
+              </div>
               <span>{n.message}</span>
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
-      {/* Spotlight search */}
       <AnimatePresence>
         {spotlightOpen && (
           <motion.div
@@ -251,7 +283,6 @@ export default function SystemUI() {
         )}
       </AnimatePresence>
 
-      {/* Konami confetti */}
       {konamiActive && <ConfettiCanvas onDone={() => setKonamiActive(false)} />}
     </>
   )

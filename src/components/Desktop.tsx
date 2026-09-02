@@ -65,7 +65,6 @@ export default function Desktop() {
 
   return (
     <div ref={desktopRef} className="desktop" onContextMenu={handleContextMenu} onClick={handleClick}>
-      {/* Live video */}
       {bgMode === 'live' && (
         <video key={liveWall} autoPlay loop muted playsInline ref={bgRef as any} style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
@@ -75,7 +74,6 @@ export default function Desktop() {
         </video>
       )}
 
-      {/* Static wallpaper */}
       {bgMode === 'static' && (
         <div ref={bgRef} style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
@@ -96,7 +94,6 @@ export default function Desktop() {
 
       <div className="desktop-pattern" />
 
-      {/* Glow orbs with parallax (ref-driven) */}
       <div ref={orb1Ref} style={{
         position: 'absolute', top: '10%', right: '15%', width: 350, height: 350,
         borderRadius: '50%',
@@ -110,7 +107,6 @@ export default function Desktop() {
         pointerEvents: 'none', filter: 'blur(50px)', transition: 'transform 0.5s ease-out',
       }} />
 
-      {/* Cursor-reactive glow (ref-driven) */}
       <div ref={glowRef} style={{
         position: 'fixed', pointerEvents: 'none', zIndex: 1,
         width: 400, height: 400, borderRadius: '50%',
@@ -118,13 +114,11 @@ export default function Desktop() {
         transform: 'translate(-50%, -50%)', transition: 'left 0.15s ease-out, top 0.15s ease-out',
       }} />
 
-      {/* Glass reflection */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: 'radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.008) 0%, transparent 50%)',
       }} />
 
-      {/* Grid */}
       <div style={{
         position: 'absolute', inset: 0,
         backgroundImage: 'linear-gradient(rgba(232,130,155,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(232,130,155,0.015) 1px, transparent 1px)',
@@ -137,7 +131,6 @@ export default function Desktop() {
         textAlign: 'center', pointerEvents: 'none', userSelect: 'none',
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
       }}>
-        {/* Custom स्याउ OS Logo */}
         <div style={{
           width: 'clamp(56px, 16vw, 96px)', height: 'clamp(56px, 16vw, 96px)', borderRadius: 24,
           background: 'rgba(255, 255, 255, 0.05)',
@@ -171,7 +164,6 @@ export default function Desktop() {
         </div>
       </div>
 
-      {/* Context Menu with staggered animation */}
       <AnimatePresence>
         {contextMenu && (
           <motion.div

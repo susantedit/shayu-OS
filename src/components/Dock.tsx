@@ -12,7 +12,9 @@ interface DockItem {
 const coreDockItems: DockItem[] = [
   { id: 'creator', label: 'Creator Profile', color: '#8B5CF6', icon: 'creator' },
   { id: 'devlogs', label: 'Devlogs', color: 'var(--color-sakura)', icon: 'devlogs' },
+  { id: 'studio', label: 'Syau Studio', color: '#8B5CF6', icon: 'studio' },
   { id: 'about', label: 'About Me', color: 'var(--color-sakura)', icon: 'user' },
+  { id: 'capture', label: 'Capture & Record', color: 'var(--color-sakura)', icon: 'capture' },
   { id: 'terminal', label: 'Terminal', color: 'var(--color-miku)', icon: 'terminal' },
   { id: 'notes', label: 'Notes', color: 'var(--color-peach)', icon: 'notes' },
   { id: 'calculator', label: 'Calculator', color: 'var(--color-lavender)', icon: 'calc' },
@@ -26,7 +28,6 @@ const coreDockItems: DockItem[] = [
   { id: 'settings', label: 'Settings', color: 'var(--color-text-secondary)', icon: 'settings' },
 ]
 
-// Store apps that appear in dock when installed
 const storeDockApps: Record<string, DockItem> = {
   weather: { id: 'weather', label: 'Weather', color: '#93C5FD', icon: 'dock-weather' },
   kanban: { id: 'kanban', label: 'Kanban', color: '#86EFAC', icon: 'dock-kanban' },
@@ -37,7 +38,9 @@ const storeDockApps: Record<string, DockItem> = {
 }
 
 const appTitles: Record<string, string> = {
-  creator: 'Kantaraj Luitel (Susant) - Creator Profile', devlogs: 'स्याउ OS Devlogs', about: 'About Me', terminal: 'Terminal', notes: 'Notes', calculator: 'Calculator',
+  creator: 'Kantaraj Luitel (Susant) - Creator Profile', devlogs: 'स्याउ OS Devlogs', about: 'About Me',
+  studio: 'Syau Studio - Live Web IDE & Code Sandbox',
+  capture: 'स्याउ Capture Studio', terminal: 'Terminal', notes: 'Notes', calculator: 'Calculator',
   music: 'Music Player', gallery: 'Gallery', browser: 'Browser',
   files: 'Files', guide: 'Guide', store: 'स्याउ Store', settings: 'Settings',
   weather: 'Weather', kanban: 'Kanban Board', timer: 'Focus Timer',
@@ -45,7 +48,8 @@ const appTitles: Record<string, string> = {
 }
 
 const appSizes: Record<string, [number, number]> = {
-  creator: [860, 580], devlogs: [840, 560], about: [480, 540], terminal: [600, 400], notes: [500, 450], calculator: [320, 460],
+  creator: [860, 580], devlogs: [840, 560], about: [480, 540], capture: [820, 580],
+  studio: [920, 600], terminal: [600, 400], notes: [500, 450], calculator: [320, 460],
   music: [720, 500], gallery: [600, 480], browser: [800, 560],
   files: [640, 480], store: [420, 580], guide: [500, 560], settings: [460, 520],
   weather: [360, 420], kanban: [520, 440], timer: [340, 520],
@@ -55,6 +59,9 @@ const appSizes: Record<string, [number, number]> = {
 const ICONS: Record<string, string> = {
   creator: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-creator" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#8B5CF6"/><stop offset="100%" stop-color="#EC4899"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-creator)"/><polygon points="28,12 33,22 44,24 36,32 38,43 28,38 18,43 20,32 12,24 23,22" fill="white" opacity="0.95"/></svg>`,
   devlogs: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-devlogs" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8829B"/><stop offset="100%" stop-color="#C45A7C"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-devlogs)"/><path d="M16 12h24a2 2 0 012 2v28a2 2 0 01-2 2H16a2 2 0 01-2-2V14a2 2 0 012-2z" fill="white" opacity="0.9"/><path d="M20 20h16M20 26h16M20 32h10" stroke="#C45A7C" stroke-width="2" stroke-linecap="round"/><circle cx="36" cy="34" r="6" fill="#C45A7C"/><path d="M34 34l1.5 1.5 3-3" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none"/></svg>`,
+  studio: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-studio" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-studio)"/><path d="M20 18l-8 10 8 10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.95"/><path d="M36 18l8 10-8 10" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.95"/><line x1="30" y1="14" x2="26" y2="42" stroke="#FBBF24" stroke-width="3" stroke-linecap="round" opacity="0.95"/></svg>`,
+  about: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-about" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8829B"/><stop offset="100%" stop-color="#C45A7C"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-about)"/><circle cx="28" cy="21" r="8" fill="white" opacity="0.95"/><path d="M14 44c0-7.7 6.3-14 14-14s14 6.3 14 14" fill="white" opacity="0.95"/></svg>`,
+  capture: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-cap" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8829B"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-cap)"/><rect x="12" y="16" width="22" height="24" rx="4" fill="white" opacity="0.95"/><path d="M34 23l10-5v20l-10-5z" fill="white" opacity="0.95"/><circle cx="23" cy="28" r="4.5" fill="#E8829B"/></svg>`,
   user: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-user" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8829B"/><stop offset="100%" stop-color="#C45A7C"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-user)"/><circle cx="28" cy="21" r="8" fill="white" opacity="0.95"/><path d="M14 44c0-7.7 6.3-14 14-14s14 6.3 14 14" fill="white" opacity="0.95"/></svg>`,
   terminal: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-term" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#1a1a2e"/><stop offset="100%" stop-color="#0d0d1a"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-term)"/><path d="M16 20l10 8-10 8" stroke="#7EDDD6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M30 38h12" stroke="#7EDDD6" stroke-width="3" stroke-linecap="round" fill="none"/></svg>`,
   notes: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-notes" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FDBA74"/><stop offset="100%" stop-color="#FB923C"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-notes)"/><rect x="15" y="10" width="26" height="36" rx="3" fill="white" opacity="0.95"/><line x1="21" y1="20" x2="35" y2="20" stroke="#FB923C" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="26" x2="35" y2="26" stroke="#FB923C" stroke-width="2" stroke-linecap="round"/><line x1="21" y1="32" x2="30" y2="32" stroke="#FB923C" stroke-width="2" stroke-linecap="round"/></svg>`,
@@ -68,7 +75,6 @@ const ICONS: Record<string, string> = {
   meo: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-meo" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#B8C4D0"/><stop offset="50%" stop-color="#8899AA"/><stop offset="100%" stop-color="#6B7B8D"/></linearGradient><radialGradient id="g-meo-core" cx="45%" cy="40%"><stop offset="0%" stop-color="white" stop-opacity="0.95"/><stop offset="100%" stop-color="white" stop-opacity="0.3"/></radialGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-meo)"/><circle cx="28" cy="28" r="14" fill="url(#g-meo-core)" opacity="0.9"/><circle cx="28" cy="28" r="10" fill="none" stroke="white" stroke-width="1.5" opacity="0.4"/><circle cx="28" cy="28" r="6" fill="white" opacity="0.5"/><circle cx="24" cy="24" r="3" fill="white" opacity="0.8"/></svg>`,
   files: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-files" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#93C5FD"/><stop offset="100%" stop-color="#60A5FA"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-files)"/><path d="M14 12h12l4 4h12a2 2 0 012 2v22a2 2 0 01-2 2H14a2 2 0 01-2-2V14a2 2 0 012-2z" fill="white" opacity="0.9"/><rect x="16" y="22" width="24" height="3" rx="1.5" fill="#60A5FA" opacity="0.5"/><rect x="16" y="29" width="18" height="3" rx="1.5" fill="#60A5FA" opacity="0.35"/><rect x="16" y="36" width="22" height="3" rx="1.5" fill="#60A5FA" opacity="0.25"/></svg>`,
   store: `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-store" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#E8829B"/><stop offset="100%" stop-color="#C45A7C"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-store)"/><rect x="12" y="20" width="32" height="24" rx="3" fill="white" opacity="0.15"/><path d="M12 20h32" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.9"/><path d="M16 20l3-5h18l3 5" stroke="white" stroke-width="2" fill="none" opacity="0.8"/><rect x="17" y="26" width="9" height="8" rx="2" fill="white" opacity="0.85"/><rect x="30" y="26" width="9" height="8" rx="2" fill="white" opacity="0.85"/><rect x="17" y="37" width="9" height="4" rx="1.5" fill="white" opacity="0.6"/><rect x="30" y="37" width="9" height="4" rx="1.5" fill="white" opacity="0.6"/></svg>`,
-  // Store-installed app icons — premium dock style
   'dock-weather': `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-weather" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#93C5FD"/><stop offset="100%" stop-color="#3B82F6"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-weather)"/><circle cx="30" cy="20" r="8" fill="white" opacity="0.9"/><path d="M16 32a9 9 0 0116-7 7 7 0 015 12H14a7 7 0 012-12z" fill="white" opacity="0.85"/></svg>`,
   'dock-kanban': `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-kanban" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#86EFAC"/><stop offset="100%" stop-color="#4ADE80"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-kanban)"/><rect x="10" y="12" width="10" height="32" rx="3" fill="white" opacity="0.9"/><rect x="10" y="12" width="10" height="10" rx="3" fill="white" opacity="0.55"/><rect x="23" y="12" width="10" height="22" rx="3" fill="white" opacity="0.9"/><rect x="23" y="12" width="10" height="8" rx="3" fill="white" opacity="0.55"/><rect x="36" y="12" width="10" height="16" rx="3" fill="white" opacity="0.9"/><rect x="36" y="12" width="10" height="6" rx="3" fill="white" opacity="0.55"/></svg>`,
   'dock-timer': `<svg viewBox="0 0 56 56"><defs><linearGradient id="g-timer" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#FDBA74"/><stop offset="100%" stop-color="#F97316"/></linearGradient></defs><rect width="56" height="56" rx="14" fill="url(#g-timer)"/><circle cx="28" cy="30" r="14" fill="none" stroke="white" stroke-width="2.5" opacity="0.9"/><path d="M28 20v10l7 4" stroke="white" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.9"/><rect x="24" y="8" width="8" height="4" rx="2" fill="white" opacity="0.8"/></svg>`,
@@ -87,7 +93,6 @@ export default function Dock() {
   const [bouncing, setBouncing] = useState<string | null>(null)
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null)
 
-  // Merge core dock items with installed store apps
   const dockItems = useMemo(() => {
     const installed = installedStoreApps
       .filter(id => storeDockApps[id])
@@ -95,7 +100,6 @@ export default function Dock() {
     return [...coreDockItems, ...installed]
   }, [installedStoreApps])
 
-  // Magnification via direct DOM manipulation (no React re-renders)
   const handleMouseMove = (e: React.MouseEvent) => {
     const container = containerRef.current
     if (!container) return
@@ -131,7 +135,7 @@ export default function Dock() {
     setRipple({ x: origin.x, y: origin.y })
     setTimeout(() => setRipple(null), 800)
     try { (window as any).__syauPlayClick?.('open') } catch {}
-    addNotif(`${item.label} launched`, '🚀', 2000)
+    addNotif(`${item.label} launched`, 'rocket', 2000)
   }
 
   return (
