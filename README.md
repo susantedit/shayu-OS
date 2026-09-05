@@ -2,7 +2,7 @@
 
 # स्याउ OS (Syau OS)
 
-**A high-performance web desktop operating system created by Kantaraj Luitel (Susant)**
+**A client-side web desktop environment built by Kantaraj Luitel (Susant)**
 
 Built for the [Hack Club](https://hackclub.com) WebOS Jam
 
@@ -15,89 +15,54 @@ Built for the [Hack Club](https://hackclub.com) WebOS Jam
 
 ---
 
-##  About the Creator
+## About the Creator
 
-**Kantaraj Luitel (Susant)** — Developer, Cybersecurity Enthusiast, Content Creator, and Hackathon Winner from Nepal 🇳🇵.
-- **2nd Place** - Campfire Kathmandu 2026 (HackClub)
--  **Oracle Cloud Certified** Generative AI Professional & AI Foundations Associate
--  **APIsec Certified Practitioner**
--  [GitHub Profile](https://github.com/susantedit) • [LinkedIn](https://linkedin.com/in/kantaraj-luitel) • [Buy Me a Coffee](https://buymeacoffee.com/Susantedit)
+**Kantaraj Luitel (Susant)** — Developer, cybersecurity enthusiast, and builder from Nepal.
+- **2nd Place** - Campfire Kathmandu 2026 (Hack Club)
+- **Oracle Cloud Certified** Generative AI Professional & AI Foundations Associate
+- **APIsec Certified Practitioner**
+- [GitHub Profile](https://github.com/susantedit) | [LinkedIn](https://linkedin.com/in/kantaraj-luitel) | [Buy Me a Coffee](https://buymeacoffee.com/Susantedit)
 
 ---
 
-##  About स्याउ OS
+## About स्याउ OS
 
-**स्याउ OS** (Syau OS) is a full-featured, client-side web desktop environment. It features a bilingual typography system (**Noto Sans Devanagari** + **Space Grotesk** + **Inter**), dual Dark & White Light theme mode engine, native Devlog viewer app, Bikram Sambat Nepali date converter widget, Meo AI OS assistant, and draggable windows.
+**स्याउ OS** (Syau OS) is a web-based desktop environment that runs entirely in the browser. The name "स्याउ" (pronounced *Syau*) means "Apple" in Nepali, serving as a playful nod to macOS while spotlighting native Devanagari typography (**Noto Sans Devanagari**) paired with clean monospace and sans-serif typefaces.
 
 ---
 
 ## Features
 
-### Desktop Environment
-- **Windowing system** — drag, resize (8 directions), minimize, maximize, close with macOS-style traffic lights
-- **Dock** — macOS-style magnification, bounce animations, launch ripple effects, open-app indicators
-- **Top bar** — clock, battery/wifi/volume icons, logo dropdown menu, active app indicator
-- **Context menu** — right-click anywhere for quick app access
-- **Spotlight search** — press `Cmd+K` / `Ctrl+K` to search and launch apps
-- **Lock screen** — auto-locks after 5 minutes of inactivity, click to unlock
-- **Desktop widgets** — analog clock (canvas-drawn) and calendar, toggleable from Settings
-- **Notifications** — toast notifications for app launches and actions
+### Window Management & Desktop
+- **Windowing System**: Draggable and resizable windows with focus elevation (z-index handling), minimize, maximize, and close controls.
+- **Dock**: Floating application dock with hover magnification, active app indicators, and responsive horizontal scrolling on mobile.
+- **Top Bar**: System status bar featuring time, audio/wifi/battery indicators, logo menu, and live **Bikram Sambat (BS)** Nepali calendar dates.
+- **Mobile Responsive**: Automatic window clamping and auto-maximize on mobile screens with touch-friendly controls.
+- **Dual Themes**: Switch between Dark Mode and Light Mode with consistent CSS variables.
 
-### Pixel Cat Pet
-- 16x16 pixel art sprite rendered on canvas at 3x scale
-- **Walk cycle** — animated legs when following cursor
-- **Idle** — gentle bounce, tail swish between frames
-- **Sleep** — eyes closed, "z" particles float up after 15s of no mouse movement
-- **Happy** — heart eyes, floating heart particles on click
-- **Blink** — periodic eye-close animation
-- **Pin/unpin** — click to pin in place, click again to resume following cursor
-
-### Visual Design
-- **Dark gothic-kawaii palette** — deep blacks, sakura pink, miku teal, lavender, mint, peach
-- **Glassmorphism** — blur, saturation, and subtle borders on every panel
-- **Cursor trail** — sakura-colored comet tail (canvas-based, zero lag)
-- **Parallax background** — glow orbs shift with mouse movement
-- **Shimmer effect** — subtle light sweep on windows every 20 seconds
-- **Boot sequence** — logo reveal with blur → welcome fade → terminal with BIOS/kernel/services → particle burst → staggered desktop assembly
-- **Boot chime** — C major chord via Web Audio API
-
-### Easter Eggs
-- **Konami Code** — press `↑↑↓↓←→←→BA` anywhere for a confetti explosion
-- **Rainbow mode** — click the "स्याउ OS" logo 10 times for a rainbow top bar
-- **Desktop pet** — the pet follows your cursor
-- **Terminal `sudo`** — try it and find out ;)
-
----
-
-## Built-in Apps
-
-| App | Description |
-|-----|-------------|
-| **Creator Profile** | Interactive portfolio app for Kantaraj Luitel (Susant) with tabs for Bio, Certs, Stack & Socials |
-| **Devlogs** | Built-in Devlog viewer app with search filter covering Architecture, Dual Themes & Web Responsiveness |
-| **About Me** | Profile card with avatar, bio, tags, and creator profile button |
-| **Terminal** | Custom shell (`syau-sh`) with 20+ commands including `neofetch`, `cowsay`, `matrix`, `weather`, and more |
-| **Notes** | Text editor with auto-save to localStorage and word count |
-| **Calculator** | Basic calculator with keyboard support |
-| **Music Player** | Spotify Web Player Hub with Nepali Hits, Lofi, Anime OSTs, Synthwave, Jazz, and custom Spotify link loader |
-| **Gallery** | 33-photo Google Drive gallery with hover tooltips, lightbox viewer, upload & deletion |
-| **Browser** | Embedded web browser with Google Translate and Wayback Machine proxy fallback |
-| **Settings** | Theme modes (Dark & White Light Mode), accent colors, wallpapers, widget toggle |
-| **Guide** | Accordion-style guide covering every feature, command, and easter egg |
+### Built-in Apps
+- **Devlogs**: Built-in interactive devlog reader sharing the real building journey, challenges, and code cleanup.
+- **Notes**: Simple text scratchpad with instant local storage saving and live word counter.
+- **Calculator**: Clean calculator with keyboard support and basic operations.
+- **Music Player**: Spotify Web Player integration featuring curated playlists (Nepali Classics, Lofi, Anime OSTs).
+- **Terminal**: Browser shell (`syau-sh`) with utility commands (`neofetch`, `help`, `date`, `clear`).
+- **Creator Profile**: Profile window highlighting certifications, projects, and contact links.
+- **Gallery**: Lightbox photo gallery with thumbnail previews and zoom view.
+- **Settings**: System customization for themes, accent colors, and desktop widgets.
 
 ---
 
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
+|---|---|
 | Framework | React 19 |
-| Language | TypeScript 6 |
-| Build Tool | Vite 8 |
-| Styling | Tailwind CSS 4 + Custom CSS Design Tokens |
-| Typography | Noto Sans Devanagari 600 + Space Grotesk 700 + Inter |
-| State | Zustand |
-| Animation | Framer Motion |
+| Language | TypeScript |
+| Build Tool | Vite |
+| Styling | Tailwind CSS + CSS Custom Properties |
+| Typography | Noto Sans Devanagari + Space Grotesk + Inter |
+| State Management | Zustand |
+| Motion | Framer Motion |
 | Icons | Lucide React |
 
 ---
@@ -121,18 +86,21 @@ npm run build
 
 ---
 
-##  Development Journey & Acknowledgments
+## AI Disclosure & Building Process
 
-This project started from a simple, minimal concept. To turn it into a full fledged web operating system, I took a step back to research deeply, watch tutorials, and learn new architectural concepts from non blocking state management to windowing mathematics and canvas rendering. 
+In the spirit of Hack Club's focus on learning and authentic engineering:
 
-While I built and experimented with many parts myself, I believe in full transparency: I actively collaborated with AI tools throughout the journey. AI assisted me as a learning partner, helping debug tricky logic, brainstorm features, and rewrite/polish my content and documentation into clean, grammatically sound English. This project represents both my hands on learning curve and the modern workflow of building with AI assistance.
+- **Initial Scaffolding**: I initially used AI assistance for brainstorming features, exploring window manager concepts, and scaffolding initial component templates.
+- **Refactoring & Ownership**: Following feedback from Hack Club reviewers (Shreerang), I have been actively refactoring the codebase by hand:
+  - Rewriting the devlogs in my authentic voice detailing the real bugs I encountered (window z-index bugs, mobile touch handling, iframe reloads).
+  - De-vibing the CSS: replacing hyper-saturated neon glows and heavy blur with clean, intentional theme tokens.
+  - Removing AI boilerplate comments and simplifying application logic across Notes, Calculator, Widgets, and Terminal.
+  - Making frequent, incremental git commits documenting real iterative coding progress.
 
 ---
 
 <div align="center">
 
-**स्याउ OS (Syau OS) v1.3.0** — Created by Kantaraj Luitel (Susant) 🇳🇵
-
-</div>
+**स्याउ OS (Syau OS)** — Created by Kantaraj Luitel (Susant), Nepal
 
 </div>
