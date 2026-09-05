@@ -13,44 +13,47 @@ export default function Widgets() {
   const isAnyMaximized = windows.some(w => w.workspace === currentWorkspace && !w.minimized && w.maximized)
 
   useEffect(() => {
-    const handler = () => setEnabled(localStorage.getItem('syau-os-widgets') !== 'off')
-    window.addEventListener('storage', handler)
-    const interval = setInterval(handler, 500)
-    return () => { window.removeEventListener('storage', handler); clearInterval(interval) }
+    const syncWidgetState = () => setEnabled(localStorage.getItem('syau-os-widgets') !== 'off')
+    window.addEventListener('storage', syncWidgetState)
+    const interval = setInterval(syncWidgetState, 500)
+    return () => { window.removeEventListener('storage', syncWidgetState); clearInterval(interval) }
   }, [])
 
-  // Clock tick
   useEffect(() => {
     if (!enabled) return
     const interval = setInterval(() => setTime(new Date()), 1000)
     return () => clearInterval(interval)
   }, [enabled])
 
-  // Draw analog clock
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas || !enabled) return
-    const ctx = canvas.getContext('2d')!
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
     const size = 140
-    canvas.width = size; canvas.height = size
-    const cx = size / 2, cy = size / 2, r = size / 2 - 8
+    canvas.width = size
+    canvas.height = size
+    const cx = size / 2
+    const cy = size / 2
+    const r = size / 2 - 8
 
     let frame: number
     const draw = () => {
       const now = new Date()
-      const h = now.getHours() % 12, m = now.getMinutes(), s = now.getSeconds()
+      const h = now.getHours() % 12
+      const m = now.getMinutes()
+      const s = now.getSeconds()
       ctx.clearRect(0, 0, size, size)
 
-      // Clock face
       ctx.beginPath()
       ctx.arc(cx, cy, r, 0, Math.PI * 2)
-      ctx.fillStyle = 'rgba(255,255,255,0.03)'
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.03)'
       ctx.fill()
-      ctx.strokeStyle = 'rgba(255,255,255,0.1)'
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)'
       ctx.lineWidth = 2
       ctx.stroke()
 
-      // Hour markers
       for (let i = 0; i < 12; i++) {
         const angle = (i * 30 - 90) * Math.PI / 180
         const inner = i % 3 === 0 ? r - 14 : r - 10
@@ -58,12 +61,11 @@ export default function Widgets() {
         ctx.beginPath()
         ctx.moveTo(cx + inner * Math.cos(angle), cy + inner * Math.sin(angle))
         ctx.lineTo(cx + outer * Math.cos(angle), cy + outer * Math.sin(angle))
-        ctx.strokeStyle = i % 3 === 0 ? 'rgba(232,130,155,0.6)' : 'rgba(255,255,255,0.15)'
+        ctx.strokeStyle = i % 3 === 0 ? 'rgba(232, 130, 155, 0.6)' : 'rgba(255, 255, 255, 0.15)'
         ctx.lineWidth = i % 3 === 0 ? 2.5 : 1.5
         ctx.stroke()
       }
 
-      // Hour hand
       const hAngle = ((h + m / 60) * 30 - 90) * Math.PI / 180
       ctx.beginPath()
       ctx.moveTo(cx, cy)
@@ -73,7 +75,6 @@ export default function Widgets() {
       ctx.lineCap = 'round'
       ctx.stroke()
 
-      // Minute hand
       const mAngle = ((m + s / 60) * 6 - 90) * Math.PI / 180
       ctx.beginPath()
       ctx.moveTo(cx, cy)
@@ -83,7 +84,6 @@ export default function Widgets() {
       ctx.lineCap = 'round'
       ctx.stroke()
 
-      // Second hand
       const sAngle = (s * 6 - 90) * Math.PI / 180
       ctx.beginPath()
       ctx.moveTo(cx, cy)
@@ -93,7 +93,6 @@ export default function Widgets() {
       ctx.lineCap = 'round'
       ctx.stroke()
 
-      // Center dot
       ctx.beginPath()
       ctx.arc(cx, cy, 3, 0, Math.PI * 2)
       ctx.fillStyle = 'var(--color-sakura)'
@@ -101,6 +100,7 @@ export default function Widgets() {
 
       frame = requestAnimationFrame(draw)
     }
+
     draw()
     return () => cancelAnimationFrame(frame)
   }, [enabled])
@@ -108,7 +108,6 @@ export default function Widgets() {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
   if (!enabled || isAnyMaximized || isMobile) return null
 
-  // Calendar data
   const today = new Date()
   const isCurrentMonth = calMonth === today.getMonth() && calYear === today.getFullYear()
   const firstDay = new Date(calYear, calMonth, 1).getDay()
@@ -120,20 +119,29 @@ export default function Widgets() {
   for (let d = 1; d <= daysInMonth; d++) calendarDays.push(d)
 
   const prevMonth = () => {
-    if (calMonth === 0) { setCalMonth(11); setCalYear(y => y - 1) }
-    else setCalMonth(m => m - 1)
+    if (calMonth === 0) {
+      setCalMonth(11)
+      setCalYear(y => y - 1)
+    } else {
+      setCalMonth(m => m - 1)
+    }
   }
+
   const nextMonth = () => {
-    if (calMonth === 11) { setCalMonth(0); setCalYear(y => y + 1) }
-    else setCalMonth(m => m + 1)
+    if (calMonth === 11) {
+      setCalMonth(0)
+      setCalYear(y => y + 1)
+    } else {
+      setCalMonth(m => m + 1)
+    }
   }
 
   const glassStyle: React.CSSProperties = {
-    background: 'linear-gradient(135deg, rgba(8,10,20,0.55) 0%, rgba(4,5,12,0.65) 50%, rgba(10,12,22,0.55) 100%)',
-    backdropFilter: 'blur(40px) saturate(2) brightness(1.15)',
-    borderRadius: 18,
-    border: '1px solid rgba(255,255,255,0.1)',
-    boxShadow: '0 12px 48px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.08) inset',
+    background: 'var(--color-window-bg)',
+    backdropFilter: 'blur(20px)',
+    borderRadius: 16,
+    border: '1px solid var(--color-border)',
+    boxShadow: '0 8px 32px var(--color-shadow)',
     padding: 16,
     position: 'relative',
   }
@@ -172,7 +180,7 @@ export default function Widgets() {
                 background: isToday ? 'var(--color-sakura)' : 'transparent',
                 borderRadius: 6, width: 26, height: 22,
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                margin: '0 auto', cursor: d ? 'default' : 'default',
+                margin: '0 auto', cursor: 'default',
               }}>
                 {d || ''}
               </div>
