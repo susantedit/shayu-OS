@@ -92,6 +92,7 @@ export default function Dock() {
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
   const [bouncing, setBouncing] = useState<string | null>(null)
   const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null)
+  const [isMagnifying, setIsMagnifying] = useState(false)
 
   const dockItems = useMemo(() => {
     const installed = installedStoreApps
@@ -101,22 +102,36 @@ export default function Dock() {
   }, [installedStoreApps])
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    const container = containerRef.current
-    if (!container) return
-    const rect = container.getBoundingClientRect()
-    const mouseX = e.clientX - rect.left
-    const itemSize = 48, gap = 6
-    itemRefs.current.forEach((el, i) => {
+    if (window.matchMedia('(pointer: coarse)').matches) return
+    if (!isMagnifying) setIsMagnifying(true)
+    const mouseX = e.clientX
+    const maxDist = 135
+    const maxScale = 0.42
+    const maxTranslateY = -14
+
+    itemRefs.current.forEach((el) => {
       if (!el) return
-      const center = 14 + i * (itemSize + gap) + itemSize / 2
-      const dist = Math.abs(mouseX - center)
-      const scale = 1 + Math.max(0, 0.35 * (1 - dist / (itemSize * 1.8)))
-      el.style.transform = `scale(${scale})`
+      const rect = el.getBoundingClientRect()
+      const itemCenterX = rect.left + rect.width / 2
+      const dist = Math.abs(mouseX - itemCenterX)
+
+      if (dist < maxDist) {
+        const norm = dist / maxDist
+        const factor = Math.cos((norm * Math.PI) / 2) ** 2
+        const scale = 1 + maxScale * factor
+        const y = maxTranslateY * factor
+        el.style.transform = `translate3d(0, ${y}px, 0) scale(${scale})`
+      } else {
+        el.style.transform = 'translate3d(0, 0, 0) scale(1)'
+      }
     })
   }
 
   const handleMouseLeave = () => {
-    itemRefs.current.forEach(el => { if (el) el.style.transform = 'scale(1)' })
+    setIsMagnifying(false)
+    itemRefs.current.forEach(el => {
+      if (el) el.style.transform = 'translate3d(0, 0, 0) scale(1)'
+    })
   }
 
   const handleClick = (item: DockItem, e: React.MouseEvent) => {
@@ -131,7 +146,7 @@ export default function Dock() {
     const origin = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
     openWindow(item.id, appTitles[item.id] || item.label, w, h, origin)
     setBouncing(item.id)
-    setTimeout(() => setBouncing(null), 600)
+    setTimeout(() => setBouncing(null), 650)
     setRipple({ x: origin.x, y: origin.y })
     setTimeout(() => setRipple(null), 800)
     try { (window as any).__syauPlayClick?.('open') } catch {}
@@ -140,52 +155,56 @@ export default function Dock() {
 
   return (
     <>
-    <motion.div
-      ref={containerRef}
-      className="dock-container"
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      initial={{ y: 80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-    >
-      {dockItems.map((item, i) => (
-        <motion.div
-          key={item.id}
-          ref={el => { itemRefs.current[i] = el }}
-          className="dock-item cursor-pointer"
-          data-clickable="true"
-          style={{
-            background: 'transparent',
-            border: 'none',
-            backdropFilter: 'none',
-            padding: 0,
-            cursor: 'pointer',
-          }}
-          onClick={(e) => handleClick(item, e)}
-          animate={bouncing === item.id ? {
-            y: [0, -12, 0, -6, 0],
-            transition: { duration: 0.4, ease: 'easeOut' }
-          } : {}}
-          layout
-          transition={{ layout: { type: 'spring', stiffness: 400, damping: 30 } }}
-        >
-          <div className="dock-icon-wrapper"
-            dangerouslySetInnerHTML={{ __html: ICONS[item.icon] }} />
-          <div className="dock-tooltip">
-            {item.label}
-          </div>
-          {openApps.includes(item.id) && (
-            <motion.div
-              className="dock-item-dot"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+    <div className="dock-wrapper">
+      <motion.div
+        ref={containerRef}
+        className={`dock-container ${isMagnifying ? 'is-magnifying' : ''}`}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        initial={{ y: 80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+      >
+        {dockItems.map((item, i) => (
+          <motion.div
+            key={item.id}
+            ref={el => { itemRefs.current[i] = el }}
+            className="dock-item cursor-pointer"
+            data-clickable="true"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              backdropFilter: 'none',
+              padding: 0,
+              cursor: 'pointer',
+            }}
+            onClick={(e) => handleClick(item, e)}
+            animate={bouncing === item.id ? {
+              y: [0, -18, 0, -9, 0, -3, 0],
+              transition: { duration: 0.6, ease: 'easeOut' }
+            } : {}}
+            layout
+            transition={{ layout: { type: 'spring', stiffness: 400, damping: 30 } }}
+          >
+            <div
+              className="dock-icon-wrapper"
+              dangerouslySetInnerHTML={{ __html: ICONS[item.icon] }}
             />
-          )}
-        </motion.div>
-      ))}
-    </motion.div>
+            <div className="dock-tooltip">
+              {item.label}
+            </div>
+            {openApps.includes(item.id) && (
+              <motion.div
+                className="dock-item-dot"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 500, damping: 20 }}
+              />
+            )}
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
 
     {ripple && (
       <div style={{

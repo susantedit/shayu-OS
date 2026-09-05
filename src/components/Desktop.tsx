@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import {
+  User, Sparkles, BookOpen, Terminal as TermIcon,
+  FileText, Folder, Settings as SettingsIcon, Code2
+} from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 import { mediaUrl } from '../config'
 
@@ -50,17 +54,28 @@ export default function Desktop() {
     return () => { el.removeEventListener('mousemove', onMove); cancelAnimationFrame(raf) }
   }, [])
 
-  const handleContextMenu = (e: React.MouseEvent) => { e.preventDefault(); setContextMenu({ x: e.clientX, y: e.clientY }) }
+  const handleContextMenu = (e: React.MouseEvent) => {
+    e.preventDefault()
+    const menuWidth = 230
+    const menuHeight = 330
+    const pad = 12
+    const x = Math.min(e.clientX, Math.max(pad, window.innerWidth - menuWidth - pad))
+    const y = Math.min(e.clientY, Math.max(pad, window.innerHeight - menuHeight - pad))
+    setContextMenu({ x, y })
+  }
   const handleClick = () => setContextMenu(null)
 
   const menuItems = [
-    { label: 'Creator Profile (Susant)', action: () => openWindow('creator', 'Kantaraj Luitel (Susant) - Creator Profile', 860, 580) },
-    { label: 'About स्याउ OS', action: () => openWindow('about', 'About Me', 480, 540) },
-    { label: 'Devlogs', action: () => openWindow('devlogs', 'Devlogs', 840, 560) },
-    { label: 'Terminal', action: () => openWindow('terminal', 'Terminal', 600, 400) },
-    { label: 'Notes', action: () => openWindow('notes', 'Notes', 500, 450) },
+    { label: 'Creator Profile (Susant)', icon: User, action: () => openWindow('creator', 'Kantaraj Luitel (Susant) - Creator Profile', 860, 580) },
+    { label: 'About स्याउ OS', icon: Sparkles, action: () => openWindow('about', 'About Me', 480, 540) },
+    { label: 'Devlogs', icon: BookOpen, action: () => openWindow('devlogs', 'Devlogs', 840, 560) },
     { divider: true },
-    { label: 'Settings', action: () => openWindow('settings', 'Settings', 520, 600) },
+    { label: 'Syau Studio (IDE)', icon: Code2, shortcut: 'Cmd+S', action: () => openWindow('studio', 'Syau Studio - Live Web IDE & Code Sandbox', 920, 600) },
+    { label: 'Terminal', icon: TermIcon, shortcut: 'Cmd+T', action: () => openWindow('terminal', 'Terminal', 600, 400) },
+    { label: 'Notes', icon: FileText, shortcut: 'Cmd+N', action: () => openWindow('notes', 'Notes', 500, 450) },
+    { label: 'Files', icon: Folder, action: () => openWindow('files', 'Files', 640, 480) },
+    { divider: true },
+    { label: 'Settings', icon: SettingsIcon, shortcut: 'Cmd+,', action: () => openWindow('settings', 'Settings', 520, 600) },
   ]
 
   return (
@@ -170,24 +185,31 @@ export default function Desktop() {
             className="context-menu"
             style={{ left: contextMenu.x, top: contextMenu.y }}
             onClick={e => e.stopPropagation()}
-            initial={{ opacity: 0, scale: 0.92, y: -4 }}
+            initial={{ opacity: 0, scale: 0.94, y: -6 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: -4 }}
-            transition={{ duration: 0.15, ease: 'easeOut' }}
+            exit={{ opacity: 0, scale: 0.94, y: -6 }}
+            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
           >
             {menuItems.map((item, i) => {
-              if ('divider' in item) return <motion.div key={i} className="context-menu-divider" />
+              if ('divider' in item && item.divider) {
+                return <div key={`div-${i}`} className="context-menu-divider" />
+              }
+              const Icon = item.icon
               return (
-                <motion.div
-                  key={i}
+                <button
+                  key={item.label}
+                  type="button"
                   className="context-menu-item"
-                  onClick={() => { item.action(); setContextMenu(null) }}
-                  initial={{ opacity: 0, x: -8 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.03, duration: 0.15 }}
+                  onClick={() => { item.action?.(); setContextMenu(null) }}
                 >
-                  {item.label}
-                </motion.div>
+                  <span className="context-menu-item-left">
+                    {Icon && <Icon size={14} className="context-menu-icon" />}
+                    <span>{item.label}</span>
+                  </span>
+                  {item.shortcut && (
+                    <span className="context-menu-shortcut">{item.shortcut}</span>
+                  )}
+                </button>
               )
             })}
           </motion.div>

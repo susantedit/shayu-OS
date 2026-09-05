@@ -728,78 +728,107 @@ button:active { transform: scale(0.97); }
 }
 
 /* === Dock — Liquid Glass === */
-.dock-container {
+.dock-wrapper {
   position: fixed;
-  bottom: 10px;
+  bottom: 12px;
   left: 0;
   right: 0;
-  z-index: 90;
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.dock-container {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-end;
   gap: 6px;
-  padding: 10px 14px;
-  background: linear-gradient(135deg, rgba(8,10,20,0.45) 0%, rgba(4,5,12,0.5) 50%, rgba(10,12,22,0.45) 100%);
-  backdrop-filter: blur(24px) saturate(1.5) brightness(1.1);
+  padding: 8px 12px;
+  background: linear-gradient(135deg, rgba(14, 16, 26, 0.72) 0%, rgba(8, 10, 18, 0.78) 100%);
+  backdrop-filter: blur(28px) saturate(1.8) brightness(1.08);
+  -webkit-backdrop-filter: blur(28px) saturate(1.8) brightness(1.08);
   border-radius: 22px;
-  border: 1px solid rgba(255,255,255,0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow:
-    0 4px 20px rgba(0,0,0,0.3),
-    0 1px 0 rgba(255,255,255,0.05) inset;
+    0 16px 40px -8px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 1px 0 rgba(255, 255, 255, 0.18) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.35) inset;
 }
 
 .dock-item {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 28px;
   cursor: pointer;
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, margin 0.15s ease;
   position: relative;
   user-select: none;
   will-change: transform;
   transform-origin: bottom center;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
 }
-.dock-item:hover {
-  transform: translateY(-8px) scale(1.15);
-  box-shadow: 0 8px 20px rgba(232,130,155,0.15), 0 0 30px rgba(232,130,155,0.08);
-  background: rgba(255,255,255,0.06) !important;
-  border-color: rgba(232,130,155,0.12) !important;
+
+.dock-container.is-magnifying .dock-item {
+  transition: transform 0.035s linear, box-shadow 0.15s ease;
 }
+
 .dock-item:active {
-  transform: translateY(-4px) scale(1.05);
+  filter: brightness(0.9);
+}
+
+.dock-icon-wrapper {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.dock-icon-wrapper svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
 }
 
 .dock-item-dot {
   position: absolute;
-  bottom: -4px;
-  width: 4px;
-  height: 4px;
+  bottom: -5px;
+  width: 4.5px;
+  height: 4.5px;
   border-radius: 50%;
   background: var(--color-sakura);
+  box-shadow: 0 0 6px var(--color-sakura), 0 0 10px rgba(232, 130, 155, 0.7);
 }
 
 .dock-tooltip {
   position: absolute;
-  top: -38px;
+  top: -40px;
   left: 50%;
   transform: translateX(-50%) translateY(4px);
-  background: rgba(14, 10, 20, 0.95);
-  backdrop-filter: blur(16px) saturate(1.8);
+  background: rgba(12, 10, 20, 0.92);
+  backdrop-filter: blur(20px) saturate(1.8);
+  -webkit-backdrop-filter: blur(20px) saturate(1.8);
   color: var(--color-text-primary);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 5px 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  padding: 5px 11px;
   border-radius: 8px;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transform-origin: bottom center;
+  transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.15);
   z-index: 100;
 }
 .dock-item:hover .dock-tooltip {
@@ -937,36 +966,72 @@ button:active { transform: scale(0.97); }
 .context-menu {
   position: fixed;
   z-index: 200;
-  background: linear-gradient(135deg, rgba(6,8,14,0.85) 0%, rgba(3,4,8,0.9) 100%);
-  backdrop-filter: blur(30px) saturate(1.8) brightness(1.1);
-  border-radius: 10px;
-  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(135deg, rgba(14, 16, 26, 0.84) 0%, rgba(8, 10, 18, 0.88) 100%);
+  backdrop-filter: blur(28px) saturate(1.9) brightness(1.08);
+  -webkit-backdrop-filter: blur(28px) saturate(1.9) brightness(1.08);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.5),
-    0 1px 0 rgba(255,255,255,0.04) inset;
-  padding: 4px;
-  min-width: 180px;
+    0 16px 36px -4px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 1px 0 rgba(255, 255, 255, 0.16) inset;
+  padding: 5px;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 .context-menu-item {
-  padding: 7px 12px;
-  border-radius: 6px;
-  font-size: 13px;
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12.5px;
   font-weight: 500;
   cursor: pointer;
-  transition: background 0.1s;
+  background: transparent;
+  border: none;
+  text-align: left;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
+  gap: 12px;
   color: var(--color-text-primary);
+  transition: background 0.12s ease, color 0.12s ease, transform 0.08s ease;
+  user-select: none;
+}
+.context-menu-item-left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.context-menu-icon {
+  color: var(--color-text-secondary);
+  transition: color 0.12s ease;
+  flex-shrink: 0;
+}
+.context-menu-shortcut {
+  font-size: 10.5px;
+  font-family: var(--font-mono, monospace);
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 .context-menu-item:hover {
-  background: rgba(232,130,155,0.15);
+  background: rgba(232, 130, 155, 0.18);
+  color: #ffffff;
+}
+.context-menu-item:hover .context-menu-icon {
   color: var(--color-sakura);
+}
+.context-menu-item:active {
+  transform: scale(0.98);
 }
 .context-menu-divider {
   height: 1px;
-  background: var(--color-border);
-  margin: 4px 8px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 4px 6px;
 }
 
 /* === Notification === */
@@ -1089,12 +1154,6 @@ button:active { transform: scale(0.97); }
   opacity: 0;
 }
 
-/* === Dock Magnification === */
-.dock-container .dock-item {
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s, margin 0.15s ease;
-  will-change: transform;
-  transform-origin: bottom center;
-}
 
 /* === TopBar Dropdown === */
 .topbar-dropdown {
@@ -1182,8 +1241,10 @@ button:active { transform: scale(0.97); }
     gap: 6px;
     font-size: 11px;
   }
-  .dock-container {
+  .dock-wrapper {
     bottom: 6px;
+  }
+  .dock-container {
     padding: 5px 8px;
     gap: 4px;
     max-width: calc(100vw - 12px);
