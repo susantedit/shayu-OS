@@ -24,10 +24,10 @@ const COMMANDS: Record<string, (text?: string) => string> = {
 
   whoami: () => 'Kantaraj Luitel (Susant) -- builder, researcher, cybersecurity enthusiast',
 
-  about: () => `स्याउ OS v1.0.0
-A modern web-based operating system built for Hack Club.
-Made with React, TypeScript, Tailwind CSS, Noto Sans Devanagari & Space Grotesk.
-Designed by Kantaraj Luitel (Susant).`,
+  about: () => `स्याउ OS v1.3.1
+A web-based desktop environment built for Hack Club.
+Engineered with React, TypeScript, Tailwind CSS, Noto Sans Devanagari & Space Grotesk.
+Built by Kantaraj Luitel (Susant).`,
 
   skills: () => `Languages:    TypeScript, JavaScript, Python, C, SQL
 Frameworks:  React, Next.js, Tailwind, Node.js
@@ -44,12 +44,12 @@ LinkedIn: linkedin.com/in/kantaraj-luitel`,
   neofetch: () => `
   /\\_/\\      susant@syau-os
  ( o.o )     ----------------
-  > ^ <      OS: स्याउ OS 1.0.0
+  > ^ <      OS: स्याउ OS 1.3.1
  /|   |\\     Kernel: React 19 + TypeScript
-(_|   |_)    Shell: syau-sh 1.0
+(_|   |_)    Shell: syau-sh 1.3
              Resolution: responsive
              WM: Framer Motion
-             Theme: Dual Dark & White Light
+             Theme: Dual Dark & Light Mode
              Terminal: SyauTerm
              Creator: Kantaraj Luitel (Susant)`,
 

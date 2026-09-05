@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Check } from 'lucide-react'
 
 export default function Notes() {
   const [text, setText] = useState(() => {
@@ -41,8 +42,11 @@ export default function Notes() {
           {saved && text.length > 0 && (
             <span style={{
               fontSize: 10, color: 'var(--color-mint)', fontWeight: 600,
+              display: 'flex', alignItems: 'center', gap: 3,
               opacity: 1, transition: 'opacity 0.3s',
-            }}>✓ Saved</span>
+            }}>
+              <Check size={11} /> Saved
+            </span>
           )}
           <span style={{ fontSize: 11, color: 'var(--color-text-muted)' }}>
             {wordCount} words
