@@ -3,61 +3,37 @@ import { useState, useEffect } from 'react'
 export default function Calculator() {
   const [display, setDisplay] = useState('0')
   const [prev, setPrev] = useState<number | null>(null)
-  const [op, setOp] = useState<string | null>(null)
-  const [fresh, setFresh] = useState(true)
+  const [operator, setOperator] = useState<string | null>(null)
+  const [startNewNumber, setStartNewNumber] = useState(true)
 
-  // Keyboard support
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key >= '0' && e.key <= '9') handleNum(e.key)
-      else if (e.key === '.') handleNum('.')
-      else if (e.key === '+') handleOp('+')
-      else if (e.key === '-') handleOp('-')
-      else if (e.key === '*') handleOp('*')
-      else if (e.key === '/') { e.preventDefault(); handleOp('/') }
-      else if (e.key === 'Enter' || e.key === '=') handleEquals()
-      else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') handleClear()
-      else if (e.key === '%') handlePercent()
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key >= '0' && e.key <= '9') inputDigit(e.key)
+      else if (e.key === '.') inputDigit('.')
+      else if (e.key === '+') applyOperator('+')
+      else if (e.key === '-') applyOperator('-')
+      else if (e.key === '*') applyOperator('*')
+      else if (e.key === '/') { e.preventDefault(); applyOperator('/') }
+      else if (e.key === 'Enter' || e.key === '=') evaluate()
+      else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') resetCalculator()
+      else if (e.key === '%') percent()
     }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [display, prev, op, fresh])
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [display, prev, operator, startNewNumber])
 
-  const handleNum = (n: string) => {
-    if (fresh) {
-      setDisplay(n === '.' ? '0.' : n)
-      setFresh(false)
+  const inputDigit = (digit: string) => {
+    if (startNewNumber) {
+      setDisplay(digit === '.' ? '0.' : digit)
+      setStartNewNumber(false)
     } else {
-      if (n === '.' && display.includes('.')) return
-      setDisplay(display + n)
+      if (digit === '.' && display.includes('.')) return
+      setDisplay(display + digit)
     }
   }
 
-  const handleOp = (nextOp: string) => {
-    const current = parseFloat(display)
-    if (prev !== null && op && !fresh) {
-      const result = calc(prev, current, op)
-      setDisplay(String(result))
-      setPrev(result)
-    } else {
-      setPrev(current)
-    }
-    setOp(nextOp)
-    setFresh(true)
-  }
-
-  const handleEquals = () => {
-    if (prev === null || !op) return
-    const current = parseFloat(display)
-    const result = calc(prev, current, op)
-    setDisplay(String(result))
-    setPrev(null)
-    setOp(null)
-    setFresh(true)
-  }
-
-  const calc = (a: number, b: number, operator: string): number => {
-    switch (operator) {
+  const compute = (a: number, b: number, op: string): number => {
+    switch (op) {
       case '+': return a + b
       case '-': return a - b
       case '*': return a * b
@@ -66,41 +42,64 @@ export default function Calculator() {
     }
   }
 
-  const handleClear = () => {
-    setDisplay('0')
-    setPrev(null)
-    setOp(null)
-    setFresh(true)
+  const applyOperator = (nextOp: string) => {
+    const current = parseFloat(display)
+    if (prev !== null && operator && !startNewNumber) {
+      const result = compute(prev, current, operator)
+      setDisplay(String(result))
+      setPrev(result)
+    } else {
+      setPrev(current)
+    }
+    setOperator(nextOp)
+    setStartNewNumber(true)
   }
 
-  const handlePercent = () => {
+  const evaluate = () => {
+    if (prev === null || !operator) return
+    const current = parseFloat(display)
+    const result = compute(prev, current, operator)
+    setDisplay(String(result))
+    setPrev(null)
+    setOperator(null)
+    setStartNewNumber(true)
+  }
+
+  const resetCalculator = () => {
+    setDisplay('0')
+    setPrev(null)
+    setOperator(null)
+    setStartNewNumber(true)
+  }
+
+  const percent = () => {
     setDisplay(String(parseFloat(display) / 100))
   }
 
-  const handleNegate = () => {
+  const toggleSign = () => {
     setDisplay(String(-parseFloat(display)))
   }
 
   const buttons = [
-    { label: 'AC', action: handleClear, className: '' },
-    { label: '+/-', action: handleNegate, className: '' },
-    { label: '%', action: handlePercent, className: '' },
-    { label: '/', action: () => handleOp('/'), className: 'op' },
-    { label: '7', action: () => handleNum('7'), className: '' },
-    { label: '8', action: () => handleNum('8'), className: '' },
-    { label: '9', action: () => handleNum('9'), className: '' },
-    { label: '*', action: () => handleOp('*'), className: 'op' },
-    { label: '4', action: () => handleNum('4'), className: '' },
-    { label: '5', action: () => handleNum('5'), className: '' },
-    { label: '6', action: () => handleNum('6'), className: '' },
-    { label: '-', action: () => handleOp('-'), className: 'op' },
-    { label: '1', action: () => handleNum('1'), className: '' },
-    { label: '2', action: () => handleNum('2'), className: '' },
-    { label: '3', action: () => handleNum('3'), className: '' },
-    { label: '+', action: () => handleOp('+'), className: 'op' },
-    { label: '0', action: () => handleNum('0'), className: '' },
-    { label: '.', action: () => handleNum('.'), className: '' },
-    { label: '=', action: handleEquals, className: 'equals' },
+    { label: 'AC', action: resetCalculator, className: '' },
+    { label: '+/-', action: toggleSign, className: '' },
+    { label: '%', action: percent, className: '' },
+    { label: '/', action: () => applyOperator('/'), className: 'op' },
+    { label: '7', action: () => inputDigit('7'), className: '' },
+    { label: '8', action: () => inputDigit('8'), className: '' },
+    { label: '9', action: () => inputDigit('9'), className: '' },
+    { label: '*', action: () => applyOperator('*'), className: 'op' },
+    { label: '4', action: () => inputDigit('4'), className: '' },
+    { label: '5', action: () => inputDigit('5'), className: '' },
+    { label: '6', action: () => inputDigit('6'), className: '' },
+    { label: '-', action: () => applyOperator('-'), className: 'op' },
+    { label: '1', action: () => inputDigit('1'), className: '' },
+    { label: '2', action: () => inputDigit('2'), className: '' },
+    { label: '3', action: () => inputDigit('3'), className: '' },
+    { label: '+', action: () => applyOperator('+'), className: 'op' },
+    { label: '0', action: () => inputDigit('0'), className: '' },
+    { label: '.', action: () => inputDigit('.'), className: '' },
+    { label: '=', action: evaluate, className: 'equals' },
   ]
 
   return (
@@ -114,7 +113,6 @@ export default function Calculator() {
             key={i}
             className={`app-calc-btn ${btn.className}`}
             onClick={btn.action}
-            style={btn.label === '0' ? { gridColumn: 'span 1' } : undefined}
           >
             {btn.label === '*' ? '×' : btn.label === '/' ? '÷' : btn.label}
           </button>
