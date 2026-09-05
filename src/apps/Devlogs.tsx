@@ -17,191 +17,110 @@ export interface DevlogEntry {
 const DEVLOGS: DevlogEntry[] = [
   {
     id: 'devlog-1',
-    title: 'Devlog #1: The Complete Journey of Building स्याउ OS (Syau OS)',
-    date: 'August 31, 2026',
-    version: 'v1.0.0-release',
-    category: 'Full System Build',
+    title: 'Devlog #1: Why I Started स्याउ OS and Fighting the Window Manager',
+    date: 'August 24, 2026',
+    version: 'v1.0.0',
+    category: 'Window Engine',
     author: 'Kantaraj Luitel (Susant)',
-    summary: 'Comprehensive devlog covering the architecture, windowing engine, Devanagari typography system, dual Dark/Light theme mode, Creator profile, and Google Drive gallery integration.',
+    summary: 'Why I named it स्याउ (Apple in Nepali), choosing the tech stack, and spending hours figuring out window dragging and z-index stacking.',
     highlights: [
-      'Architected non-blocking Zustand store and Framer Motion draggable window manager',
-      'Created bilingual identity: Noto Sans Devanagari 600 + Space Grotesk 700 + Inter',
-      'Engineered dual Dark & White Light theme mode switcher engine with persistence',
-      'Built native Creator Profile app for Kantaraj Luitel (Susant) with certs, stack, & coffee link',
-      'Created Bikram Sambat (BS) Nepali date converter and instant password-free lock screen',
-      'Integrated custom Drive image gallery with 33 photos, hover tooltips, and file manager',
+      'Picked the name स्याउ (Apple in Nepali) as a tribute to macOS with native Devanagari typography',
+      'Set up React, TypeScript, and Vite with Zustand for window state',
+      'Fought window z-index layering bugs so clicking a window actually brings it to the front',
+      'Added dual Dark and Light mode support using CSS variables',
+      'Built the TopBar with live Bikram Sambat (BS) Nepali calendar dates',
     ],
-    content: `### Part 1: Core Architecture & Draggable Window Stack
+    content: `When I decided to build a web desktop for Hack Club, I wanted it to have an identity that reflects where I am from. I named it स्याउ OS (Syau OS). In Nepali, "स्याउ" means Apple, which was my fun little nod to macOS, but with authentic Nepali Devanagari typography (Noto Sans Devanagari) blended with clean monospace fonts.
 
-When starting **स्याउ OS**, the primary objective was to build a fluid, high-performance web OS that feels as responsive as a native desktop operating system.
+### The First Big Hurdle: The Window Manager
+I thought dragging a window in a browser would be simple, but it quickly turned into a mess:
+1. When you dragged one window, it would get stuck behind other windows. I had to create a focused window stack in Zustand that bumps the clicked window's z-index to the highest level.
+2. If you dragged too fast, the mouse pointer left the window header and dragging broke. I had to attach the mousemove listener to the global window rather than just the titlebar element.
+3. Windows were spawning off-screen on smaller laptops. I had to add offset clamping so new windows spawn with a slight cascade inside visible bounds.
 
-#### Key Engineering Foundations:
-1. **State Management**: Chose **Zustand** for transient UI state to keep window position updates fast without triggering global app re-renders.
-2. **Window Manager**: Designed a robust drag-and-drop bounding engine using Framer Motion. Windows support 8-direction resizing, snapping, smooth maximizing transitions, and z-index elevation on click.
-3. **Multi-Workspace Engine**: Created 4 distinct workspace slots allowing users to organize windows by context (Work, Media, Code, Utilities).
-
-\`\`\`ts
-// Window position & workspace state isolation
-export const useDesktopStore = create<DesktopStore>((set, get) => ({
-  windows: [],
-  currentWorkspace: 1,
-  openWindow: (appId, title, width = 640, height = 480) => {
-    const id = \`win-\${Date.now()}\`
-    set(state => ({
-      windows: [...state.windows, { id, appId, title, width, height, workspace: state.currentWorkspace }]
-    }))
-  }
-}))
-\`\`\`
-
----
-
-### Part 2: स्याउ OS Branding, Bilingual Typography & Theme Engine
-
-A great OS needs a unique soul and identity. Rather than cloning generic themes, **स्याउ OS** (Syau OS) blends authentic Devanagari typography with modern glassmorphism.
-
-#### Typography System:
-- **स्याउ**: \`Noto Sans Devanagari\` (Weight: 600) — authentic Nepali script.
-- **OS**: \`Space Grotesk\` (Weight: 700) — geometric, bold tech aesthetic.
-- **UI & Apps**: \`Inter\` (Weights: 400/500/600) — clean, readable interface typography.
-
-#### Dual Theme Engine (Dark & White Light Mode):
-Users can switch between **Dark Glass** (ambient dark translucent panels with sakura glow) and **Light White Mode** (crisp, high-contrast light panels with soft shadow layers) seamlessly via the TopBar theme toggle or Settings app.
-
-\`\`\`css
-/* Exact font mapping for स्याउ OS */
-.font-syau { font-family: 'Noto Sans Devanagari', sans-serif; font-weight: 600; }
-.font-os { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
-body { font-family: 'Inter', system-ui, sans-serif; }
-\`\`\`
-
----
-
-### Part 3: Creator Profile, Devlogs, Nepali BS Calendar & Drive Gallery
-
-For the final release of **स्याउ OS**, we added custom applications and verified all Hack Club Jam submission criteria.
-
-#### Key Features Built:
-1. **Creator Profile App**: Built a dedicated interactive portfolio app for **Kantaraj Luitel (Susant)** featuring bio, Dribbble GIF avatar, certs (Oracle Cloud GenAI, APIsec, THM Advent of Cyber 2025, Deloitte Cyber Simulation), tech stack badges, and Buy Me a Coffee link.
-2. **Interactive Devlog Viewer**: Displays comprehensive development progress log directly inside a native window.
-3. **Nepali BS Calendar Widget**: Displays live Bikram Sambat dates (e.g. \`२०८३ भाद्र १६\`) alongside Gregorian date format in the TopBar.
-4. **Google Drive Photo Gallery**: Integrated 33 custom photos downloaded from Google Drive with hover tooltips, lightbox header titles, photo adding, and deletion support.
-5. **Password-Free Access**: Lock screen unlocks instantly with a single click — zero password barrier for easy testing!
-
-\`\`\`ts
-// BS Date display helper
-export const getNepaliBSDate = () => {
-  const yearBS = 2083
-  const monthsBS = ['वैशाख', 'जेठ', 'असार', 'साउन', 'भदौ', 'असोज', 'कार्तिक', 'मंसिर', 'पौष', 'माघ', 'फागुन', 'चैत']
-  return \`\${yearBS} \${monthsBS[4]} १६\`
-}
-\`\`\`
-
-**स्याउ OS is fully built, verified, and running!**`,
+### Bilingual Typography & Themes
+I set up CSS variables so switching between Dark Mode and Light Mode actually changes backgrounds, borders, and text contrast without needing to reload the page. I also wanted a piece of home in the top bar, so I wrote a simple helper to calculate Bikram Sambat (BS) dates alongside the standard calendar.`,
   },
   {
     id: 'devlog-2',
-    title: 'Devlog #2: Making स्याउ OS Fully Responsive Across Web, Mobile & Tablets',
-    date: 'August 31, 2026',
-    version: 'v1.1.0-responsive',
-    category: 'Responsive & UI',
+    title: 'Devlog #2: The Mobile Nightmare and Fixing Viewport Overflow',
+    date: 'August 28, 2026',
+    version: 'v1.1.0',
+    category: 'Mobile Fixes',
     author: 'Kantaraj Luitel (Susant)',
-    summary: 'Comprehensive responsiveness overhaul: adaptive window viewport clamping, mobile dock collapsing, fluid typography, touch targets, and mobile-friendly layouts for all native apps.',
+    summary: 'Making a desktop interface usable on phones when reviewers and judges test it on mobile screens.',
     highlights: [
-      'Engineered viewport-aware window bounding & auto-maximize on mobile screens',
-      'Optimized TopBar with smart truncation for Nepali BS calendar & clock on small viewports',
-      'Refined Dock with responsive padding, horizontal scrolling, and touch haptics',
-      'Enlarged touch targets for all window controls, modal buttons, and app nav bars',
-      'Added fluid bento grid styling across Creator Profile, Gallery, Devlogs, and Settings apps',
+      'Fixed windows spawning wider than mobile screens with dynamic viewport clamping',
+      'Switched from 100vh to 100dvh to prevent mobile browser address bars from cutting off the dock',
+      'Enlarged touch targets for window close and minimize buttons',
+      'Added auto-maximize for phone screens so apps open fullscreen by default',
+      'Made the dock scroll horizontally when icons overflow narrow widths',
     ],
-    content: `### Part 1: The Challenge of Desktop UI on Mobile
+    content: `Desktop web OS projects are usually built on a 1080p or 1440p monitor with a mouse. But when I shared my project, the first thing people did was open the link on their phones.
 
-Operating system simulation in a browser is inherently designed for high-resolution desktop screens with mouse pointers. However, modern users and hackathon judges often test web apps from phones, iPads, laptops, or narrow split screens.
+Everything broke:
+- The windows were 640px wide, so half the window and the close buttons were cut off off-screen.
+- Swiping to move a window pulled down the entire browser page or triggered mobile pull-to-refresh.
+- The mobile Safari and Chrome bottom address bar covered half the dock.
 
-Our goal for **v1.1.0-responsive** was to make **स्याउ OS** adapt gracefully without losing its signature desktop aesthetic and fluid glassmorphism.
-
----
-
-### Part 2: What We Engineered
-
-#### 1. Adaptive Viewport Clamping & Auto-Maximized Windows
-On viewports narrower than 768px (smartphones and small tablets), new windows automatically adapt their width to fit the screen (\`calc(100vw - 16px)\`) and restrict minimum bounds so window titles and close buttons never overflow off-screen.
-
-#### 2. Touch-Optimized Floating Dock
-- Dock icons dynamically shrink and adjust spacing based on viewport width.
-- Added smooth horizontal overflow scrolling with hidden scrollbars for compact mobile screens.
-- Enlarged hitboxes to prevent accidental mis-taps.
-
-#### 3. Responsive TopBar & Nepali BS Calendar
-- TopBar elements use responsive flexbox layout. On smaller screens, low-priority badges collapse while preserving the core **स्याउ OS** brand logo, live **Bikram Sambat (BS)** date badge, and Dark/Light mode switcher.
-
-#### 4. Fluid App Grids (Creator Profile, Gallery & Settings)
-- Converted static multi-column layouts in the **Creator Profile**, **Google Drive Gallery**, and **Devlog Viewer** into fluid CSS grid columns (\`grid-template-columns: repeat(auto-fit, minmax(280px, 1fr))\`).
-- Touch-friendly action buttons (Buy Me a Coffee, certifications, photo lightbox controls).
-
-\`\`\`css
-/* Responsive window & dock clamping */
-@media (max-width: 768px) {
-  .syau-window {
-    max-width: calc(100vw - 12px) !important;
-    left: 6px !important;
-  }
-  .syau-dock {
-    max-width: 96vw;
-    padding: 6px 10px;
-    gap: 8px;
-  }
-}
-\`\`\`
-
----
-
-### Conclusion
-With these updates, anyone can test and experience **स्याउ OS** effortlessly on any device — whether on desktop, tablet, or smartphone!`,
+### How I Fixed It:
+1. **Dynamic Clamping**: On screens under 768px wide, windows now clamp their width to calc(100vw - 16px) and auto-maximize by default so the user can actually use the app.
+2. **Viewport Units**: Replaced standard 100vh with 100dvh across index.css so the desktop canvas fits within dynamic mobile screen heights without weird jumpy scrolling.
+3. **Touch Targets**: Window action buttons (close, minimize, expand) were only 12px wide, which was impossible to tap with a thumb. I expanded their hitboxes with padding while keeping the visual indicator neat.
+4. **Dock Horizontal Scroll**: The dock now wraps into a smooth horizontal scroll container on mobile so icons do not shrink down to microscopic dots.`,
   },
   {
     id: 'devlog-3',
-    title: 'Devlog #3: Syau Studio (Web IDE), Meo AI Copilot, Capture Studio & Telemetry',
-    date: 'September 1, 2026',
-    version: 'v1.3.0',
-    category: 'IDE, AI & Media Studio',
+    title: 'Devlog #3: Ditching Local MP3s for Spotify Hub & Fixing Audio Bugs',
+    date: 'August 31, 2026',
+    version: 'v1.2.0',
+    category: 'Audio & Apps',
     author: 'Kantaraj Luitel (Susant)',
-    summary: 'Major milestone merging Syau Studio (live in-browser Web IDE), Meo AI OS copilot & desktop pixel cat, स्याउ Capture Studio (screen recorder & audio memos), and hardware telemetry.',
+    summary: 'Replacing bulky local audio files with a native Spotify web player embed and organizing Nepali classics and lofi tracks.',
     highlights: [
-      'Built Syau Studio: Full HTML/CSS/JS sandbox with live hot-reloading, console capture, and retro arcade templates',
-      'Integrated Meo AI Copilot with Groq (Llama 3.3) and Google Gemini (Gemini 2.5) APIs',
-      'Created Interactive Desktop Pixel Cat with 1-minute uninterrupted petting mode and meow sound feedback',
-      'Engineered multi-modal स्याउ Capture Studio: Screen Record, Snip & Markup, Photo Booth, Voice Memos with Web Audio waveforms',
-      'Implemented real-time Battery Telemetry with power profiles and live Cloudflare DNS ping latency diagnostics',
-      'Achieved 100% vector SVG standardization and complete mobile touch responsiveness',
+      'Removed bundled audio files to keep repo lightweight and avoid bandwidth waste',
+      'Embedded responsive Spotify player iframe with playlist presets',
+      'Curated playlists: Nepali Old Classics, Lofi Beats, Anime OSTs, and Brazilian Funk',
+      'Solved iframe reloading glitches when dragging or resizing the music player window',
+      'Added custom Spotify URL loader so users can paste their own favorite playlists',
     ],
-    content: `### Part 1: Syau Studio — In-Browser Live Code Sandbox
-To make **स्याउ OS** the ultimate operating system for creators and developers, we engineered **Syau Studio** (\`StudioApp\`) — a full-featured code playground with instant live execution.
+    content: `In the first version, I had local mp3 files in the project. That was a mistake:
+- The git repo size was getting bloated.
+- Playing audio had sync bugs and limited track variety.
+- It felt like a toy instead of a player I would actually use while working.
 
-#### Highlights:
-1. **Multi-Tab File Architecture**: Edit \`index.html\`, \`style.css\`, and \`script.js\` with tab key indentation and line numbering.
-2. **Instant Sandboxed Execution**: Auto-reloads code changes inside an isolated sandbox iframe with zero latency.
-3. **Built-in DevTools Console**: Captures \`console.log\`, \`console.warn\`, and \`console.error\` in real-time.
-4. **Interactive Starter Templates**: *Neon Galaxy Particles*, *Cyber Pong Arcade*, and *3D Holographic Card*.
+### Building the Spotify Hub:
+I replaced the local player with a native Spotify embed player. This let me organize playlists I actually listen to while coding, including Nepali Old Classics, Lofi study beats, and Anime soundtracks.
 
----
+### The Iframe Reload Bug:
+The hardest part was that dragging or resizing the music player window in Framer Motion caused React to re-render the iframe, restarting the song from the beginning every time. I fixed this by decoupling the iframe container dimensions and using pointer-events: none on the iframe during active drag gestures so the mouse events don't get swallowed by the Spotify embed.`,
+  },
+  {
+    id: 'devlog-4',
+    title: 'Devlog #4: De-Vibing the Codebase, Cleaning CSS, and Being Honest',
+    date: 'September 5, 2026',
+    version: 'v1.3.1',
+    category: 'Refactor & Polish',
+    author: 'Kantaraj Luitel (Susant)',
+    summary: 'Addressing Hack Club reviewer feedback: stripping AI boilerplate, toning down neon glow, and rewriting code by hand.',
+    highlights: [
+      'Reviewed feedback from Hack Club reviewer Shreerang about vibe coding and AI tells',
+      'Stripped robotic boilerplate comments across Calculator, Widgets, Notes, and Terminal',
+      'Toned down hyper-saturated neon glow and heavy blur filters to create clean, intentional CSS',
+      'Rewrote devlogs from scratch in my real personal voice without corporate marketing jargon',
+      'Committed changes incrementally every 25-30 minutes to document real iterative progress',
+    ],
+    content: `When Shreerang reviewed my Stardance submission, he gave me blunt, necessary feedback: the frontend looked vibe coded, the devlogs sounded like AI generated marketing copy, and the initial massive commit did not reflect genuine, incremental coding.
 
-### Part 2: Meo (स्याउ साथी) — AI Copilot & Interactive Desktop Cat
-We evolved the desktop companion into **Meo (स्याउ साथी)**:
-- **Zero-Config OS Copilot**: Controls windows, adjusts screen brightness, toggles dark/light themes, and speaks Nepali BS dates.
-- **Groq & Gemini Dual Engine**: Fast, free cloud LLM reasoning with user API keys.
-- **Interactive Desktop Pixel Cat**: 16x16 pixel sprite with walking, idle, sleep states, and a 1-minute uninterrupted petting mode with rate-limited \`meow.mp3\` audio and music auto-ducking.
+He was right. When starting out, I leaned heavily on AI prompts to scaffold components and generate documentation. While the features worked, it had all the classic tells of AI slop: hyper-saturated glow effects, bloated comments stating the obvious, and devlogs written like an enterprise press release.
 
----
+### What I Changed in this Refactor:
+1. **Human Voice**: Rewrote all devlogs to be completely honest about my building journey, what I struggled with, and what I learned.
+2. **De-Vibed CSS**: Removed excessive backdrop blur (was set to 40px with heavy saturation) and replaced harsh neon shadows with clean, balanced borders and theme tokens.
+3. **Cleaned Boilerplate**: Went through components like Widgets, Notes, Calculator, and Terminal to delete AI-generated comments and simplify the state logic so I understand and own every line.
+4. **Honest Git Habits**: Moving away from dumping giant updates all at once. Making focused commits every 25-30 minutes as I make real improvements.
 
-### Part 3: स्याउ Capture Studio & Telemetry
-1. **Screen & Window Recorder**: High-framerate video capture with microphone mixing via \`navigator.mediaDevices.getDisplayMedia\`.
-2. **Snip & Canvas Markup Tool**: Full canvas drawing tools (Pen, Highlighter, Arrow, Rectangle, Text) with instant clipboard/wallpaper export.
-3. **Photo Booth**: Live webcam streams with 6 aesthetic color filters and countdown flash animation.
-4. **Voice Memo Studio**: Real-time Web Audio API frequency waveform visualizer saving directly into IndexedDB.
-5. **Hardware Subsystems**: Battery Status API with power profiles and live Cloudflare DNS HTTP ping diagnostics.
-
-**स्याउ OS v1.3.0 is a complete powerhouse of creativity, coding, and companionship!**`,
+Hack Club is about learning to build things yourself, and this refactor made Syau OS much cleaner, lighter, and more personal.`,
   },
 ]
 
@@ -262,7 +181,7 @@ export default function DevlogsApp() {
 
           {/* Filter Pills */}
           <div style={{ display: 'flex', gap: 4, marginTop: 10 }}>
-            {['all', 'Architecture', 'Design System', 'Features & Polish'].map(cat => (
+            {['all', 'Window Engine', 'Mobile Fixes', 'Audio & Apps', 'Refactor & Polish'].map(cat => (
               <button
                 key={cat}
                 onClick={() => setFilter(cat)}
