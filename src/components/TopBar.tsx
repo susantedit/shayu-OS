@@ -76,7 +76,7 @@ export default function TopBar() {
   const logoMenuItems = [
     { label: 'Creator Profile (Susant)', action: () => { openWindow('creator', 'Kantaraj Luitel (Susant) - Creator Profile', 860, 580); setMenuOpen(null) } },
     { label: 'About स्याउ OS', action: () => { openWindow('about', 'About Me', 480, 540); setMenuOpen(null) } },
-    { label: 'Devlogs (3 Entries)', action: () => { openWindow('devlogs', 'Devlogs', 840, 560); setMenuOpen(null) } },
+    { label: 'स्याउ OS Devlogs', action: () => { openWindow('devlogs', 'स्याउ OS Devlogs', 840, 560); setMenuOpen(null) } },
     { label: 'Settings', action: () => { openWindow('settings', 'Settings', 460, 560); setMenuOpen(null) } },
     { divider: true },
     { label: 'Terminal', action: () => { openWindow('terminal', 'Terminal', 600, 400); setMenuOpen(null) } },
