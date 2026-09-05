@@ -253,7 +253,7 @@ export default function App() {
                   fontSize: 13, fontWeight: 600, color: 'var(--color-text-secondary)',
                   opacity: 0.6, whiteSpace: 'nowrap', letterSpacing: 0.5,
                 }}>
-                  We have a Guide app too, if you ever get lost ✨
+                  We have a Guide app too, if you ever get lost
                 </div>
                 <motion.div
                   animate={{ y: [0, 6, 0] }}

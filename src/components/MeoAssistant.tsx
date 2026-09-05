@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Check } from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 import { useThemeStore } from '../store/themeStore'
 
@@ -547,7 +548,7 @@ export default function MeoAssistant() {
 
     if (lower.includes('nepali date') || lower.includes('date') || lower.includes('मिति') || lower.includes('tithi') || lower.includes('calendar') || lower.includes('samay')) {
       return {
-        text: "आजको नेपाली मिति: २०८३ भाद्र १६ (Bikram Sambat 2083) हो, म्याउँ! 🐾 Happy computing in स्याउ OS!",
+        text: "आजको नेपाली मिति: २०८३ भाद्र १६ (Bikram Sambat 2083) हो, म्याउँ! Happy computing in स्याउ OS!",
         emotion: 'happy'
       }
     }
@@ -558,37 +559,37 @@ export default function MeoAssistant() {
       if (!isNaN(val)) {
         theme.setBrightness(val)
         return {
-          text: `Purrr! Adjusted display brightness to ${val}%. The screen looks great, boss! 🐾`,
+          text: `Purrr! Adjusted display brightness to ${val}%. The screen looks great, boss!`,
           emotion: 'playful'
         }
       }
     }
     if (lower.includes('max brightness') || lower.includes('brightest') || lower.includes('full bright')) {
       theme.setBrightness(130)
-      return { text: "Brightened up your desktop to 130%! Glowing bright, meow! ☀️", emotion: 'excited' }
+      return { text: "Brightened up your desktop to 130%! Glowing bright, meow!", emotion: 'excited' }
     }
     if (lower.includes('dim screen') || lower.includes('low brightness') || lower.includes('night mode screen')) {
       theme.setBrightness(60)
-      return { text: "Dimmed screen to 60% for comfy nighttime hacking. Purrr... 🌙", emotion: 'calm' }
+      return { text: "Dimmed screen to 60% for comfy nighttime hacking. Purrr...", emotion: 'calm' }
     }
 
     if (lower.includes('dark mode') || lower.includes('dark theme')) {
       theme.setMode('dark')
-      return { text: "Switched to Dark Glass mode! Deep ambient obsidian tones activated. Meow! 🌙", emotion: 'calm' }
+      return { text: "Switched to Dark Glass mode! Deep ambient obsidian tones activated. Meow!", emotion: 'calm' }
     }
     if (lower.includes('light mode') || lower.includes('white mode') || lower.includes('light theme')) {
       theme.setMode('light')
-      return { text: "Switched to Light White mode! Crisp, clean, and vibrant. Purrr! ☀️", emotion: 'happy' }
+      return { text: "Switched to Light White mode! Crisp, clean, and vibrant. Purrr!", emotion: 'happy' }
     }
     if (lower.includes('switch mode') || lower.includes('toggle theme') || lower.includes('change theme')) {
       theme.toggleMode()
-      return { text: "Theme toggled! Looking fabulous, human! 🐾", emotion: 'playful' }
+      return { text: "Theme toggled! Looking fabulous, human!", emotion: 'playful' }
     }
 
     if (lower.includes('capture') || lower.includes('record screen') || lower.includes('screenshot') || lower.includes('snip') || lower.includes('photo booth') || lower.includes('record video')) {
       useDesktopStore.getState().openWindow('capture', 'Capture & Record', 820, 580)
       return {
-        text: "Opening स्याउ Capture Studio! You can record high-fps video, snap screenshots, or take photo booth shots! Meow! 📹✂️",
+        text: "Opening स्याउ Capture Studio! You can record high-fps video, snap screenshots, or take photo booth shots! Meow!",
         emotion: 'excited'
       }
     }
@@ -596,14 +597,14 @@ export default function MeoAssistant() {
     if (lower.includes('who are you') || lower.includes('who made you') || lower.includes('creator') || lower.includes('susant') || lower.includes('kantaraj')) {
       useDesktopStore.getState().openWindow('creator', 'Kantaraj Luitel (Susant) - Creator Profile', 860, 580)
       return {
-        text: "I am Meo (स्याउ साथी), the resident feline AI copilot of स्याउ OS! I was crafted with lots of love by Kantaraj Luitel (Susant). Here is his Creator Profile, meow! 🐾",
+        text: "I am Meo (स्याउ साथी), the resident feline AI copilot of स्याउ OS! I was crafted with lots of love by Kantaraj Luitel (Susant). Here is his Creator Profile, meow!",
         emotion: 'happy'
       }
     }
 
     if (lower.includes('namaste') || lower.includes('नमस्ते') || lower.includes('hello') || lower.includes('hi') || lower.includes('hey')) {
       return {
-        text: "नमस्ते! म स्याउ साथी (Meo) हुँ। Welcome to स्याउ OS, boss! Say 'open terminal', 'record screen', 'nepali date', or ask me for a cat joke! Meow! 🐱",
+        text: "नमस्ते! म स्याउ साथी (Meo) हुँ। Welcome to स्याउ OS, boss! Say 'open terminal', 'record screen', 'nepali date', or ask me for a cat joke! Meow!",
         emotion: 'happy'
       }
     }
@@ -616,11 +617,11 @@ export default function MeoAssistant() {
 
     if (lower.includes('joke') || lower.includes('laugh') || lower.includes('funny') || lower.includes('make me laugh')) {
       const jokes = [
-        "Why was the cat sitting on the computer? Because it wanted to keep an eye on the mouse! Purrrrr 😂",
-        "What do you call a pile of kittens? A meowntain! 🏔️ Meow!",
-        "What is a cat's favorite color? Purrr-ple! 💜",
+        "Why was the cat sitting on the computer? Because it wanted to keep an eye on the mouse! Purrrrr",
+        "What do you call a pile of kittens? A meowntain! Meow!",
+        "What is a cat's favorite color? Purrr-ple!",
         "Why don't cats play poker in the jungle? Too many cheetahs! Meow!",
-        "How do cats end a fight? They hiss and make up! Purrrr 🐾"
+        "How do cats end a fight? They hiss and make up! Purrrr"
       ]
       return {
         text: jokes[Math.floor(Math.random() * jokes.length)],
@@ -630,13 +631,13 @@ export default function MeoAssistant() {
 
     if (lower.includes('meow') || lower.includes('purr') || lower.includes('cat') || lower.includes('paws') || lower.includes('billi') || lower.includes('biralo')) {
       return {
-        text: "Meow meow purrrrrr! *paws at your cursor playfully* Need anything opened or adjusted, human friend? 🐾",
+        text: "Meow meow purrrrrr! *paws at your cursor playfully* Need anything opened or adjusted, human friend?",
         emotion: 'playful'
       }
     }
 
     return {
-      text: `Purrr... I heard: "${userMessage}". As your feline copilot, I can open apps (terminal, music, notes, files, capture studio), adjust brightness, switch themes, or tell you the Nepali BS date! Meow! 🐱`,
+      text: `Purrr... I heard: "${userMessage}". As your feline copilot, I can open apps (terminal, music, notes, files, capture studio), adjust brightness, switch themes, or tell you the Nepali BS date! Meow!`,
       emotion: 'happy'
     }
   }
@@ -717,7 +718,7 @@ export default function MeoAssistant() {
     if (fallback.text.startsWith('Purrr... I heard:')) {
       setShowSettings(true)
       return {
-        text: "Meow! To talk with me, please add your free Groq API Key (from console.groq.com) or Gemini API Key (from aistudio.google.com) in settings above! 🐾",
+        text: "Meow! To talk with me, please add your free Groq API Key (from console.groq.com) or Gemini API Key (from aistudio.google.com) in settings above!",
         emotion: 'concerned'
       }
     }
@@ -1147,7 +1148,9 @@ export default function MeoAssistant() {
                       lineHeight: 1.4,
                     }}>
                       {(groqKey || apiKey) ? (
-                        <span style={{ color: 'rgba(52,211,153,0.85)' }}>✓ {groqKey ? 'Groq Llama 3.3 Connected' : 'Gemini 2.5 Connected'}</span>
+                        <span style={{ color: 'rgba(52,211,153,0.85)', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+                          <Check size={12} /> {groqKey ? 'Groq Llama 3.3 Connected' : 'Gemini 2.5 Connected'}
+                        </span>
                       ) : (
                         <span>Add either a free Groq or Gemini API key to activate full feline conversational AI!</span>
                       )}
@@ -1172,11 +1175,11 @@ export default function MeoAssistant() {
                   lineHeight: 1.6
                 }}>
                   <span>
-                    Meow! I am <strong>Meo (स्याउ साथी)</strong>, your feline OS copilot 🐾<br/>
+                    Meow! I am <strong>Meo (स्याउ साथी)</strong>, your feline OS copilot<br/>
                     <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>
                       {(groqKey || apiKey) 
                         ? 'Type a message below or tap the microphone to speak!' 
-                        : 'Add a free Groq or Gemini API key in ⚙️ settings above to chat!'}
+                        : 'Add a free Groq or Gemini API key in settings above to chat!'}
                     </span>
                   </span>
                 </div>
@@ -1206,7 +1209,7 @@ export default function MeoAssistant() {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
                     <span style={{ fontSize: 10, fontWeight: 700, color: msg.role === 'user' ? '#E8829B' : '#7EDDD6' }}>
-                      {msg.role === 'user' ? 'You' : 'Meo 🐾'}
+                      {msg.role === 'user' ? 'You' : 'Meo'}
                     </span>
                   </div>
                   <div>{msg.text}</div>

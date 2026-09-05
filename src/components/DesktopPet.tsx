@@ -469,9 +469,9 @@ export default function DesktopPet() {
     if (now - lastPetTime.current >= 2000) {
       lastPetTime.current = now
       playPetSound()
-      setPetFeedback('Purrrr~ Meow! 💖')
+      setPetFeedback('Purrrr~ Meow!')
     } else {
-      setPetFeedback('*Purrs happily* 🐾')
+      setPetFeedback('*Purrs happily*')
     }
 
     setTimeout(() => setPetFeedback(null), 1800)

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { UserCheck } from 'lucide-react'
+import { UserCheck, Trophy, GraduationCap, ShieldCheck } from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 
 export default function AboutMe() {
@@ -90,14 +90,22 @@ export default function AboutMe() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
       >
-        <p>
-          <strong style={{ color: 'var(--color-text-primary)' }}>Kantaraj Luitel (Susant)</strong> is a student, developer, AI researcher, and cybersecurity enthusiast from Nepal 🇳🇵.
-          <br /><br />
-          🏆 <strong>2nd Place</strong> - Campfire Kathmandu 2026 (HackClub)
-          <br />
-          🎓 <strong>Oracle Cloud Certified</strong> Generative AI Professional & AI Foundations Associate
-          <br />
-          🔐 <strong>APIsec Certified</strong> Practitioner
+        <p style={{ display: 'flex', flexDirection: 'column', gap: 6, margin: 0 }}>
+          <span>
+            <strong style={{ color: 'var(--color-text-primary)' }}>Kantaraj Luitel (Susant)</strong> is a student, developer, AI researcher, and cybersecurity enthusiast from Nepal.
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+            <Trophy size={14} style={{ color: '#FBBF24', flexShrink: 0 }} />
+            <span><strong style={{ color: 'var(--color-text-primary)' }}>2nd Place</strong> - Campfire Kathmandu 2026 (HackClub)</span>
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <GraduationCap size={14} style={{ color: 'var(--color-miku)', flexShrink: 0 }} />
+            <span><strong style={{ color: 'var(--color-text-primary)' }}>Oracle Cloud Certified</strong> Generative AI Professional & AI Foundations Associate</span>
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <ShieldCheck size={14} style={{ color: '#4ADE80', flexShrink: 0 }} />
+            <span><strong style={{ color: 'var(--color-text-primary)' }}>APIsec Certified</strong> Practitioner</span>
+          </span>
         </p>
       </motion.div>
 

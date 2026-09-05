@@ -8,28 +8,17 @@ import { useDesktopStore, useNotificationStore } from '../store/desktopStore'
 
 function renderNotificationIcon(icon?: string) {
   switch (icon) {
-    case 'wifi':
-    case '📶': return <Wifi size={16} style={{ color: 'var(--color-sakura)' }} />
-    case 'wifi-off':
-    case '📵': return <WifiOff size={16} style={{ color: '#EF4444' }} />
-    case 'globe':
-    case '🌐': return <Globe size={16} style={{ color: 'var(--color-miku)' }} />
-    case 'alert':
-    case '⚠️': return <AlertTriangle size={16} style={{ color: '#FBBF24' }} />
-    case 'battery':
-    case '🔋': return <Battery size={16} style={{ color: 'var(--color-sakura)' }} />
-    case 'battery-charging':
-    case '⚡': return <Zap size={16} style={{ color: '#4ADE80' }} />
-    case 'battery-low':
-    case '🪫': return <BatteryWarning size={16} style={{ color: '#EF4444' }} />
-    case 'trash':
-    case '🗑️': return <Trash2 size={16} style={{ color: '#F87171' }} />
-    case 'radar':
-    case '📡': return <Radio size={16} style={{ color: 'var(--color-miku)' }} />
-    case 'rocket':
-    case '🚀': return <Cpu size={16} style={{ color: 'var(--color-sakura)' }} />
-    case 'check':
-    case '✅': return <CheckCircle2 size={16} style={{ color: '#4ADE80' }} />
+    case 'wifi': return <Wifi size={16} style={{ color: 'var(--color-sakura)' }} />
+    case 'wifi-off': return <WifiOff size={16} style={{ color: '#EF4444' }} />
+    case 'globe': return <Globe size={16} style={{ color: 'var(--color-miku)' }} />
+    case 'alert': return <AlertTriangle size={16} style={{ color: '#FBBF24' }} />
+    case 'battery': return <Battery size={16} style={{ color: 'var(--color-sakura)' }} />
+    case 'battery-charging': return <Zap size={16} style={{ color: '#4ADE80' }} />
+    case 'battery-low': return <BatteryWarning size={16} style={{ color: '#EF4444' }} />
+    case 'trash': return <Trash2 size={16} style={{ color: '#F87171' }} />
+    case 'radar': return <Radio size={16} style={{ color: 'var(--color-miku)' }} />
+    case 'rocket': return <Cpu size={16} style={{ color: 'var(--color-sakura)' }} />
+    case 'check': return <CheckCircle2 size={16} style={{ color: '#4ADE80' }} />
     default: return <Bell size={16} style={{ color: 'var(--color-sakura)' }} />
   }
 }

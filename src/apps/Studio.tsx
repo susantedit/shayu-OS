@@ -31,7 +31,7 @@ const TEMPLATES: ProjectTemplate[] = [
     name: 'Neon Galaxy Particles',
     desc: 'Interactive glowing particle system with physics and mouse gravity',
     html: `<div class="container">
-  <h1>🌌 स्याउ Particle Engine</h1>
+  <h1>स्याउ Particle Engine</h1>
   <p>Move your mouse or touch to attract cosmic stardust!</p>
   <canvas id="canvas"></canvas>
 </div>`,
@@ -136,7 +136,7 @@ function loop() {
   requestAnimationFrame(loop);
 }
 
-console.log('🌌 स्याउ Particle Engine Initialized!');
+console.log('स्याउ Particle Engine Initialized!');
 loop();`
   },
   {
@@ -278,7 +278,7 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-console.log('🕹️ Cyber Pong Ready!');
+console.log('Cyber Pong Ready!');
 gameLoop();`
   },
   {
@@ -291,10 +291,10 @@ gameLoop();`
     <h2>स्याउ Studio</h2>
     <p>Ultra-fluid reactive computing powered by Nepali craftsmanship.</p>
     <div class="meta">
-      <span>★ 4.98 Rating</span>
-      <span>⚡ Zero Latency</span>
+      <span>Rating: 4.98</span>
+      <span>Zero Latency</span>
     </div>
-    <button onclick="alert('Meow! Welcome to स्याउ Studio! 🐾')">Launch Project</button>
+    <button onclick="alert('Meow! Welcome to स्याउ Studio!')">Launch Project</button>
   </div>
 </div>`,
     css: `* { margin: 0; padding: 0; box-sizing: border-box; }
@@ -378,7 +378,7 @@ window.addEventListener('mousemove', (e) => {
   card.style.transform = \`rotateY(\${x}deg) rotateX(\${y}deg)\`;
 });
 
-console.log('✨ 3D Holographic Card Mounted!');`
+console.log('3D Holographic Card Mounted!');`
   }
 ]
 
@@ -547,7 +547,7 @@ export default function Studio() {
     const geminiKey = localStorage.getItem('syau-gemini-key') || ''
 
     if (!groqKey && !geminiKey) {
-      alert('Meow! Please add your Groq or Gemini API Key in Meo AI settings to use AI Code Generation! 🐾')
+      alert('Meow! Please add your Groq or Gemini API Key in Meo AI settings to use AI Code Generation!')
       window.dispatchEvent(new CustomEvent('meo-toggle'))
       return
     }
