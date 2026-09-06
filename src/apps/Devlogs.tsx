@@ -70,46 +70,42 @@ The solution was two-fold:
   },
   {
     id: 'devlog-4',
-    title: 'The Hack Club Review: Stripping AI Boilerplate and Taking Real Ownership',
+    title: 'The Hack Club Feedback: Deleting Boilerplate and Taking Real Ownership',
     date: 'September 5, 2026',
     readTime: '4 min read',
-    summary: 'Candid reflections on feedback from Hack Club reviewer Shreerang, deleting 800+ lines of fake canvas demos, and rewriting devlogs honestly.',
-    content: `When Shreerang reviewed my Stardance project on Hack Club, he gave me blunt, necessary feedback:
-"The front-end looks a lot vibe coded. Rewrite the parts you used AI for. Even your devlogs look AI gen."
+    summary: 'Reflections on feedback from Shreerang, deleting 800+ lines of canvas demos, and toning down the UI.',
+    content: `When Shreerang reviewed my project on Hack Club, he gave me straightforward feedback:
+"The front-end looks a lot vibe coded. Rewrite the parts you used ai for. Even your devlogs look ai gen."
 
-At first, hearing that stung because I spent long nights debugging the window manager, mobile touch bounds, and Spotify iframe reloading. But when I stepped back and looked at the codebase through a reviewer's eyes, he was right.
+At first, hearing that was tough because I spent hours debugging window dragging and touch support on mobile. But when I actually looked at what was in my repo, he had a point.
 
-When I started scaffolding the project, I leaned on AI prompts to flesh out apps and generate markdown summaries. That left distinct fingerprints:
-1. Studio.tsx had grown to nearly 1,000 lines because it was packed with huge hardcoded canvas particle systems (neon stars, synthwave grids) that I did not write by hand and would never actually use.
-2. The devlogs had a robotic structure with "Key Accomplishments", corporate categories, and marketing summaries that sounded like a PR announcement instead of a student developer talking about their code.
-3. Excessive CSS gradients, neon borders, and aesthetic fluff that masked simple underlying logic.
+When I started, I used AI to quickly generate starter templates for different apps. Because of that:
+1. Studio.tsx was over 1,000 lines full of massive canvas particle scripts that I didn't write and didn't even care about.
+2. My earlier devlogs were structured like corporate marketing updates with bullet points and buzzwords instead of just writing like a high school student learning web dev.
+3. The UI had too many glowing borders, glassmorphic blurs, and neon gradients that made it look like a generic template.
 
-### What I Did to Fix It
-I went through the codebase to prune the fluff and take true ownership:
-- Gutted the 800+ lines of pre-baked canvas particle scripts from Studio.tsx and turned it into a clean, straightforward HTML/CSS/JS scratchpad under 200 lines that I understand completely.
-- Deleted the artificial devlog cards and rewrote every single entry here in my own authentic voice as a high school student developer in Nepal.
-- Toned down the CSS: removed oversaturated glow filters and replaced them with clean, functional borders and readable type.
+What I changed:
+- Gutted the pre-baked canvas particle scripts from Studio.tsx and turned it into a simple HTML/CSS/JS playground under 200 lines that I actually understand.
+- Rewrote the devlogs in plain English to talk about the actual bugs I ran into.
+- Cleaned up the styles so it feels like a real desktop instead of an over-designed demo.
 
-Hack Club is about genuine learning and building things yourself. Stripping out the AI fluff made स्याउ OS significantly lighter, cleaner, and something I can stand behind 100%.`,
+Taking ownership of the code feels a lot better than just shipping lines an LLM spit out.`,
   },
   {
     id: 'devlog-5',
-    title: 'Going 100% Local: Removing the AI Chatbot and Passing Hack Club Standards',
+    title: 'Cutting the AI Chatbot and Building a Real Command Runner',
     date: 'September 6, 2026',
     readTime: '3 min read',
-    summary: 'Eliminating the Gemini API integration, hardcoded keys, and turning Meo into an authentic, offline OS command companion.',
-    content: `Following review feedback from @Shreerang on Hack Club (#ask-the-shipwrights), I took a hard look at the remaining AI elements in SyauOS.
+    summary: 'Removing the Gemini API, getting rid of hardcoded keys, and making Meo a lightweight offline shortcut tool.',
+    content: `After talking with Shreerang on Slack (#ask-the-shipwrights), I realized having an AI assistant in the OS was the biggest mistake. It gave the impression that the whole OS was just an AI wrapper, and having a Gemini API key box in Settings looked terrible.
 
-The biggest red flag was MeoAssistant:
-Early on, I had wired up Google's Gemini 1.5 Flash REST API to make Meo a conversational AI chatbot, even leaving an API key configuration input in Settings. Having an LLM chatbot inside a desktop OS immediately gave the impression that the entire project was an AI wrapper.
+Here is what I did to fix it today:
+1. Completely deleted the Google Gemini 1.5 Flash API calls and deleted the API key setting from Settings.tsx.
+2. Turned Meo into a simple, 100% offline command runner and keyboard shortcut helper. It parses simple commands locally like "open terminal", "open notes", "workspace 2", and "shortcuts" without calling any server or AI model.
+3. Removed the Web Speech API voice synthesis so it stays silent, fast, and doesn't get in the way.
+4. Stripped out another batch of unused code and boilerplate.
 
-### The Refactoring:
-1. Removed all external AI REST calls, Gemini API endpoints, and cloud keys from the repository.
-2. Rewrote Meo into a 100% client-side desktop companion and keyboard command runner. It now handles system actions locally: launching apps (Terminal, Notes, Calculator, Devlogs), switching themes, jumping between virtual workspaces, and listing keyboard shortcuts.
-3. Added native Web Speech API synthesis for offline spoken feedback without sending any user data over the network.
-4. Cleaned up Settings.tsx to remove all API key fields.
-
-SyauOS is now completely self-contained and runs 100% on the client device. The features I am proud of — the Bikram Sambat calendar engine, the window manager physics, and the local developer tools — stand front and center on their own merits.`,
+Now SyauOS has zero external AI API calls. Every app runs locally on the browser, and the code is straightforward enough that I can explain every single part of it.`,
   },
 ]
 

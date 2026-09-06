@@ -124,21 +124,25 @@ SyauOS includes automated unit tests running on Node's native test runner (`node
 
 ## Honest AI Declaration
 
-As required by Hack Club and in the interest of transparent engineering:
+I want to be completely transparent about how this project was built and where AI was involved:
 
-### Where AI Was Used:
-- **Early Brainstorming & Scaffolding**: AI was used during early exploration to outline component layout ideas and draft color tokens.
+### The Scaffolding Phase:
+When I first started this project, I used AI prompts to scaffold out many of the apps and generate layout boilerplates. That led to a massive initial codebase, which included a lot of code I didn't write by hand (like heavy canvas particle demos, placeholder store apps, and an AI chat assistant hooked up to Gemini 1.5 Flash).
 
-### Where AI Was NOT Used / What Was Rewritten by Hand:
-- **Zero Generative AI / Cloud APIs**: All Gemini REST API calls, API keys, and chatbot integrations have been completely excised. Meo operates 100% locally as an offline desktop navigation helper and command launcher.
-- **Window Management Logic**: Diagnosed and rewrote window dragging, z-index elevation, pointer boundary slipping, and multi-workspace window isolation from scratch.
-- **Nepali Bikram Sambat Calendar Engine**: Built the algorithmic date converter and Devanagari numeral transformer from scratch (`nepaliCalendar.ts`).
-- **Major Codebase Audit & Cleanup**:
-  - Removed over 5,000 lines of brittle AI boilerplate (including bloated canvas scripts in Studio, fake app mockups, and external AI calls).
-  - Replaced fake placeholder apps and raw HTML blocks with typed components and Lucide React vector icons (zero emojis).
-  - Eliminated high-frequency `setInterval` local storage polling loops in widgets in favor of clean custom DOM events.
-  - Authored authentic, first-person devlogs in `src/apps/Devlogs.tsx` reflecting real engineering hurdles, mobile responsiveness bugs, and architectural rewrites.
-- **Automated Testing**: Designed and implemented the complete 10-test unit testing suite for the calendar engine and desktop store.
+### The Rewrite & Human Ownership (<30% AI):
+Following review feedback from Hack Club Shipwright @Shreerang, I audited the repository to cut the fluff and ensure the project reflects my own work:
+1. **Excised All External AI & Cloud APIs**:
+   - Completely deleted Google Gemini 1.5 Flash REST calls, API key inputs, and voice synthesis.
+   - Converted Meo (`src/components/MeoAssistant.tsx`) into a simple, 100% offline desktop command runner and shortcut indexer.
+2. **Stripped Over 5,000 Lines of AI Boilerplate**:
+   - Deleted pre-baked canvas particle scripts from `Studio.tsx` (cut from 1,000+ lines down to a clean 180-line scratchpad).
+   - Pruned fake template mockups and unused placeholder apps.
+   - Cleaned up bloated CSS filters and cursor trail scripts.
+3. **What I Hand-Engineered and Understand**:
+   - **Bikram Sambat (BS) Nepali Calendar**: Wrote the algorithmic Gregorian-to-BS date calculation and dynamic Devanagari digit formatting (`src/utils/nepaliCalendar.ts`) verified by 5 unit tests.
+   - **Window Manager**: Diagnosed and rewrote window dragging, z-index focus stacking, pointer boundary slipping, and multi-workspace window filtering (`src/store/desktopStore.ts`, `src/components/Window.tsx`) verified by 5 unit tests.
+   - **Shell & Tools**: Built the custom terminal parser (`Terminal.tsx`), clean calculator evaluation, persistent notes, and responsive mobile adaptations.
+   - **Devlogs**: Documented every bug, mobile breakpoint glitch, and refactor in plain English in `src/apps/Devlogs.tsx`.
 
 ---
 

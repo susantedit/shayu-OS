@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  Compass, Send, Volume2, VolumeX, X, Minimize2,
-  Check, Sparkles, Terminal, Keyboard
+  Compass, Send, X, Minimize2,
+  Check, Sparkles
 } from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 import { useThemeStore } from '../store/themeStore'
@@ -35,7 +35,6 @@ const APP_TITLES: Record<string, { title: string; w: number; h: number }> = {
 export default function MeoAssistant() {
   const [active, setActive] = useState(false)
   const [minimized, setMinimized] = useState(false)
-  const [voiceEnabled, setVoiceEnabled] = useState(true)
   const [messages, setMessages] = useState<Message[]>([
     {
       id: 'init',
@@ -67,7 +66,6 @@ export default function MeoAssistant() {
       }
       if (e.key === 'Escape' && active) {
         setActive(false)
-        window.speechSynthesis?.cancel()
       }
     }
     const handleToggleEvent = () => {
@@ -82,16 +80,6 @@ export default function MeoAssistant() {
       window.removeEventListener('meo-toggle', handleToggleEvent)
     }
   }, [active])
-
-  // Speak assistant messages via Web Speech API
-  const speak = useCallback((text: string) => {
-    if (!voiceEnabled || typeof window === 'undefined' || !window.speechSynthesis) return
-    window.speechSynthesis.cancel()
-    const utterance = new SpeechSynthesisUtterance(text.replace(/\[ACTION:[^\]]+\]/g, ''))
-    utterance.pitch = 1.15
-    utterance.rate = 1.05
-    window.speechSynthesis.speak(utterance)
-  }, [voiceEnabled])
 
   // Execute OS action tags
   const executeAction = useCallback((action: string): string | null => {
@@ -221,7 +209,6 @@ export default function MeoAssistant() {
       actionTriggered: actionResult || undefined,
     }
     setMessages(prev => [...prev, assistantMsg])
-    speak(reply)
   }
 
   if (!active) return null
@@ -278,13 +265,6 @@ export default function MeoAssistant() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <button
-              onClick={() => setVoiceEnabled(v => !v)}
-              title={voiceEnabled ? 'Mute Voice' : 'Enable Voice'}
-              style={{ background: 'transparent', border: 'none', color: voiceEnabled ? 'var(--color-sakura)' : 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: 4 }}
-            >
-              {voiceEnabled ? <Volume2 size={15} /> : <VolumeX size={15} />}
-            </button>
-            <button
               onClick={() => setMinimized(m => !m)}
               title={minimized ? 'Expand' : 'Minimize'}
               style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: 4 }}
@@ -292,7 +272,7 @@ export default function MeoAssistant() {
               <Minimize2 size={14} />
             </button>
             <button
-              onClick={() => { setActive(false); window.speechSynthesis?.cancel() }}
+              onClick={() => setActive(false)}
               title="Close"
               style={{ background: 'transparent', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: 4 }}
             >
