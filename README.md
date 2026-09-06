@@ -7,6 +7,16 @@ Built by **Kantaraj Luitel (Susant)** for the [Hack Club Stardance](https://star
 
 ---
 
+## A Note From the Builder
+
+When I first started this project, I thought I could build everything with AI prompts. But as time went on, I realized that when I depended too much on generated code, the project became bloated, buggy, and completely disconnected from what I actually knew. 
+
+So I stepped back and rebuilt the project so I could truly understand every piece. I watched tutorials, read documentation, and wrote the logic myself: debugging mouse drag physics, mobile touch viewports, and building the Bikram Sambat calendar converter from scratch. 
+
+I did use AI for initial exploration and syntax help when stuck, but this project taught me that real engineering means taking ownership of your code. SyauOS is something I learned by researching, experimenting, breaking, and fixing with my own hands.
+
+---
+
 ## Why I Built This
 
 I wanted to understand how operating systems handle windowing, multi-tasking, and application state in a browser environment, while giving it a distinct identity instead of cloning a generic macOS or Windows theme. SyauOS integrates:

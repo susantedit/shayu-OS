@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { FastForward } from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 import { mediaUrl } from '../config'
 
@@ -145,15 +146,28 @@ export default function BootScreen() {
     return () => { cancelAnimationFrame(frame); window.removeEventListener('resize', resize) }
   }, [])
 
+  const skipBoot = () => {
+    setBootDone(true)
+  }
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+        skipBoot()
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [])
+
   useEffect(() => {
     const timers: ReturnType<typeof setTimeout>[] = []
-    timers.push(setTimeout(() => setLogoSharp(true), 100))
-    timers.push(setTimeout(() => setBootPhase('welcome'), 2000))
+    timers.push(setTimeout(() => setLogoSharp(true), 50))
     timers.push(setTimeout(() => {
       playBootChime()
       setBootPhase('welcome')
-    }, 2000))
-    timers.push(setTimeout(() => setBootPhase('terminal'), 4000))
+    }, 600))
+    timers.push(setTimeout(() => setBootPhase('terminal'), 1400))
     return () => timers.forEach(clearTimeout)
   }, [])
 
@@ -208,6 +222,23 @@ export default function BootScreen() {
 
   return (
     <div style={{ position: 'fixed', inset: 0, zIndex: 9999, background: '#030305', overflow: 'hidden', fontFamily: 'var(--font-mono)', opacity: bootPhase === 'fadeout' ? 0 : 1, transition: 'opacity 0.8s ease-in-out' }}>
+      <button
+        onClick={skipBoot}
+        style={{
+          position: 'absolute', top: 16, right: 16, zIndex: 60,
+          display: 'flex', alignItems: 'center', gap: 6,
+          padding: '6px 12px', borderRadius: 8,
+          background: 'rgba(255, 255, 255, 0.08)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          color: 'var(--color-sakura, #E8829B)', fontSize: 11, fontWeight: 600,
+          cursor: 'pointer', backdropFilter: 'blur(8px)',
+          fontFamily: 'var(--font-sans, sans-serif)',
+          transition: 'all 0.2s',
+        }}
+      >
+        <span>Skip Boot</span>
+        <FastForward size={13} />
+      </button>
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.6 }} />
 
       {BG_IMAGES.map((img, i) => (
