@@ -70,7 +70,10 @@ export default function Settings() {
 
   useEffect(() => { localStorage.setItem('syau-os-wallpaper', selectedWallpaper) }, [selectedWallpaper])
   useEffect(() => { localStorage.setItem('syau-os-live-wall', selectedLiveWall) }, [selectedLiveWall])
-  useEffect(() => { localStorage.setItem('syau-os-widgets', widgets ? 'on' : 'off') }, [widgets])
+  useEffect(() => {
+    localStorage.setItem('syau-os-widgets', widgets ? 'on' : 'off')
+    window.dispatchEvent(new Event('syau-widgets-toggle'))
+  }, [widgets])
 
   return (
     <div style={{ padding: 20, overflow: 'auto', height: '100%' }}>
@@ -746,25 +749,18 @@ export default function Settings() {
         </div>
       </Section>
 
-      <Section title="Meo Assistant">
-        <div style={{ marginBottom: 8 }}>
-          <span style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-text-primary)' }}>Gemini API Key</span>
-          <div style={{ fontSize: 10, color: 'var(--color-text-muted)', marginTop: 2 }}>Required for Meo AI responses. Get one at aistudio.google.com</div>
+      <Section title="Meo Companion">
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+          <div>
+            <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--color-text-primary)' }}>Shortcut & Navigation Helper</div>
+            <div style={{ fontSize: 11, color: 'var(--color-text-muted)', marginTop: 2 }}>100% offline desktop companion & command launcher</div>
+          </div>
+          <span style={{ fontSize: 11, fontFamily: 'var(--font-mono)', padding: '2px 6px', borderRadius: 4, background: 'rgba(255,255,255,0.06)', color: 'var(--color-text-muted)' }}>
+            Ctrl+M
+          </span>
         </div>
-        <input
-          type="password"
-          defaultValue={localStorage.getItem('syau-gemini-key') || 'AIzaSyDxvt3A5saNeoG9FeAFqNcQmL-wmqXokJ0'}
-          onBlur={(e) => localStorage.setItem('syau-gemini-key', e.target.value)}
-          placeholder="Paste your Gemini API key..."
-          style={{
-            width: '100%', padding: '8px 12px', borderRadius: 8,
-            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
-            color: 'var(--color-text-primary)', fontSize: 12,
-            fontFamily: 'var(--font-mono)', outline: 'none',
-          }}
-        />
-        <div style={{ marginTop: 6, fontSize: 11, color: 'var(--color-text-muted)' }}>
-          Ctrl+M to toggle Meo · Click the orb to talk
+        <div style={{ fontSize: 11, color: 'var(--color-text-muted)', lineHeight: 1.5 }}>
+          Meo operates completely offline on your device without external APIs or cloud services. Use it to quickly launch apps, switch themes, or discover keyboard shortcuts.
         </div>
       </Section>
 
