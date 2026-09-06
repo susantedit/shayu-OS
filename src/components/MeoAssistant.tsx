@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Compass, Send, X, Minimize2,
@@ -349,7 +349,6 @@ export default function MeoAssistant() {
                         actionTriggered: actionResult || undefined,
                       }
                       setMessages(prev => [...prev, assistantMsg])
-                      speak(reply)
                     }, 50)
                   }}
                   style={{
