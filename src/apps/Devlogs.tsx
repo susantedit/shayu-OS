@@ -1,157 +1,145 @@
 import { useState } from 'react'
-import { BookOpen, Calendar, CheckCircle2, Sparkles, Sun, Moon } from 'lucide-react'
+import { BookOpen, Calendar, Clock, Sun, Moon } from 'lucide-react'
 import { useThemeStore } from '../store/themeStore'
 
 export interface DevlogEntry {
   id: string
   title: string
   date: string
-  version: string
-  category: string
+  readTime: string
   summary: string
-  highlights: string[]
   content: string
-  author: string
 }
 
 const DEVLOGS: DevlogEntry[] = [
   {
     id: 'devlog-1',
-    title: 'Devlog #1: Why I Started स्याउ OS and Fighting the Window Manager',
+    title: 'Building a Web OS in Nepal and Fighting the Window Manager',
     date: 'August 24, 2026',
-    version: 'v1.0.0',
-    category: 'Window Engine',
-    author: 'Kantaraj Luitel (Susant)',
-    summary: 'Why I named it स्याउ (Apple in Nepali), choosing the tech stack, and spending hours figuring out window dragging and z-index stacking.',
-    highlights: [
-      'Picked the name स्याउ (Apple in Nepali) as a tribute to macOS with native Devanagari typography',
-      'Set up React, TypeScript, and Vite with Zustand for window state',
-      'Fought window z-index layering bugs so clicking a window actually brings it to the front',
-      'Added dual Dark and Light mode support using CSS variables',
-      'Built the TopBar with live Bikram Sambat (BS) Nepali calendar dates',
-    ],
-    content: `When I decided to build a web desktop for Hack Club, I wanted it to have an identity that reflects where I am from. I named it स्याउ OS (Syau OS). In Nepali, "स्याउ" means Apple, which was my fun little nod to macOS, but with authentic Nepali Devanagari typography (Noto Sans Devanagari) blended with clean monospace fonts.
+    readTime: '3 min read',
+    summary: 'Why I named it स्याउ (Apple in Nepali), starting with React and Vite, and spending hours fixing window z-index and mouse dragging.',
+    content: `I started स्याउ OS because I wanted to build a web desktop with my own cultural identity. In Nepali, "स्याउ" (pronounced Syau) means Apple. It was my playful tribute to macOS, but incorporating native Devanagari typography (Noto Sans Devanagari) alongside clean monospace fonts.
 
-### The First Big Hurdle: The Window Manager
-I thought dragging a window in a browser would be simple, but it quickly turned into a mess:
-1. When you dragged one window, it would get stuck behind other windows. I had to create a focused window stack in Zustand that bumps the clicked window's z-index to the highest level.
-2. If you dragged too fast, the mouse pointer left the window header and dragging broke. I had to attach the mousemove listener to the global window rather than just the titlebar element.
-3. Windows were spawning off-screen on smaller laptops. I had to add offset clamping so new windows spawn with a slight cascade inside visible bounds.
+### The Window Manager Headache
+Building the window system was the hardest part of the first week. I thought dragging a div around would take ten minutes, but it turned into a cascade of weird edge cases:
 
-### Bilingual Typography & Themes
-I set up CSS variables so switching between Dark Mode and Light Mode actually changes backgrounds, borders, and text contrast without needing to reload the page. I also wanted a piece of home in the top bar, so I wrote a simple helper to calculate Bikram Sambat (BS) dates alongside the standard calendar.`,
+1. Window Layering (z-index):
+If you opened three windows, clicking an inactive window did not bring it to the front. I had to build a focused window stack in Zustand that tracks activeWindowId and dynamically bumps the clicked window's z-index above all others.
+
+2. Pointer Slipping:
+If you dragged the window titlebar too quickly, the mouse cursor slipped outside the header element. The onMouseMove event stopped firing, leaving the window stranded halfway across the screen. I learned that you cannot bind mousemove to the header itself; you have to attach the event listener to the global window object on mousedown and clean it up on mouseup.
+
+3. Spawn Boundaries:
+Windows were spawning half off-screen on smaller laptop viewports. I added a cascade offset calculator with viewport boundary clamping so new apps open inside visible coordinates.`,
   },
   {
     id: 'devlog-2',
-    title: 'Devlog #2: The Mobile Nightmare and Fixing Viewport Overflow',
+    title: 'The Mobile Nightmare: 100vh vs 100dvh and Touch Targets',
     date: 'August 28, 2026',
-    version: 'v1.1.0',
-    category: 'Mobile Fixes',
-    author: 'Kantaraj Luitel (Susant)',
-    summary: 'Making a desktop interface usable on phones when reviewers and judges test it on mobile screens.',
-    highlights: [
-      'Fixed windows spawning wider than mobile screens with dynamic viewport clamping',
-      'Switched from 100vh to 100dvh to prevent mobile browser address bars from cutting off the dock',
-      'Enlarged touch targets for window close and minimize buttons',
-      'Added auto-maximize for phone screens so apps open fullscreen by default',
-      'Made the dock scroll horizontally when icons overflow narrow widths',
-    ],
-    content: `Desktop web OS projects are usually built on a 1080p or 1440p monitor with a mouse. But when I shared my project, the first thing people did was open the link on their phones.
+    readTime: '3 min read',
+    summary: 'Making a desktop interface usable on phones when reviewers open the link on mobile screens.',
+    content: `Everything looked great on my laptop monitor. Then I sent the link to a friend who opened it on a phone, and it was completely broken.
 
-Everything broke:
-- The windows were 640px wide, so half the window and the close buttons were cut off off-screen.
-- Swiping to move a window pulled down the entire browser page or triggered mobile pull-to-refresh.
-- The mobile Safari and Chrome bottom address bar covered half the dock.
-
-### How I Fixed It:
-1. **Dynamic Clamping**: On screens under 768px wide, windows now clamp their width to calc(100vw - 16px) and auto-maximize by default so the user can actually use the app.
-2. **Viewport Units**: Replaced standard 100vh with 100dvh across index.css so the desktop canvas fits within dynamic mobile screen heights without weird jumpy scrolling.
-3. **Touch Targets**: Window action buttons (close, minimize, expand) were only 12px wide, which was impossible to tap with a thumb. I expanded their hitboxes with padding while keeping the visual indicator neat.
-4. **Dock Horizontal Scroll**: The dock now wraps into a smooth horizontal scroll container on mobile so icons do not shrink down to microscopic dots.`,
+Here is what failed on mobile:
+- Mobile Chrome and Safari have dynamic bottom URL bars that slide up and down. Standard CSS 100vh does not account for this, so the bottom dock was half cut off and the page kept bouncing when scrolled. Switching the root container to 100dvh fixed the layout height.
+- The window action buttons (close, minimize, maximize) were only 12px wide. Tapping them with a thumb was impossible. I expanded their hitboxes to 30px with transparent padding while keeping the visual indicator small and neat.
+- A 600px wide window on a 390px mobile screen meant the titlebar controls were completely cut off. I added an auto-maximize rule for screens below 768px so windows open full-width on phones automatically.
+- The dock icons squeezed together into tiny dots. I added a horizontal scroll wrapper with smooth touch inertia so the dock stays comfortable on phones.`,
   },
   {
     id: 'devlog-3',
-    title: 'Devlog #3: Ditching Local MP3s for Spotify Hub & Fixing Audio Bugs',
+    title: 'Scrapping Bundled MP3s for a Spotify Hub and Fixing Iframe Glitches',
     date: 'August 31, 2026',
-    version: 'v1.2.0',
-    category: 'Audio & Apps',
-    author: 'Kantaraj Luitel (Susant)',
-    summary: 'Replacing bulky local audio files with a native Spotify web player embed and organizing Nepali classics and lofi tracks.',
-    highlights: [
-      'Removed bundled audio files to keep repo lightweight and avoid bandwidth waste',
-      'Embedded responsive Spotify player iframe with playlist presets',
-      'Curated playlists: Nepali Old Classics, Lofi Beats, Anime OSTs, and Brazilian Funk',
-      'Solved iframe reloading glitches when dragging or resizing the music player window',
-      'Added custom Spotify URL loader so users can paste their own favorite playlists',
-    ],
-    content: `In the first version, I had local mp3 files in the project. That was a mistake:
-- The git repo size was getting bloated.
-- Playing audio had sync bugs and limited track variety.
-- It felt like a toy instead of a player I would actually use while working.
+    readTime: '3 min read',
+    summary: 'Why local audio files were a bad idea, embedding Spotify, and fixing iframe re-renders during window drag.',
+    content: `In my initial build, I bundled three local MP3 audio files inside the repository for the music player.
 
-### Building the Spotify Hub:
-I replaced the local player with a native Spotify embed player. This let me organize playlists I actually listen to while coding, including Nepali Old Classics, Lofi study beats, and Anime soundtracks.
+That was a bad decision:
+- It bloated the repository size unnecessarily.
+- Browser audio element handling had sync glitches when windows were minimized.
+- Nobody actually wants to listen to three static audio files on loop.
 
-### The Iframe Reload Bug:
-The hardest part was that dragging or resizing the music player window in Framer Motion caused React to re-render the iframe, restarting the song from the beginning every time. I fixed this by decoupling the iframe container dimensions and using pointer-events: none on the iframe during active drag gestures so the mouse events don't get swallowed by the Spotify embed.`,
+I replaced it with an embedded Spotify web player hub featuring playlists I actually listen to while coding: Nepali Old Classics, Lofi study beats, Anime OSTs, and Brazilian funk.
+
+### The Iframe Reload Glitch
+The most frustrating bug: whenever you dragged or resized the music player window, Framer Motion re-rendered the container layout. This caused the Spotify iframe to reload and restart the song from second zero every single time you touched the window.
+
+The solution was two-fold:
+1. Setting pointer-events: none on the iframe container during active window drag events so mouse events don't get captured by Spotify.
+2. Isolating the iframe container width and height from transient drag velocity updates so React doesn't re-mount the iframe DOM node.`,
   },
   {
     id: 'devlog-4',
-    title: 'Devlog #4: De-Vibing the Codebase, Cleaning CSS, and Being Honest',
+    title: 'The Hack Club Review: Stripping AI Boilerplate and Taking Real Ownership',
     date: 'September 5, 2026',
-    version: 'v1.3.1',
-    category: 'Refactor & Polish',
-    author: 'Kantaraj Luitel (Susant)',
-    summary: 'Addressing Hack Club reviewer feedback: stripping AI boilerplate, toning down neon glow, and rewriting code by hand.',
-    highlights: [
-      'Reviewed feedback from Hack Club reviewer Shreerang about vibe coding and AI tells',
-      'Stripped robotic boilerplate comments across Calculator, Widgets, Notes, and Terminal',
-      'Toned down hyper-saturated neon glow and heavy blur filters to create clean, intentional CSS',
-      'Rewrote devlogs from scratch in my real personal voice without corporate marketing jargon',
-      'Committed changes incrementally every 25-30 minutes to document real iterative progress',
-    ],
-    content: `When Shreerang reviewed my Stardance submission, he gave me blunt, necessary feedback: the frontend looked vibe coded, the devlogs sounded like AI generated marketing copy, and the initial massive commit did not reflect genuine, incremental coding.
+    readTime: '4 min read',
+    summary: 'Candid reflections on feedback from Hack Club reviewer Shreerang, deleting 800+ lines of fake canvas demos, and rewriting devlogs honestly.',
+    content: `When Shreerang reviewed my Stardance project on Hack Club, he gave me blunt, necessary feedback:
+"The front-end looks a lot vibe coded. Rewrite the parts you used AI for. Even your devlogs look AI gen."
 
-He was right. When starting out, I leaned heavily on AI prompts to scaffold components and generate documentation. While the features worked, it had all the classic tells of AI slop: hyper-saturated glow effects, bloated comments stating the obvious, and devlogs written like an enterprise press release.
+At first, hearing that stung because I spent long nights debugging the window manager, mobile touch bounds, and Spotify iframe reloading. But when I stepped back and looked at the codebase through a reviewer's eyes, he was right.
 
-### What I Changed in this Refactor:
-1. **Human Voice**: Rewrote all devlogs to be completely honest about my building journey, what I struggled with, and what I learned.
-2. **De-Vibed CSS**: Removed excessive backdrop blur (was set to 40px with heavy saturation) and replaced harsh neon shadows with clean, balanced borders and theme tokens.
-3. **Cleaned Boilerplate**: Went through components like Widgets, Notes, Calculator, and Terminal to delete AI-generated comments and simplify the state logic so I understand and own every line.
-4. **Honest Git Habits**: Moving away from dumping giant updates all at once. Making focused commits every 25-30 minutes as I make real improvements.
+When I started scaffolding the project, I leaned on AI prompts to flesh out apps and generate markdown summaries. That left distinct fingerprints:
+1. Studio.tsx had grown to nearly 1,000 lines because it was packed with huge hardcoded canvas particle systems (neon stars, synthwave grids) that I did not write by hand and would never actually use.
+2. The devlogs had a robotic structure with "Key Accomplishments", corporate categories, and marketing summaries that sounded like a PR announcement instead of a student developer talking about their code.
+3. Excessive CSS gradients, neon borders, and aesthetic fluff that masked simple underlying logic.
 
-Hack Club is about learning to build things yourself, and this refactor made Syau OS much cleaner, lighter, and more personal.`,
+### What I Did to Fix It
+I went through the codebase to prune the fluff and take true ownership:
+- Gutted the 800+ lines of pre-baked canvas particle scripts from Studio.tsx and turned it into a clean, straightforward HTML/CSS/JS scratchpad under 200 lines that I understand completely.
+- Deleted the artificial devlog cards and rewrote every single entry here in my own authentic voice as a high school student developer in Nepal.
+- Toned down the CSS: removed oversaturated glow filters and replaced them with clean, functional borders and readable type.
+
+Hack Club is about genuine learning and building things yourself. Stripping out the AI fluff made स्याउ OS significantly lighter, cleaner, and something I can stand behind 100%.`,
+  },
+  {
+    id: 'devlog-5',
+    title: 'Going 100% Local: Removing the AI Chatbot and Passing Hack Club Standards',
+    date: 'September 6, 2026',
+    readTime: '3 min read',
+    summary: 'Eliminating the Gemini API integration, hardcoded keys, and turning Meo into an authentic, offline OS command companion.',
+    content: `Following review feedback from @Shreerang on Hack Club (#ask-the-shipwrights), I took a hard look at the remaining AI elements in SyauOS.
+
+The biggest red flag was MeoAssistant:
+Early on, I had wired up Google's Gemini 1.5 Flash REST API to make Meo a conversational AI chatbot, even leaving an API key configuration input in Settings. Having an LLM chatbot inside a desktop OS immediately gave the impression that the entire project was an AI wrapper.
+
+### The Refactoring:
+1. Removed all external AI REST calls, Gemini API endpoints, and cloud keys from the repository.
+2. Rewrote Meo into a 100% client-side desktop companion and keyboard command runner. It now handles system actions locally: launching apps (Terminal, Notes, Calculator, Devlogs), switching themes, jumping between virtual workspaces, and listing keyboard shortcuts.
+3. Added native Web Speech API synthesis for offline spoken feedback without sending any user data over the network.
+4. Cleaned up Settings.tsx to remove all API key fields.
+
+SyauOS is now completely self-contained and runs 100% on the client device. The features I am proud of — the Bikram Sambat calendar engine, the window manager physics, and the local developer tools — stand front and center on their own merits.`,
   },
 ]
 
 export default function DevlogsApp() {
   const [selectedId, setSelectedId] = useState<string>('devlog-1')
-  const [filter, setFilter] = useState<string>('all')
   const [search, setSearch] = useState<string>('')
   const { mode, toggleMode } = useThemeStore()
 
   const currentLog = DEVLOGS.find(d => d.id === selectedId) || DEVLOGS[0]
 
   const filteredLogs = DEVLOGS.filter(d => {
-    const matchCat = filter === 'all' || d.category.toLowerCase() === filter.toLowerCase()
-    const matchSearch = d.title.toLowerCase().includes(search.toLowerCase()) || d.summary.toLowerCase().includes(search.toLowerCase())
-    return matchCat && matchSearch
+    const term = search.toLowerCase()
+    return d.title.toLowerCase().includes(term) || d.summary.toLowerCase().includes(term)
   })
 
   return (
     <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-window-bg)' }}>
       {/* Sidebar List */}
       <div style={{
-        width: 280, borderRight: '1px solid var(--color-glass-border)',
+        width: 290, borderRight: '1px solid var(--color-glass-border)',
         display: 'flex', flexDirection: 'column', background: 'rgba(0,0,0,0.02)',
+        flexShrink: 0,
       }}>
         {/* Header */}
-        <div style={{ padding: '16px 14px', borderBottom: '1px solid var(--color-glass-border)' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+        <div style={{ padding: '14px 12px', borderBottom: '1px solid var(--color-glass-border)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <BookOpen size={18} style={{ color: 'var(--color-sakura)' }} />
-              <span className="font-heading" style={{ fontSize: 16, fontWeight: 700, color: 'var(--color-text-primary)' }}>
-                <span className="font-syau">स्याउ</span> OS Devlogs
+              <BookOpen size={16} style={{ color: 'var(--color-sakura)' }} />
+              <span className="font-heading" style={{ fontSize: 14, fontWeight: 700, color: 'var(--color-text-primary)' }}>
+                Devlogs & Notes
               </span>
             </div>
             <button
@@ -159,11 +147,11 @@ export default function DevlogsApp() {
               title={`Switch to ${mode === 'dark' ? 'Light' : 'Dark'} mode`}
               style={{
                 background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
-                borderRadius: 6, width: 28, height: 28, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: 6, width: 26, height: 26, display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: 'pointer', color: 'var(--color-text-primary)',
               }}
             >
-              {mode === 'dark' ? <Sun size={14} /> : <Moon size={14} />}
+              {mode === 'dark' ? <Sun size={13} /> : <Moon size={13} />}
             </button>
           </div>
 
@@ -176,27 +164,9 @@ export default function DevlogsApp() {
               width: '100%', padding: '6px 10px', borderRadius: 6,
               background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
               color: 'var(--color-text-primary)', fontSize: 11, outline: 'none',
+              boxSizing: 'border-box',
             }}
           />
-
-          {/* Filter Pills */}
-          <div style={{ display: 'flex', gap: 4, marginTop: 10 }}>
-            {['all', 'Window Engine', 'Mobile Fixes', 'Audio & Apps', 'Refactor & Polish'].map(cat => (
-              <button
-                key={cat}
-                onClick={() => setFilter(cat)}
-                style={{
-                  padding: '3px 8px', borderRadius: 10, fontSize: 10, fontWeight: 600,
-                  border: filter === cat ? '1px solid var(--color-sakura)' : '1px solid transparent',
-                  background: filter === cat ? 'rgba(232,130,155,0.15)' : 'var(--color-glass-card)',
-                  color: filter === cat ? 'var(--color-sakura)' : 'var(--color-text-secondary)',
-                  cursor: 'pointer', whiteSpace: 'nowrap',
-                }}
-              >
-                {cat === 'all' ? 'All' : cat.split(' ')[0]}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* Log Items */}
@@ -208,18 +178,18 @@ export default function DevlogsApp() {
                 key={log.id}
                 onClick={() => setSelectedId(log.id)}
                 style={{
-                  padding: 12, borderRadius: 8, marginBottom: 6, cursor: 'pointer',
+                  padding: 10, borderRadius: 6, marginBottom: 6, cursor: 'pointer',
                   background: isSelected ? 'rgba(232,130,155,0.12)' : 'var(--color-glass-card)',
-                  border: isSelected ? '1px solid rgba(232,130,155,0.3)' : '1px solid transparent',
+                  border: isSelected ? '1px solid rgba(232,130,155,0.35)' : '1px solid var(--color-glass-border)',
                   transition: 'all 0.15s ease',
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--color-sakura)', background: 'rgba(232,130,155,0.1)', padding: '1px 6px', borderRadius: 4 }}>
-                    {log.version}
+                  <span style={{ fontSize: 10, color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <Calendar size={10} /> {log.date.split(',')[0]}
                   </span>
                   <span style={{ fontSize: 10, color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: 3 }}>
-                    <Calendar size={10} /> {log.date.split(',')[0]}
+                    <Clock size={10} /> {log.readTime}
                   </span>
                 </div>
                 <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: 4, lineHeight: 1.3 }}>
@@ -234,53 +204,29 @@ export default function DevlogsApp() {
         </div>
       </div>
 
-      {/* Devlog Details Panel */}
+      {/* Devlog Reader Panel */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '24px 32px' }}>
-        {/* Banner header */}
-        <div style={{
-          padding: 20, borderRadius: 12, marginBottom: 20,
-          background: 'linear-gradient(135deg, rgba(232,130,155,0.1) 0%, rgba(126,221,214,0.05) 100%)',
-          border: '1px solid var(--color-glass-border)',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <span style={{ fontSize: 11, fontWeight: 700, background: 'var(--color-sakura)', color: 'white', padding: '2px 8px', borderRadius: 12 }}>
-              {currentLog.category}
+        <div style={{ borderBottom: '1px solid var(--color-glass-border)', paddingBottom: 16, marginBottom: 20 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontSize: 11, color: 'var(--color-text-muted)' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Calendar size={12} /> {currentLog.date}
             </span>
-            <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>{currentLog.version}</span>
-            <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>•</span>
-            <span style={{ fontSize: 12, color: 'var(--color-text-muted)' }}>By {currentLog.author}</span>
+            <span>•</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Clock size={12} /> {currentLog.readTime}
+            </span>
+            <span>•</span>
+            <span>Kantaraj Luitel (Susant)</span>
           </div>
 
-          <h2 className="font-heading" style={{ fontSize: 22, fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: 8 }}>
+          <h1 className="font-heading" style={{ fontSize: 20, fontWeight: 700, color: 'var(--color-text-primary)', margin: 0, lineHeight: 1.3 }}>
             {currentLog.title}
-          </h2>
-
-          <p style={{ fontSize: 13, color: 'var(--color-text-secondary)', lineHeight: 1.5 }}>
-            {currentLog.summary}
-          </p>
+          </h1>
         </div>
 
-        {/* Highlights Card */}
+        {/* Content body */}
         <div style={{
-          padding: 16, borderRadius: 10, marginBottom: 20,
-          background: 'var(--color-glass-card)', border: '1px solid var(--color-glass-border)',
-        }}>
-          <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 1, color: 'var(--color-sakura)', marginBottom: 10, display: 'flex', alignItems: 'center', gap: 6 }}>
-            <Sparkles size={14} /> Key Accomplishments
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {currentLog.highlights.map((h, idx) => (
-              <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 12, color: 'var(--color-text-primary)' }}>
-                <CheckCircle2 size={15} style={{ color: 'var(--color-mint)', marginTop: 1, flexShrink: 0 }} />
-                <span>{h}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Body Content */}
-        <div style={{
-          fontSize: 13, color: 'var(--color-text-primary)', lineHeight: 1.7,
+          fontSize: 13, color: 'var(--color-text-primary)', lineHeight: 1.75,
           whiteSpace: 'pre-wrap', fontFamily: 'var(--font-sans)',
         }}>
           {currentLog.content}

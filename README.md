@@ -1,73 +1,76 @@
-<div align="center">
+# स्याउ OS (SyauOS)
 
-# स्याउ OS (Syau OS)
+A client-side web desktop environment built with React 19, TypeScript, and Vite.
+Named **स्याउ** (*Syau*, meaning "Apple" in Nepali), the project blends desktop operating system conventions with native Nepali cultural identity, Devanagari typography, and Bikram Sambat (BS) calendar integration.
 
-**A client-side web desktop environment built by Kantaraj Luitel (Susant)**
-
-Built for the [Hack Club](https://hackclub.com) WebOS Jam
-
-[![Created by Kantaraj Luitel](https://img.shields.io/badge/Creator-Kantaraj_Luitel_(Susant)-8B5CF6?style=flat-square&logo=github)](https://github.com/susantedit)
-[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat-square&logo=vite)](https://vite.dev)
-
-</div>
+Built by **Kantaraj Luitel (Susant)** for the [Hack Club Stardance](https://stardance.hackclub.com/projects/56644) showcase.
 
 ---
 
-## About the Creator
+## Why I Built This
 
-**Kantaraj Luitel (Susant)** — Developer, cybersecurity enthusiast, and builder from Nepal.
-- **2nd Place** - Campfire Kathmandu 2026 (Hack Club)
-- **Oracle Cloud Certified** Generative AI Professional & AI Foundations Associate
-- **APIsec Certified Practitioner**
-- [GitHub Profile](https://github.com/susantedit) | [LinkedIn](https://linkedin.com/in/kantaraj-luitel) | [Buy Me a Coffee](https://buymeacoffee.com/Susantedit)
-
----
-
-## About स्याउ OS
-
-**स्याउ OS** (Syau OS) is a web-based desktop environment that runs entirely in the browser. The name "स्याउ" (pronounced *Syau*) means "Apple" in Nepali, serving as a playful nod to macOS while spotlighting native Devanagari typography (**Noto Sans Devanagari**) paired with clean monospace and sans-serif typefaces.
+I wanted to understand how operating systems handle windowing, multi-tasking, and application state in a browser environment, while giving it a distinct identity instead of cloning a generic macOS or Windows theme. SyauOS integrates:
+- Native Devanagari typography (`Noto Sans Devanagari`) paired with `Space Grotesk`.
+- Real-time Gregorian (AD) to Nepali Bikram Sambat (BS) date conversion displaying years, months, and days in native numerals (e.g., २०८३ भाद्र १६).
+- A custom window manager with focus elevation, z-index stacks, dragging physics, maximizing, and multi-workspace support.
 
 ---
 
-## Features
+## Architecture & How It Works
 
-### Window Management & Desktop
-- **Windowing System**: Draggable and resizable windows with focus elevation (z-index handling), minimize, maximize, and close controls.
-- **Dock**: Floating application dock with hover magnification, active app indicators, and responsive horizontal scrolling on mobile.
-- **Top Bar**: System status bar featuring time, audio/wifi/battery indicators, logo menu, and live **Bikram Sambat (BS)** Nepali calendar dates.
-- **Mobile Responsive**: Automatic window clamping and auto-maximize on mobile screens with touch-friendly controls.
-- **Dual Themes**: Switch between Dark Mode and Light Mode with consistent CSS variables.
+### 1. Window Manager (`src/store/desktopStore.ts`, `src/components/Window.tsx`)
+- **State Management**: Zustand manages active window IDs, open app lists, z-index counters, minimized/maximized flags, and multi-workspace assignments.
+- **60fps Drag & Resize**: During mouse drag, coordinates update the DOM element directly (`style.left`, `style.top`) rather than re-rendering the React tree on every pointer event. Final coordinates are synced back into Zustand on `mouseup`.
+- **Focus Elevation**: Clicking anywhere on an unfocused window elevates its `zIndex` to `nextZIndex + 1` and updates `activeWindowId`.
+- **Multi-Workspace**: Supports 4 independent virtual desktops. Switching workspaces filters active windows without unmounting background app state.
 
-### Built-in Apps
-- **Devlogs**: Built-in interactive devlog reader sharing the real building journey, challenges, and code cleanup.
-- **Notes**: Simple text scratchpad with instant local storage saving and live word counter.
-- **Calculator**: Clean calculator with keyboard support and basic operations.
-- **Music Player**: Spotify Web Player integration featuring curated playlists (Nepali Classics, Lofi, Anime OSTs).
-- **Terminal**: Browser shell (`syau-sh`) with utility commands (`neofetch`, `help`, `date`, `clear`).
-- **Creator Profile**: Profile window highlighting certifications, projects, and contact links.
-- **Gallery**: Lightbox photo gallery with thumbnail previews and zoom view.
-- **Settings**: System customization for themes, accent colors, and desktop widgets.
+### 2. Bikram Sambat Calendar Engine (`src/utils/nepaliCalendar.ts`)
+- Pure TypeScript implementation of the Bikram Sambat calendar system.
+- Converts standard Gregorian `Date` objects to BS year, month (`बैशाख` through `चैत`), and day.
+- Formats dates into Devanagari numerals (`०-९`) dynamically without hardcoded strings.
+- Verified with 5 dedicated unit tests for historical and future date transitions.
+
+### 3. Desktop Shell (`src/components/`)
+- **TopBar**: Live Nepali date, digital clock, battery/wifi/sound indicators, and quick control center.
+- **Dock**: Floating macOS-style application launcher with magnification and running indicators.
+- **SystemUI**: Toast notification dispatcher, audio click synthesizer (Web Audio API), and shortcut handlers (Cmd+K / Ctrl+K Spotlight search).
+- **Widgets**: Expandable desktop sidebar with clock, calendar, and quick toggles.
+
+---
+
+## Built-in Applications
+
+| App | Description | Key Tech |
+|---|---|---|
+| **Devlogs** | Interactive developer notes documenting real bugs, fixes, and architecture choices | Local state, theme toggling |
+| **Notes** | Persistent markdown/text scratchpad with word count and autosave | LocalStorage |
+| **Calculator** | Clean desktop calculator with keyboard input support | JavaScript math evaluation |
+| **Browser** | In-OS web portal with curated developer bookmarks and external launch | HTML iframe + sandbox |
+| **Capture** | Screen recording tool with microphone audio and photo booth mode | `navigator.mediaDevices` |
+| **Terminal** | Custom `syau-sh` terminal with commands (`help`, `neofetch`, `date`, `clear`, `apps`) | Command parser |
+| **Music Player** | Spotify Web Player hub with curated coding playlists | Embedded iframe |
+| **Settings** | System customization (dark/light mode, accent color, widget toggles) | Zustand store |
+| **Studio** | Live HTML/CSS/JavaScript interactive scratchpad runner | Sandboxed iframe |
+| **Store** | Curated catalog of installable web utilities and mini-apps | App registry |
+| **Gallery** | Image viewer showcasing desktop wallpapers and photos | Modal lightbox |
+| **About Me** | Builder portfolio detailing certifications and Hack Club projects | Vector layout |
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | React 19 |
-| Language | TypeScript |
-| Build Tool | Vite |
-| Styling | Tailwind CSS + CSS Custom Properties |
-| Typography | Noto Sans Devanagari + Space Grotesk + Inter |
-| State Management | Zustand |
-| Motion | Framer Motion |
-| Icons | Lucide React |
+- **Framework**: React 19
+- **Language**: TypeScript (strict type checking enabled)
+- **Bundler**: Vite 8
+- **State Management**: Zustand
+- **Motion**: Framer Motion
+- **Icons**: Lucide React (vector SVG, zero emojis across the entire codebase)
+- **Styling**: Tailwind CSS + CSS Custom Properties (Tokens)
+- **Testing**: Node.js native test runner (`node:test`, `node:assert`)
 
 ---
 
-## Getting Started
+## Running Locally
 
 ```bash
 # Clone the repository
@@ -77,30 +80,68 @@ cd shayu-OS
 # Install dependencies
 npm install
 
-# Start development server
+# Run the development server
 npm run dev
 
-# Build for production
+# Run unit test suite (10 tests)
+npm test
+
+# Build production bundle
 npm run build
 ```
 
 ---
 
-## AI Disclosure & Building Process
+## Testing & Quality Assurance
 
-In the spirit of Hack Club's focus on learning and authentic engineering:
+SyauOS includes automated unit tests running on Node's native test runner (`node --test`):
+- `src/utils/nepaliCalendar.test.ts`: Validates Arabic-to-Devanagari digit conversion, 12-month array ordering, leap/month-day transitions, and Bikram Sambat date calculations.
+- `src/store/desktopStore.test.ts`: Validates window boot state, window creation, focus z-index elevation, minimize/maximize toggling, multi-workspace isolation, and clean window closing.
 
-- **Initial Scaffolding**: I initially used AI assistance for brainstorming features, exploring window manager concepts, and scaffolding initial component templates.
-- **Refactoring & Ownership**: Following feedback from Hack Club reviewers (Shreerang), I have been actively refactoring the codebase by hand:
-  - Rewriting the devlogs in my authentic voice detailing the real bugs I encountered (window z-index bugs, mobile touch handling, iframe reloads).
-  - De-vibing the CSS: replacing hyper-saturated neon glows and heavy blur with clean, intentional theme tokens.
-  - Removing AI boilerplate comments and simplifying application logic across Notes, Calculator, Widgets, and Terminal.
-  - Making frequent, incremental git commits documenting real iterative coding progress.
+```
+✔ DesktopStore boots and opens a window
+✔ DesktopStore focusWindow increases zIndex and sets activeWindowId
+✔ DesktopStore minimize and maximize behavior
+✔ DesktopStore workspace management and filtering
+✔ DesktopStore closeWindow cleans up window and active state
+✔ toDevanagariDigits converts standard digits to Devanagari numerals
+✔ NEPALI_MONTHS contains all 12 Bikram Sambat months in order
+✔ getNepaliDateBS converts known Gregorian date 2023-04-14 to 2080 Baishakh 1
+✔ getNepaliDateBS converts known Gregorian date 2024-04-13 to 2081 Baishakh 1
+✔ getNepaliDateBS accurately advances months and days in BS year 2080
+ℹ tests 10, pass 10, fail 0
+```
 
 ---
 
-<div align="center">
+## Known Limitations
 
-**स्याउ OS (Syau OS)** — Created by Kantaraj Luitel (Susant), Nepal
+1. **Iframe Security Policies**: Most popular websites (Google, GitHub, Wikipedia) send the `X-Frame-Options: SAMEORIGIN` or `DENY` HTTP response header. Browsers block these from rendering inside SyauOS's Browser iframe. When blocked, the browser UI displays an explicit security explanation with an "Open in New Tab" fallback.
+2. **Single-Threaded Browser Environment**: All windows run inside the same React JavaScript execution context. A heavy script running inside the Studio playground or an app shares the main browser thread.
+3. **Screen Recording Permissions**: The Capture app relies on the browser's `getDisplayMedia` API, which requires user permission and is restricted on some mobile browsers.
 
-</div>
+---
+
+## Honest AI Declaration
+
+As required by Hack Club and in the interest of transparent engineering:
+
+### Where AI Was Used:
+- **Early Brainstorming & Scaffolding**: AI was used during early exploration to outline component layout ideas and draft color tokens.
+
+### Where AI Was NOT Used / What Was Rewritten by Hand:
+- **Zero Generative AI / Cloud APIs**: All Gemini REST API calls, API keys, and chatbot integrations have been completely excised. Meo operates 100% locally as an offline desktop navigation helper and command launcher.
+- **Window Management Logic**: Diagnosed and rewrote window dragging, z-index elevation, pointer boundary slipping, and multi-workspace window isolation from scratch.
+- **Nepali Bikram Sambat Calendar Engine**: Built the algorithmic date converter and Devanagari numeral transformer from scratch (`nepaliCalendar.ts`).
+- **Major Codebase Audit & Cleanup**:
+  - Removed over 5,000 lines of brittle AI boilerplate (including bloated canvas scripts in Studio, fake app mockups, and external AI calls).
+  - Replaced fake placeholder apps and raw HTML blocks with typed components and Lucide React vector icons (zero emojis).
+  - Eliminated high-frequency `setInterval` local storage polling loops in widgets in favor of clean custom DOM events.
+  - Authored authentic, first-person devlogs in `src/apps/Devlogs.tsx` reflecting real engineering hurdles, mobile responsiveness bugs, and architectural rewrites.
+- **Automated Testing**: Designed and implemented the complete 10-test unit testing suite for the calendar engine and desktop store.
+
+---
+
+## License
+
+MIT © [Kantaraj Luitel (Susant)](https://github.com/susantedit)
