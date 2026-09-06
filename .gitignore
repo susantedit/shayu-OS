@@ -34,3 +34,10 @@ public/reels/
 .env.*.local
 
 .vercel
+
+# Local scratch/test scripts
+test.py
+*.py
+/index.tsx
+/main.tsx
+.agents/skills/

@@ -427,8 +427,13 @@ export default function DesktopPet() {
       particles.current = particles.current.filter(p => {
         p.x += p.vx; p.y += p.vy; p.life -= 0.012
         ctx.fillStyle = p.type === 'zz' ? '#C4B5FD' : p.type === 'heart' ? '#FF6B8B' : '#F5D0A9'
-        ctx.globalAlpha = p.life
-        ctx.fillText(p.type === 'zz' ? 'z' : p.type === 'heart' ? '♥' : '✦', p.x, p.y)
+        if (p.type === 'zz') {
+          ctx.fillText('z', p.x, p.y)
+        } else {
+          ctx.beginPath()
+          ctx.arc(p.x, p.y, p.type === 'heart' ? 2.5 : 1.5, 0, Math.PI * 2)
+          ctx.fill()
+        }
         return p.life > 0
       })
 

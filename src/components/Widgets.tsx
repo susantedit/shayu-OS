@@ -15,8 +15,11 @@ export default function Widgets() {
   useEffect(() => {
     const syncWidgetState = () => setEnabled(localStorage.getItem('syau-os-widgets') !== 'off')
     window.addEventListener('storage', syncWidgetState)
-    const interval = setInterval(syncWidgetState, 500)
-    return () => { window.removeEventListener('storage', syncWidgetState); clearInterval(interval) }
+    window.addEventListener('syau-widgets-toggle', syncWidgetState)
+    return () => {
+      window.removeEventListener('storage', syncWidgetState)
+      window.removeEventListener('syau-widgets-toggle', syncWidgetState)
+    }
   }, [])
 
   useEffect(() => {

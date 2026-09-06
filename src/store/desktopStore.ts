@@ -136,7 +136,7 @@ export const useDesktopStore = create<DesktopStore>((set, get) => ({
 
   toggleMaximize: (id) => set(state => ({
     windows: state.windows.map(w =>
-      w.id === id ? { ...w, maximized: !w.maximized } : w
+      w.id === id ? { ...w, maximized: !w.maximized, minimized: false } : w
     ),
   })),
 

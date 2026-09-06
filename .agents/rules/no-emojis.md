@@ -10,6 +10,6 @@ always_on: true
 - Always use **Lucide React icons**, **custom SVG icons**, or clean, professional typographic text.
 
 ## Rules & Requirements
-1. **No Unicode Emojis**: Do not render or hardcode unicode emojis (e.g., 🍎, 🚀, 🔥, ⚡, 💻, ⚙️, etc.) in any React components, templates, or markdown files.
+1. **No Unicode Emojis**: Do not render or hardcode unicode emojis in any React components, templates, or markdown files.
 2. **Icons First**: For visual indicators, status badges, buttons, toolbars, and menus, always import and use vector icons (e.g., `lucide-react` or clean `<svg>` paths).
 3. **Data / JSON / Configs**: Ensure configuration files, mock data, and system logs do not use emojis as iconography or status indicators.

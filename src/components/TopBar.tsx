@@ -8,6 +8,7 @@ import { useDesktopStore } from '../store/desktopStore'
 import { useThemeStore } from '../store/themeStore'
 import { useNetworkStore } from '../store/networkStore'
 import { useBatteryStore } from '../store/batteryStore'
+import { getNepaliDateBS } from '../utils/nepaliCalendar'
 
 export default function TopBar() {
   const [time, setTime] = useState(new Date())
@@ -608,7 +609,7 @@ export default function TopBar() {
         </AnimatePresence>
 
         <span className="font-syau topbar-hide-mobile" style={{ fontSize: 11, color: 'var(--color-sakura)', background: 'rgba(232,130,155,0.1)', padding: '2px 6px', borderRadius: 4, fontWeight: 600 }}>
-          २०८३ भाद्र १६
+          {getNepaliDateBS(time).formattedBS}
         </span>
 
         <span className="topbar-hide-mobile">{formatDate(time)}</span>
