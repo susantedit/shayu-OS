@@ -67,7 +67,7 @@ function playBootChime() {
       osc.start(ctx.currentTime + i * 0.15)
       osc.stop(ctx.currentTime + i * 0.15 + 1.5)
     })
-  } catch { /* Audio not available */ }
+  } catch {}
 }
 
 const BG_IMAGES = [

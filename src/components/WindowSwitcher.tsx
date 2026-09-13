@@ -41,7 +41,6 @@ export default function WindowSwitcher() {
 
   const visibleWindows = windows.filter(w => w.workspace === currentWorkspace && !w.minimized)
 
-  // Listen for external open trigger (from top bar button)
   useEffect(() => {
     const handler = () => {
       if (visibleWindows.length > 1) {
@@ -54,7 +53,6 @@ export default function WindowSwitcher() {
   }, [visibleWindows.length])
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    // Ctrl+Shift+A to open, Tab to cycle
     if (e.ctrlKey && e.shiftKey && e.key === 'A') {
       e.preventDefault()
       if (visibleWindows.length > 1) {

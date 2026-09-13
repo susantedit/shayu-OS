@@ -110,7 +110,7 @@ export default function AboutMe() {
       </motion.div>
 
       <motion.button
-        onClick={() => openWindow('creator', 'Kantaraj Luitel (Susant) - Creator Profile', 860, 580)}
+        onClick={() => openWindow('devlogs', 'स्याउ OS Devlogs', 800, 540)}
         style={{
           width: '100%', padding: '10px 16px', borderRadius: 10,
           background: 'linear-gradient(135deg, var(--color-sakura) 0%, var(--color-sakura-deep) 100%)',
@@ -122,7 +122,7 @@ export default function AboutMe() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        <UserCheck size={16} /> Open Full Creator Profile App
+        <UserCheck size={16} /> Read Devlogs
       </motion.button>
     </div>
   )

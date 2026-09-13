@@ -3,7 +3,7 @@ import { useNotificationStore } from './desktopStore'
 
 export interface WifiNetwork {
   ssid: string
-  signal: number // 1-4
+  signal: number
   secured: boolean
   speed?: string
   isDevice?: boolean
@@ -23,8 +23,8 @@ interface NetworkStore {
   connectedSsid: string | null
   availableNetworks: WifiNetwork[]
   isDeviceOnline: boolean
-  deviceDownlink: number | null // in Mbps
-  deviceRtt: number | null // in ms
+  deviceDownlink: number | null
+  deviceRtt: number | null
   deviceEffectiveType: string | null
   livePing: number | null
   isPinging: boolean
@@ -66,7 +66,6 @@ export const useNetworkStore = create<NetworkStore>((set, get) => {
     ]
   }
 
-  // Setup live listeners for physical device online/offline status
   if (typeof window !== 'undefined') {
     window.addEventListener('online', () => {
       set({ isDeviceOnline: true })

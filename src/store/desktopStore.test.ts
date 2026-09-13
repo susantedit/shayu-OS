@@ -2,7 +2,6 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { useDesktopStore } from './desktopStore.ts'
 
-// Reset store state between test runs
 function resetStore() {
   useDesktopStore.setState({
     windows: [],
@@ -50,7 +49,6 @@ test('DesktopStore focusWindow increases zIndex and sets activeWindowId', () => 
 
   assert.equal(useDesktopStore.getState().activeWindowId, win2Id)
 
-  // Focus win1
   store.focusWindow(win1Id)
   const afterFocus = useDesktopStore.getState()
 
@@ -66,17 +64,14 @@ test('DesktopStore minimize and maximize behavior', () => {
   store.openWindow('notes', 'Notes')
   const winId = useDesktopStore.getState().windows[0].id
 
-  // Minimize
   store.minimizeWindow(winId)
   assert.equal(useDesktopStore.getState().windows[0].minimized, true)
   assert.equal(useDesktopStore.getState().activeWindowId, null)
 
-  // Toggle Maximize
   store.toggleMaximize(winId)
   assert.equal(useDesktopStore.getState().windows[0].maximized, true)
-  assert.equal(useDesktopStore.getState().windows[0].minimized, false) // unminimizes on maximize
+  assert.equal(useDesktopStore.getState().windows[0].minimized, false)
 
-  // Toggle Maximize off
   store.toggleMaximize(winId)
   assert.equal(useDesktopStore.getState().windows[0].maximized, false)
 })
@@ -88,15 +83,12 @@ test('DesktopStore workspace management and filtering', () => {
   store.openWindow('app_ws1', 'App on WS 1')
   const win1Id = useDesktopStore.getState().windows[0].id
 
-  // Switch to workspace 2
   store.switchWorkspace(2)
   assert.equal(useDesktopStore.getState().currentWorkspace, 2)
 
-  // Open window on workspace 2
   store.openWindow('app_ws2', 'App on WS 2')
   assert.equal(useDesktopStore.getState().windows.length, 2)
 
-  // Test getWorkspaceWindows filtering
   const ws1Windows = useDesktopStore.getState().getWorkspaceWindows(1)
   const ws2Windows = useDesktopStore.getState().getWorkspaceWindows(2)
 

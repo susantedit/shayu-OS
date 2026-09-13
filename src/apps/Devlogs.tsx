@@ -14,98 +14,67 @@ export interface DevlogEntry {
 const DEVLOGS: DevlogEntry[] = [
   {
     id: 'devlog-1',
-    title: 'Building a Web OS in Nepal and Fighting the Window Manager',
+    title: 'Starting SyauOS and fighting window dragging bugs',
     date: 'August 24, 2026',
-    readTime: '3 min read',
-    summary: 'Why I named it स्याउ (Apple in Nepali), starting with React and Vite, and spending hours fixing window z-index and mouse dragging.',
-    content: `I started स्याउ OS because I wanted to build a web desktop with my own cultural identity. In Nepali, "स्याउ" (pronounced Syau) means Apple. It was my playful tribute to macOS, but incorporating native Devanagari typography (Noto Sans Devanagari) alongside clean monospace fonts.
+    readTime: '2 min read',
+    summary: 'Why I called it स्याउ, building on React and Vite, and fixing mouse cursor slipping.',
+    content: `I wanted to build a web desktop with its own Nepali identity. In Nepal, "स्याउ" (Syau) means Apple, so calling it स्याउ OS felt like a fun nod to macOS.
 
-### The Window Manager Headache
-Building the window system was the hardest part of the first week. I thought dragging a div around would take ten minutes, but it turned into a cascade of weird edge cases:
+Window dragging was the first thing that broke. I thought adding an onMouseMove handler to the window header would take five minutes. But if you dragged too quickly, your mouse pointer slipped off the header div, the event stopped firing, and the window just froze in place.
 
-1. Window Layering (z-index):
-If you opened three windows, clicking an inactive window did not bring it to the front. I had to build a focused window stack in Zustand that tracks activeWindowId and dynamically bumps the clicked window's z-index above all others.
+I learned that mousemove has to be attached to the global window object when mousedown starts, then cleaned up on mouseup.
 
-2. Pointer Slipping:
-If you dragged the window titlebar too quickly, the mouse cursor slipped outside the header element. The onMouseMove event stopped firing, leaving the window stranded halfway across the screen. I learned that you cannot bind mousemove to the header itself; you have to attach the event listener to the global window object on mousedown and clean it up on mouseup.
-
-3. Spawn Boundaries:
-Windows were spawning half off-screen on smaller laptop viewports. I added a cascade offset calculator with viewport boundary clamping so new apps open inside visible coordinates.`,
+Then there was the z-index problem. Clicking an old window didn't bring it in front of the active one. I solved that with a small Zustand store to track the active window id and increase its z-index on click. I also clamped the spawn coordinates so windows stop opening half off-screen on small laptop screens.`,
   },
   {
     id: 'devlog-2',
-    title: 'The Mobile Nightmare: 100vh vs 100dvh and Touch Targets',
+    title: 'Fixing the layout for mobile phones',
     date: 'August 28, 2026',
-    readTime: '3 min read',
-    summary: 'Making a desktop interface usable on phones when reviewers open the link on mobile screens.',
-    content: `Everything looked great on my laptop monitor. Then I sent the link to a friend who opened it on a phone, and it was completely broken.
+    readTime: '2 min read',
+    summary: 'Handling mobile browser address bars with 100dvh and making buttons easier to tap.',
+    content: `The desktop looked fine on my monitor, but it was unusable on phones.
 
-Here is what failed on mobile:
-- Mobile Chrome and Safari have dynamic bottom URL bars that slide up and down. Standard CSS 100vh does not account for this, so the bottom dock was half cut off and the page kept bouncing when scrolled. Switching the root container to 100dvh fixed the layout height.
-- The window action buttons (close, minimize, maximize) were only 12px wide. Tapping them with a thumb was impossible. I expanded their hitboxes to 30px with transparent padding while keeping the visual indicator small and neat.
-- A 600px wide window on a 390px mobile screen meant the titlebar controls were completely cut off. I added an auto-maximize rule for screens below 768px so windows open full-width on phones automatically.
-- The dock icons squeezed together into tiny dots. I added a horizontal scroll wrapper with smooth touch inertia so the dock stays comfortable on phones.`,
+Mobile Safari and Chrome have dynamic URL bars that slide around when you scroll. Regular CSS 100vh doesn't track that movement, so the bottom dock got cut in half and bounced around. Switching the main container to 100dvh stopped the jitter.
+
+The window controls also needed work. A 12px close button is easy to click with a mouse, but thumb taps kept missing it. I gave the buttons invisible padding so the clickable hit target is roughly 30px while keeping the icon small.
+
+On screens under 768px wide, standard desktop windows also went way past the screen edge. I added a rule that auto-maximizes windows on mobile so people can actually read notes or type commands without zooming.`,
   },
   {
     id: 'devlog-3',
-    title: 'Scrapping Bundled MP3s for a Spotify Hub and Fixing Iframe Glitches',
-    date: 'August 31, 2026',
+    title: 'Building the Nepali calendar and unit converter',
+    date: 'September 1, 2026',
     readTime: '3 min read',
-    summary: 'Why local audio files were a bad idea, embedding Spotify, and fixing iframe re-renders during window drag.',
-    content: `In my initial build, I bundled three local MP3 audio files inside the repository for the music player.
+    summary: 'Why standard date math fails for Bikram Sambat, and writing land measurement conversions.',
+    content: `I wanted an app in SyauOS that felt distinctly Nepali. We use the Bikram Sambat (BS) calendar in Nepal, which is about 56.7 years ahead of the Gregorian calendar.
 
-That was a bad decision:
-- It bloated the repository size unnecessarily.
-- Browser audio element handling had sync glitches when windows were minimized.
-- Nobody actually wants to listen to three static audio files on loop.
+Converting BS dates in JavaScript is tricky because Nepali month lengths change from year to year. Baisakh might have 31 days one year and 32 days the next. There is no simple leap year math like in the solar calendar, so I compiled a month-length lookup table from 2000 BS to 2090 BS to calculate accurate day differences.
 
-I replaced it with an embedded Spotify web player hub featuring playlists I actually listen to while coding: Nepali Old Classics, Lofi study beats, Anime OSTs, and Brazilian funk.
-
-### The Iframe Reload Glitch
-The most frustrating bug: whenever you dragged or resized the music player window, Framer Motion re-rendered the container layout. This caused the Spotify iframe to reload and restart the song from second zero every single time you touched the window.
-
-The solution was two-fold:
-1. Setting pointer-events: none on the iframe container during active window drag events so mouse events don't get captured by Spotify.
-2. Isolating the iframe container width and height from transient drag velocity updates so React doesn't re-mount the iframe DOM node.`,
+I also added conversions for traditional land units. In Kathmandu and hilly regions, land is bought in Ropani, Aana, Paisa, and Daam. Down in the Terai plains, people use Bigha, Kattha, and Dhur. Writing the formulas to convert between these units and square feet gives the OS a practical tool that people in Nepal use all the time.`,
   },
   {
     id: 'devlog-4',
-    title: 'The Hack Club Feedback: Deleting Boilerplate and Taking Real Ownership',
+    title: 'Hack Club feedback and removing boilerplate',
     date: 'September 5, 2026',
-    readTime: '4 min read',
-    summary: 'Reflections on feedback from Shreerang, deleting 800+ lines of canvas demos, and toning down the UI.',
-    content: `When Shreerang reviewed my project on Hack Club, he gave me straightforward feedback:
-"The front-end looks a lot vibe coded. Rewrite the parts you used ai for. Even your devlogs look ai gen."
+    readTime: '2 min read',
+    summary: 'Shreerang called out the vibe coding, so I deleted hundreds of lines of unused templates.',
+    content: `Shreerang reviewed my project on Hack Club and told me the front-end looked vibe coded and that even my devlogs felt AI-generated.
 
-At first, hearing that was tough because I spent hours debugging window dragging and touch support on mobile. But when I actually looked at what was in my repo, he had a point.
+That was tough to hear at first because I spent a lot of time debugging CSS and window states. But he was right. Early on, I asked an LLM for starter code across different apps, and it dumped in massive files. I had a studio app with over a thousand lines of canvas particle code that I didn't write and couldn't explain.
 
-When I started, I used AI to quickly generate starter templates for different apps. Because of that:
-1. Studio.tsx was over 1,000 lines full of massive canvas particle scripts that I didn't write and didn't even care about.
-2. My earlier devlogs were structured like corporate marketing updates with bullet points and buzzwords instead of just writing like a high school student learning web dev.
-3. The UI had too many glowing borders, glassmorphic blurs, and neon gradients that made it look like a generic template.
-
-What I changed:
-- Gutted the pre-baked canvas particle scripts from Studio.tsx and turned it into a simple HTML/CSS/JS playground under 200 lines that I actually understand.
-- Rewrote the devlogs in plain English to talk about the actual bugs I ran into.
-- Cleaned up the styles so it feels like a real desktop instead of an over-designed demo.
-
-Taking ownership of the code feels a lot better than just shipping lines an LLM spit out.`,
+I went through the repo and deleted the bloat. I dropped the canvas files, the dummy browser, and other filler apps. SyauOS is smaller now, but every file left in the project is something I understand and wrote myself.`,
   },
   {
     id: 'devlog-5',
-    title: 'Cutting the AI Chatbot and Building a Real Command Runner',
+    title: 'Cutting the AI chatbot and running offline',
     date: 'September 6, 2026',
-    readTime: '3 min read',
-    summary: 'Removing the Gemini API, getting rid of hardcoded keys, and making Meo a lightweight offline shortcut tool.',
-    content: `After talking with Shreerang on Slack (#ask-the-shipwrights), I realized having an AI assistant in the OS was the biggest mistake. It gave the impression that the whole OS was just an AI wrapper, and having a Gemini API key box in Settings looked terrible.
+    readTime: '2 min read',
+    summary: 'Getting rid of the Gemini API prompt box so SyauOS is a clean, local web desktop.',
+    content: `Having an AI assistant in the OS turned out to be a mistake. Putting an API key field in Settings made the whole project look like a thin wrapper around Gemini.
 
-Here is what I did to fix it today:
-1. Completely deleted the Google Gemini 1.5 Flash API calls and deleted the API key setting from Settings.tsx.
-2. Turned Meo into a simple, 100% offline command runner and keyboard shortcut helper. It parses simple commands locally like "open terminal", "open notes", "workspace 2", and "shortcuts" without calling any server or AI model.
-3. Removed the Web Speech API voice synthesis so it stays silent, fast, and doesn't get in the way.
-4. Stripped out another batch of unused code and boilerplate.
+I deleted all the external API calls and removed the assistant. Now SyauOS runs purely client-side in the browser. The terminal parses local commands like neofetch and clear, notes save to localStorage, and the calendar runs its math directly in TypeScript.
 
-Now SyauOS has zero external AI API calls. Every app runs locally on the browser, and the code is straightforward enough that I can explain every single part of it.`,
+It loads fast, needs zero API keys, and works without an internet connection.`,
   },
 ]
 
@@ -123,13 +92,12 @@ export default function DevlogsApp() {
 
   return (
     <div style={{ display: 'flex', height: '100%', overflow: 'hidden', background: 'var(--color-window-bg)' }}>
-      {/* Sidebar List */}
-      <div style={{
+       <div style={{
         width: 290, borderRight: '1px solid var(--color-glass-border)',
         display: 'flex', flexDirection: 'column', background: 'rgba(0,0,0,0.02)',
         flexShrink: 0,
       }}>
-        {/* Header */}
+     
         <div style={{ padding: '14px 12px', borderBottom: '1px solid var(--color-glass-border)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -165,7 +133,7 @@ export default function DevlogsApp() {
           />
         </div>
 
-        {/* Log Items */}
+       
         <div style={{ flex: 1, overflowY: 'auto', padding: 8 }}>
           {filteredLogs.map(log => {
             const isSelected = log.id === selectedId
@@ -200,7 +168,6 @@ export default function DevlogsApp() {
         </div>
       </div>
 
-      {/* Devlog Reader Panel */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '24px 32px' }}>
         <div style={{ borderBottom: '1px solid var(--color-glass-border)', paddingBottom: 16, marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontSize: 11, color: 'var(--color-text-muted)' }}>
@@ -220,7 +187,7 @@ export default function DevlogsApp() {
           </h1>
         </div>
 
-        {/* Content body */}
+       
         <div style={{
           fontSize: 13, color: 'var(--color-text-primary)', lineHeight: 1.75,
           whiteSpace: 'pre-wrap', fontFamily: 'var(--font-sans)',

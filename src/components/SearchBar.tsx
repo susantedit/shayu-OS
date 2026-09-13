@@ -1,30 +1,19 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  User, Terminal, FileText, Calculator, Music, Image, Globe,
-  BookOpen, Settings, Folder, ShoppingBag, CloudSun, CheckSquare,
-  Timer, Keyboard, Palette, X, Search
+  User, Terminal, FileText, Calculator,
+  BookOpen, Settings, X, Search, Calendar
 } from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 
 const APPS = [
-  { id: 'about', title: 'About Me', kw: 'about profile susant creator kantaraj', Icon: User, color: 'var(--color-sakura)' },
-  { id: 'terminal', title: 'Terminal', kw: 'terminal shell console command', Icon: Terminal, color: 'var(--color-miku)' },
-  { id: 'notes', title: 'Notes', kw: 'notes text write memo', Icon: FileText, color: 'var(--color-peach)' },
-  { id: 'calculator', title: 'Calculator', kw: 'calculator math calc', Icon: Calculator, color: 'var(--color-lavender)' },
-  { id: 'music', title: 'Music Player', kw: 'music player songs nepali phonk', Icon: Music, color: 'var(--color-sakura)' },
-  { id: 'gallery', title: 'Gallery', kw: 'gallery images photos pictures', Icon: Image, color: 'var(--color-miku)' },
-  { id: 'browser', title: 'Browser', kw: 'browser web internet search', Icon: Globe, color: 'var(--color-sky)' },
-  { id: 'guide', title: 'Guide', kw: 'guide help features manual', Icon: BookOpen, color: 'var(--color-mint)' },
-  { id: 'settings', title: 'Settings', kw: 'settings preferences accent theme', Icon: Settings, color: 'var(--color-text-secondary)' },
-  { id: 'files', title: 'Files', kw: 'files file manager explorer folders', Icon: Folder, color: 'var(--color-sky)' },
-  { id: 'store', title: 'App Store', kw: 'store apps install market', Icon: ShoppingBag, color: 'var(--color-sakura)' },
-  { id: 'weather', title: 'Weather', kw: 'weather forecast temperature climate', Icon: CloudSun, color: '#93C5FD' },
-  { id: 'kanban', title: 'Kanban', kw: 'kanban board tasks agile', Icon: CheckSquare, color: '#86EFAC' },
-  { id: 'timer', title: 'Timer', kw: 'timer stopwatch countdown focus', Icon: Timer, color: '#FDBA74' },
-  { id: 'typing-speed', title: 'Typing Speed', kw: 'typing speed wpm test keyboard', Icon: Keyboard, color: '#C4B5FD' },
-  { id: 'paint-studio', title: 'Paint', kw: 'paint draw art canvas studio', Icon: Palette, color: '#86EFAC' },
-  { id: 'image-editor', title: 'Image Editor', kw: 'image editor photo canvas filters', Icon: Image, color: '#E8829B' },
+  { id: 'nepali-converter', title: 'Nepali Calendar & Units', kw: 'nepali calendar bikram sambat patro converter ropani aana bigha tola gold weight land date', Icon: Calendar, color: '#EF4444' },
+  { id: 'terminal', title: 'Terminal', kw: 'terminal shell console command syau-sh', Icon: Terminal, color: 'var(--color-miku)' },
+  { id: 'notes', title: 'Notes', kw: 'notes markdown memo text write export scratchpad', Icon: FileText, color: 'var(--color-peach)' },
+  { id: 'calculator', title: 'Calculator', kw: 'calculator math calc numbers', Icon: Calculator, color: 'var(--color-lavender)' },
+  { id: 'devlogs', title: 'Devlogs', kw: 'devlogs notes architecture bug fixes mobile learning', Icon: BookOpen, color: 'var(--color-sakura)' },
+  { id: 'about', title: 'About Me', kw: 'about profile susant creator kantaraj builder', Icon: User, color: 'var(--color-sakura)' },
+  { id: 'settings', title: 'Settings', kw: 'settings preferences accent theme mode appearance dock', Icon: Settings, color: 'var(--color-text-secondary)' },
 ]
 
 export default function SearchBar() {
@@ -44,7 +33,6 @@ export default function SearchBar() {
     ? APPS.filter(a => `${a.title} ${a.kw}`.toLowerCase().includes(query.toLowerCase()))
     : APPS
 
-  // Close on outside click
   useEffect(() => {
     if (!focused) return
     const handler = (e: MouseEvent | TouchEvent) => {
@@ -60,7 +48,6 @@ export default function SearchBar() {
     }
   }, [focused])
 
-  // Global shortcut to focus
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -83,7 +70,6 @@ export default function SearchBar() {
     }
   }
 
-  // Hide search bar on mobile when an app window is open to avoid blocking window controls
   if (isMobile && hasActiveWindow && !focused) {
     return null
   }

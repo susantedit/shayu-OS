@@ -40,4 +40,6 @@ test.py
 *.py
 /index.tsx
 /main.tsx
-.agents/skills/
+.agents/
+.agents
+css_practice_state.txt

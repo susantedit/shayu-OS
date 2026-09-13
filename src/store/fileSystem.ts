@@ -87,6 +87,7 @@ interface FileSystemStore {
   rename: (id: string, newName: string) => Promise<void>
   remove: (id: string) => Promise<void>
   move: (id: string, newParentId: string | null) => Promise<void>
+  restoreNodes: (nodes: FSNode[]) => Promise<void>
 
   ensureDefaultStructure: () => Promise<void>
 }
@@ -174,6 +175,17 @@ export const useFileSystem = create<FileSystemStore>((set, get) => ({
     const updated = { ...node, parentId: newParentId, modified: Date.now() }
     await dbPut(updated)
     set(s => ({ nodes: s.nodes.map(n => n.id === id ? updated : n) }))
+  },
+
+  restoreNodes: async (nodes: FSNode[]) => {
+    try {
+      const existing = await dbGetAll()
+      await dbDeleteAll(existing.map(n => n.id))
+      for (const node of nodes) {
+        await dbPut(node)
+      }
+    } catch {}
+    set({ nodes })
   },
 
   ensureDefaultStructure: async () => {

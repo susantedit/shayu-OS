@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-  /* === स्याउ OS Palette & Typography === */
   --color-cream: #050508;
   --color-cream-dark: #030305;
   --color-sakura: #E8829B;
@@ -40,6 +39,10 @@
 
 :root {
   --os-brightness: 100%;
+  --os-window-blur: 18px;
+  --os-window-opacity: 0.88;
+  --os-wallpaper-blur: 0px;
+  --os-wallpaper-dim: 0.3;
 }
 
 :root, [data-theme="dark"] {
@@ -139,12 +142,10 @@ html, body, #root {
   cursor: url('/cursors/sukuna-cursor.png') 2 2, url('/cursors/sukuna-cursor.cur') 2 2, auto;
 }
 
-/* Custom Sukuna Flame Arrow for default pointing */
 *, *::before, *::after {
   cursor: inherit;
 }
 
-/* Custom Demon Slayer Water Breathing Sword Cursor for ANY clickable button, link, dock item, or interactive element */
 button,
 button *,
 a,
@@ -186,7 +187,6 @@ label,
   cursor: url('/cursors/demonslayer-pointer.png') 3 2, url('/cursors/demonslayer-pointer.cur') 3 2, pointer !important;
 }
 
-/* Inputs & text selection */
 input[type="text"],
 input[type="password"],
 input[type="email"],
@@ -202,7 +202,6 @@ textarea,
   transition: filter 0.15s ease-out;
 }
 
-/* Smooth accent color transitions on all elements using CSS vars */
 .accent-transition,
 .accent-transition * {
   transition: color 0.5s ease, background-color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease !important;
@@ -214,23 +213,19 @@ textarea,
   text-shadow: 0 0 8px rgba(232,130,155,0.4);
 }
 
-/* Scrollbar — expand on hover */
 ::-webkit-scrollbar { width: 6px; height: 6px; transition: width 0.2s; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(232,130,155,0.25); border-radius: 999px; transition: background 0.2s, width 0.2s; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-sakura); width: 10px; }
 
-/* Focus rings — sakura glow */
 *:focus-visible {
   outline: 2px solid var(--color-sakura);
   outline-offset: 2px;
   box-shadow: 0 0 0 4px rgba(232,130,155,0.15);
 }
 
-/* Micro-interaction: press feedback on all buttons */
 button:active { transform: scale(0.97); }
 
-/* Cursor trail */
 .cursor-trail-dot {
   position: fixed;
   width: 8px;
@@ -244,7 +239,6 @@ button:active { transform: scale(0.97); }
   filter: blur(1px);
 }
 
-/* === Boot Screen V2 — Real OS Boot === */
 .boot-screen-v2 {
   position: fixed;
   inset: 0;
@@ -254,7 +248,6 @@ button:active { transform: scale(0.97); }
   font-family: var(--font-mono);
 }
 
-/* Ambient glow orbs */
 .boot-orb {
   position: absolute;
   border-radius: 50%;
@@ -283,7 +276,6 @@ button:active { transform: scale(0.97); }
   animation-delay: 4s;
 }
 
-/* Grid overlay */
 .boot-grid {
   position: absolute;
   inset: 0;
@@ -295,7 +287,6 @@ button:active { transform: scale(0.97); }
   opacity: 0.5;
 }
 
-/* Scanlines */
 .boot-scanlines {
   position: absolute;
   inset: 0;
@@ -310,7 +301,6 @@ button:active { transform: scale(0.97); }
   z-index: 1;
 }
 
-/* Main content layout */
 .boot-content {
   position: relative;
   z-index: 2;
@@ -322,7 +312,6 @@ button:active { transform: scale(0.97); }
   padding: 40px;
 }
 
-/* Terminal glass panel */
 .boot-terminal-glass {
   width: 560px;
   max-height: 70vh;
@@ -416,7 +405,6 @@ button:active { transform: scale(0.97); }
   50% { opacity: 0; }
 }
 
-/* Status panel */
 .boot-status-panel {
   display: flex;
   flex-direction: column;
@@ -452,7 +440,6 @@ button:active { transform: scale(0.97); }
   text-transform: uppercase;
 }
 
-/* Info blocks */
 .boot-info-blocks {
   display: flex;
   flex-direction: column;
@@ -482,7 +469,6 @@ button:active { transform: scale(0.97); }
   color: var(--color-text-secondary);
 }
 
-/* Phase dots */
 .boot-phase-dots {
   display: flex;
   gap: 8px;
@@ -506,7 +492,6 @@ button:active { transform: scale(0.97); }
   background: rgba(232,130,155,0.3);
 }
 
-/* Responsive */
 @media (max-width: 900px) {
   .boot-content {
     flex-direction: column;
@@ -519,7 +504,6 @@ button:active { transform: scale(0.97); }
   }
 }
 
-/* === Ambient Glow === */
 @keyframes glow-pulse {
   0%, 100% { opacity: 0.03; }
   50% { opacity: 0.06; }
@@ -533,7 +517,6 @@ button:active { transform: scale(0.97); }
   100% { transform: translate(0, 0); }
 }
 
-/* === Top Bar — Clean Handcrafted System Bar === */
 .top-bar {
   position: fixed;
   top: 0;
@@ -588,7 +571,6 @@ button:active { transform: scale(0.97); }
   color: var(--color-text-primary);
 }
 
-/* === Desktop Canvas === */
 .desktop {
   position: fixed;
   top: 0;
@@ -606,12 +588,11 @@ button:active { transform: scale(0.97); }
   pointer-events: none;
 }
 
-/* === Window — Refined Handcrafted Frame === */
 .window {
   position: absolute;
   background: var(--color-window-bg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(var(--os-window-blur, 18px));
+  -webkit-backdrop-filter: blur(var(--os-window-blur, 18px));
   border-radius: var(--radius-window);
   border: 1px solid var(--color-border);
   box-shadow: 0 10px 32px var(--color-shadow);
@@ -620,7 +601,18 @@ button:active { transform: scale(0.97); }
   overflow: hidden;
   min-width: 320px;
   min-height: 200px;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  will-change: transform, left, top, width, height;
+  transition: width 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              height 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              left 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              top 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+}
+
+.window.is-dragging {
+  transition: none !important;
+  user-select: none !important;
 }
 
 .window.active {
@@ -700,7 +692,6 @@ button:active { transform: scale(0.97); }
   position: relative;
 }
 
-/* === Dock — Liquid Glass === */
 .dock-wrapper {
   position: fixed;
   bottom: 12px;
@@ -767,6 +758,98 @@ button:active { transform: scale(0.97); }
   filter: drop-shadow(0 2px 6px var(--color-shadow));
 }
 
+[data-dock-position="left"] .dock-wrapper {
+  bottom: 16px;
+  top: 48px;
+  left: 12px;
+  right: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-dock-position="left"] .dock-container {
+  flex-direction: column;
+  align-items: center;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+[data-dock-position="left"] .dock-tooltip {
+  top: 50%;
+  left: calc(100% + 10px);
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+[data-dock-position="left"] .dock-item-dot {
+  left: -5px;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+[data-dock-position="right"] .dock-wrapper {
+  bottom: 16px;
+  top: 48px;
+  right: 12px;
+  left: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+[data-dock-position="right"] .dock-container {
+  flex-direction: column;
+  align-items: center;
+  max-height: calc(100vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+[data-dock-position="right"] .dock-tooltip {
+  top: 50%;
+  right: calc(100% + 10px);
+  left: auto;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+[data-dock-position="right"] .dock-item-dot {
+  right: -5px;
+  left: auto;
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+}
+
+[data-dock-size="compact"] .dock-item {
+  width: 42px;
+  height: 42px;
+  border-radius: 11px;
+}
+[data-dock-size="compact"] .dock-icon-wrapper {
+  width: 38px;
+  height: 38px;
+}
+[data-dock-size="compact"] .dock-container {
+  padding: 6px 8px;
+  gap: 4px;
+}
+
+[data-dock-size="large"] .dock-item {
+  width: 62px;
+  height: 62px;
+  border-radius: 16px;
+}
+[data-dock-size="large"] .dock-icon-wrapper {
+  width: 56px;
+  height: 56px;
+}
+[data-dock-size="large"] .dock-container {
+  padding: 10px 14px;
+  gap: 8px;
+}
+
 .dock-item-dot {
   position: absolute;
   bottom: -5px;
@@ -804,7 +887,6 @@ button:active { transform: scale(0.97); }
   transform: translateX(-50%) translateY(0);
 }
 
-/* === Music Player === */
 .app-music-progress {
   width: 100%;
   height: 4px;
@@ -819,7 +901,6 @@ button:active { transform: scale(0.97); }
   transition: width 0.5s linear;
 }
 
-/* === Calculator === */
 .app-calc {
   padding: 16px;
   display: flex;
@@ -880,7 +961,6 @@ button:active { transform: scale(0.97); }
   background: var(--color-sakura-deep);
 }
 
-/* === Terminal === */
 .app-terminal {
   background: #0D0A0E;
   color: #E8D5E0;
@@ -908,7 +988,6 @@ button:active { transform: scale(0.97); }
   line-height: 1.6;
 }
 
-/* === Notes === */
 .app-notes {
   padding: 20px;
   height: 100%;
@@ -930,7 +1009,6 @@ button:active { transform: scale(0.97); }
   color: var(--color-text-muted);
 }
 
-/* === Context Menu — Liquid Glass === */
 .context-menu {
   position: fixed;
   z-index: 200;
@@ -1002,7 +1080,6 @@ button:active { transform: scale(0.97); }
   margin: 4px 6px;
 }
 
-/* === Notification === */
 .notification {
   position: fixed;
   top: 40px;
@@ -1039,7 +1116,6 @@ button:active { transform: scale(0.97); }
   to { transform: rotate(360deg); }
 }
 
-/* Welcome text fade */
 @keyframes welcome-fade {
   0% { opacity: 0; transform: scale(0.95); }
   15% { opacity: 1; transform: scale(1); }
@@ -1047,13 +1123,11 @@ button:active { transform: scale(0.97); }
   100% { opacity: 0; transform: scale(1.02); }
 }
 
-/* Rainbow mode easter egg */
 @keyframes rainbow-slide {
   0% { background-position: 0% 50%; }
   100% { background-position: 400% 50%; }
 }
 
-/* Launch ripple from dock */
 @keyframes launch-ripple {
   0% { width: 20px; height: 20px; opacity: 0.6; }
   100% { width: 300px; height: 300px; opacity: 0; }
@@ -1065,13 +1139,11 @@ button:active { transform: scale(0.97); }
   100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
 }
 
-/* Meo assistant pulse */
 @keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(1.15); }
 }
 
-/* === Glitch Effect === */
 @keyframes glitch-1 {
   0%, 100% { clip-path: inset(0 0 95% 0); transform: translateX(0); }
   20% { clip-path: inset(20% 0 60% 0); transform: translateX(-3px); }
@@ -1107,7 +1179,6 @@ button:active { transform: scale(0.97); }
   opacity: 0.7;
 }
 
-/* === Boot Logo === */
 .boot-logo-reveal {
   font-size: 48px;
   font-weight: 700;
@@ -1122,8 +1193,6 @@ button:active { transform: scale(0.97); }
   opacity: 0;
 }
 
-
-/* === TopBar Dropdown === */
 .topbar-dropdown {
   position: absolute;
   top: 34px;
@@ -1159,7 +1228,6 @@ button:active { transform: scale(0.97); }
   margin: 4px 8px;
 }
 
-/* Active app underline */
 .active-app-underline {
   position: absolute;
   bottom: 0;
@@ -1170,7 +1238,6 @@ button:active { transform: scale(0.97); }
   box-shadow: 0 0 8px rgba(232,130,155,0.3);
 }
 
-/* === Window Resize Handles === */
 .resize-handle {
   position: absolute;
   z-index: 10;
@@ -1184,7 +1251,6 @@ button:active { transform: scale(0.97); }
 .resize-handle-ne { right: 0; top: 40px; width: 12px; height: 12px; cursor: nesw-resize; }
 .resize-handle-nw { left: 0; top: 40px; width: 12px; height: 12px; cursor: nwse-resize; }
 
-/* Dock icon wrapper base */
 .dock-icon-wrapper {
   width: 48px;
   height: 48px;
@@ -1199,7 +1265,6 @@ button:active { transform: scale(0.97); }
   display: block;
 }
 
-/* === Responsive Mobile Adjustments === */
 @media (max-width: 768px) {
   .top-bar {
     padding: 0 8px;

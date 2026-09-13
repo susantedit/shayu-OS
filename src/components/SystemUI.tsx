@@ -23,7 +23,6 @@ function renderNotificationIcon(icon?: string) {
   }
 }
 
-// === Click Sounds (Web Audio API Synthesizer) ===
 let audioCtx: AudioContext | null = null
 
 function playClick(type: 'click' | 'open' | 'close' = 'click') {
@@ -60,15 +59,11 @@ function playClick(type: 'click' | 'open' | 'close' = 'click') {
       osc.start(ctx.currentTime)
       osc.stop(ctx.currentTime + 0.1)
     }
-  } catch {
-    // Audio Context not supported or permission denied
-  }
+  } catch {}
 }
 
-// Make click sounds globally available
 (window as any).__syauPlayClick = playClick
 
-// === Konami Code Easter Egg ===
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a']
 
 function ConfettiCanvas({ onDone }: { onDone: () => void }) {
@@ -129,7 +124,6 @@ export default function SystemUI() {
   const [konamiActive, setKonamiActive] = useState(false)
   const konamiBuffer = useRef<string[]>([])
 
-  // Konami code listener
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       konamiBuffer.current.push(e.key)
@@ -144,7 +138,6 @@ export default function SystemUI() {
     return () => window.removeEventListener('keydown', handler)
   }, [])
 
-  // Global UI click audio feedback
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       const target = e.target as HTMLElement
@@ -164,7 +157,6 @@ export default function SystemUI() {
 
   return (
     <>
-      {/* Notifications Toaster */}
       <div className="syau-toast-container" style={{
         position: 'fixed',
         top: 42,

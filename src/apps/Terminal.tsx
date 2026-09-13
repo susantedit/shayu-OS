@@ -1,4 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
+import { useDesktopStore } from '../store/desktopStore'
+import { getNepaliDateBS } from '../utils/nepaliCalendar'
 
 interface Line {
   text: string
@@ -7,35 +9,36 @@ interface Line {
 
 const COMMANDS: Record<string, (text?: string) => string> = {
   help: () => `Available commands:
-  help       - Show this message
-  whoami     - Who am I?
-  about      - About स्याउ OS
-  skills     - My skills
-  projects   - My projects
-  contact    - Contact info
-  neofetch   - System info
-  clear      - Clear terminal
-  date       - Current date/time
-  echo       - Echo text back
-  matrix     - Matrix rain
-  weather    - Weather check
-  cowsay     - Cow says your text
-  sudo       - Try it ;)`,
+  help        - Show this list of commands
+  ps          - List active windows and processes
+  kill <name> - Close a window by title or app ID
+  nepali      - View Nepali date and open Patro
+  notes       - Open Notes scratchpad
+  calc        - Open Calculator
+  settings    - Open Settings
+  whoami      - Builder info
+  about       - About स्याउ OS
+  skills      - Technical skills
+  projects    - Highlighted projects
+  contact     - Contact information
+  neofetch    - System details and ASCII logo
+  clear       - Clear the terminal screen
+  date        - Current system timestamp
+  echo <text> - Print text to console`,
 
-  whoami: () => 'Kantaraj Luitel (Susant) -- builder, researcher, cybersecurity enthusiast',
+  whoami: () => 'Kantaraj Luitel (Susant) -- developer, student, and builder of SyauOS',
 
-  about: () => `स्याउ OS v1.3.1
-A web-based desktop environment built for Hack Club.
-Engineered with React, TypeScript, Tailwind CSS, Noto Sans Devanagari & Space Grotesk.
-Built by Kantaraj Luitel (Susant).`,
+  about: () => `स्याउ OS v1.3.0
+A client-side web desktop environment built for Hack Club.
+Engineered with React 19, TypeScript, Vite, and custom Bikram Sambat calendar logic.
+Created by Kantaraj Luitel (Susant).`,
 
   skills: () => `Languages:    TypeScript, JavaScript, Python, C, SQL
-Frameworks:  React, Next.js, Tailwind, Node.js
-Cybersecurity: APIsec Certified, Ethical Hacking, TryHackMe
-Cloud/AI:    Oracle Cloud Certified GenAI, Google Cloud, AI Agents`,
+Frameworks:   React 19, Tailwind CSS, Vite, Node.js
+Focus Areas:  Web Development, Operating System Concepts, Nepali Localization`,
 
-  projects: () => `स्याउ OS      Bilingual Web Operating System
-Creator OS    Custom Creator Profile System`,
+  projects: () => `स्याउ OS (SyauOS)  - Web Desktop Environment with Nepali Bikram Sambat Integration
+Devlogs           - Engineering notes on window management, viewports, and calendar math`,
 
   contact: () => `Email:    susantedit@gmail.com
 GitHub:   github.com/susantedit
@@ -44,45 +47,21 @@ LinkedIn: linkedin.com/in/kantaraj-luitel`,
   neofetch: () => `
   /\\_/\\      susant@syau-os
  ( o.o )     ----------------
-  > ^ <      OS: स्याउ OS 1.3.1
+  > ^ <      OS: स्याउ OS 1.3.0
  /|   |\\     Kernel: React 19 + TypeScript
 (_|   |_)    Shell: syau-sh 1.3
-             Resolution: responsive
-             WM: Framer Motion
+             WM: Custom Zustand Window Manager
+             Calendar: Bikram Sambat (BS) Engine
              Theme: Dual Dark & Light Mode
-             Terminal: SyauTerm
              Creator: Kantaraj Luitel (Susant)`,
 
   date: () => new Date().toString(),
-
-  matrix: () => 'MATRIX MODE ACTIVATED\n' + Array.from({ length: 8 }, () =>
-    Array.from({ length: 40 }, () => String.fromCharCode(0x30A0 + Math.random() * 96)).join('')
-  ).join('\n'),
-
-  weather: () => {
-    const conditions = ['Sunny', 'Partly Cloudy', 'Rainy', 'Cloudy', 'Clear Sky', 'Snowy']
-    const cond = conditions[Math.floor(Math.random() * conditions.length)]
-    const temp = Math.floor(Math.random() * 30 + 5)
-    return `स्याउ OS Weather Service\nCondition: ${cond} | ${temp}°C\nHumidity: ${Math.floor(Math.random() * 60 + 30)}%\nWind: ${Math.floor(Math.random() * 20 + 1)} km/h`
-  },
-
-  cowsay: (text?: string) => {
-    const msg = text || 'स्याउ OS is sleek!'
-    const top = ' ' + '_'.repeat(msg.length + 2)
-    const mid = `< ${msg} >`
-    const bot = ' ' + '-'.repeat(msg.length + 2)
-    return `${top}\n${mid}\n${bot}\n        \\   ^__^\n         \\  (oo)\\_______\n            (__)\\       )\\/\\\n                ||----w |\n                ||     ||`
-  },
-
-  sudo: () => {
-    return 'Permission denied: Access granted to Kantaraj Luitel (Susant).'
-  },
 }
 
 export default function Terminal() {
   const [lines, setLines] = useState<Line[]>([
-    { text: 'Welcome to SyauTerm v1.0.0 (स्याउ OS)', type: 'output' },
-    { text: 'Type "help" for available commands.', type: 'output' },
+    { text: 'SyauTerm v1.3.0 (स्याउ OS)', type: 'output' },
+    { text: 'Type "help" for a list of commands.', type: 'output' },
     { text: '', type: 'output' },
   ])
   const [input, setInput] = useState('')
@@ -110,7 +89,54 @@ export default function Terminal() {
       return
     }
 
-    if (command === 'echo') {
+    if (command === 'ps') {
+      const wins = useDesktopStore.getState().windows
+      let out = 'PID   APPLICATION       WORKSPACE   STATUS\n'
+      out +=    '------------------------------------------\n'
+      wins.forEach((w, idx) => {
+        const pid = String(1000 + idx).padEnd(6)
+        const app = (w.appId || 'app').slice(0, 16).padEnd(18)
+        const ws = `WS ${w.workspace}`.padEnd(12)
+        const st = (w.minimized ? 'MINIMIZED' : 'ACTIVE')
+        out += `${pid}${app}${ws}${st}\n`
+      })
+      out += `\nTotal windows open: ${wins.length}`
+      newLines.push({ text: out, type: 'output' })
+    } else if (command === 'kill') {
+      const target = args[0]
+      if (!target) {
+        newLines.push({ text: 'Usage: kill <app-id | title>', type: 'error' })
+      } else {
+        const state = useDesktopStore.getState()
+        const foundWin = state.windows.find(w =>
+          w.appId.toLowerCase() === target.toLowerCase() ||
+          w.title.toLowerCase().includes(target.toLowerCase())
+        )
+        if (foundWin) {
+          state.closeWindow(foundWin.id)
+          newLines.push({ text: `Closed window: ${foundWin.title}`, type: 'output' })
+        } else {
+          newLines.push({ text: `kill: no window found matching '${target}'`, type: 'error' })
+        }
+      }
+    } else if (command === 'nepali' || command === 'patro') {
+      const today = getNepaliDateBS(new Date())
+      let out = 'स्याउ OS नेपाली पात्रो (Bikram Sambat Calendar)\n'
+      out +=    '-----------------------------------------------\n'
+      out +=    `आजको मिति: ${today.formattedBS} गते, ${today.dayName}\n`
+      out +=    `Gregorian:   ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\n`
+      useDesktopStore.getState().openWindow('nepali-converter', 'नेपाली पात्रो र एकाइ रूपान्तरण', 780, 560)
+      newLines.push({ text: out, type: 'output' })
+    } else if (command === 'notes') {
+      useDesktopStore.getState().openWindow('notes', 'Notes', 640, 480)
+      newLines.push({ text: 'Launched Notes app.', type: 'output' })
+    } else if (command === 'calc' || command === 'calculator') {
+      useDesktopStore.getState().openWindow('calculator', 'Calculator', 320, 460)
+      newLines.push({ text: 'Launched Calculator.', type: 'output' })
+    } else if (command === 'settings') {
+      useDesktopStore.getState().openWindow('settings', 'Settings', 540, 460)
+      newLines.push({ text: 'Launched Settings.', type: 'output' })
+    } else if (command === 'echo') {
       newLines.push({ text: args.join(' '), type: 'output' })
     } else if (COMMANDS[command]) {
       const result = COMMANDS[command](args.join(' '))
@@ -140,7 +166,7 @@ export default function Terminal() {
         const newIdx = histIdx - 1
         setHistIdx(newIdx)
         setInput(history[newIdx])
-      } else {
+      } else if (histIdx === 0) {
         setHistIdx(-1)
         setInput('')
       }
@@ -148,31 +174,42 @@ export default function Terminal() {
   }
 
   return (
-    <div className="app-terminal" ref={scrollRef} onClick={() => inputRef.current?.focus()}>
-      {lines.map((line, i) => (
-        <div key={i} className="app-terminal-line">
-          {line.type === 'input' ? (
-            <span>
-              <span className="app-terminal-prompt">{line.text.slice(0, 2)}</span>
-              <span>{line.text.slice(2)}</span>
-            </span>
-          ) : (
-            <span style={{ color: line.type === 'error' ? '#F38BA8' : '#CDD6F4' }}>
-              {line.text}
-            </span>
-          )}
-        </div>
-      ))}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <span className="app-terminal-prompt">$ </span>
+    <div
+      style={{
+        display: 'flex', flexDirection: 'column', height: '100%',
+        background: '#0e1117', color: '#7EDDD6', fontFamily: 'monospace',
+        fontSize: 13, padding: 14, overflow: 'hidden'
+      }}
+      onClick={() => inputRef.current?.focus()}
+    >
+      <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>
+        {lines.map((l, i) => (
+          <div
+            key={i}
+            style={{
+              color: l.type === 'input' ? '#E8829B' : l.type === 'error' ? '#EF4444' : '#C4B5FD',
+              minHeight: l.text ? undefined : '0.6em'
+            }}
+          >
+            {l.text}
+          </div>
+        ))}
+      </div>
+
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
+        <span style={{ color: '#E8829B', fontWeight: 600 }}>$</span>
         <input
           ref={inputRef}
-          className="app-terminal-input"
+          type="text"
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           autoFocus
           spellCheck={false}
+          style={{
+            flex: 1, background: 'transparent', border: 'none', outline: 'none',
+            color: '#F3F4F6', fontFamily: 'inherit', fontSize: 'inherit'
+          }}
         />
       </div>
     </div>

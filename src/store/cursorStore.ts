@@ -6,8 +6,8 @@ export type CursorSize = 'small' | 'medium' | 'large' | 'xlarge'
 export interface CursorState {
   defaultCursor: CursorTheme
   pointerCursor: CursorTheme
-  scale: number // 20 to 200 percent
-  size: CursorSize // backward compatibility
+  scale: number
+  size: CursorSize
   setDefaultCursor: (theme: CursorTheme) => void
   setPointerCursor: (theme: CursorTheme) => void
   setScale: (scale: number) => void
@@ -49,18 +49,15 @@ const getCursorSvgDataUrl = (
   scale: number
 ): SvgCursorResult => {
   const clampedScale = Math.max(20, Math.min(200, scale))
-  // Base 100% scale is 32px
   const size = Math.max(10, Math.min(128, Math.round(32 * (clampedScale / 100))))
 
   if (theme === 'system') {
     if (type === 'pointer') {
-      // Sleek System Hand Pointer vector
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24"><path d="M9 2v10H7.5A2.5 2.5 0 0 0 5 14.5v2.5a7 7 0 0 0 7 7h3a7 7 0 0 0 7-7v-4.5a2 2 0 0 0-2-2h-1.5v-1.5a2 2 0 0 0-2-2H15v-1.5a2 2 0 0 0-2-2h-1.5V2a1.5 1.5 0 0 0-3 0z" fill="#18181c" stroke="#FFFFFF" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M12.5 7v6M15 8.5v4.5M17.5 10v3" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round"/></svg>`
       const hx = Math.max(1, Math.round(size * (9 / 24)))
       const hy = Math.max(1, Math.round(size * (2 / 24)))
       return { url: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`, hx, hy }
     } else {
-      // Sleek System Arrow Pointer vector
       const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24"><path d="M3 2L18.5 14L11.5 14.8L15.8 22L12.5 23.5L8.2 16.2L3 21V2Z" fill="#18181c" stroke="#FFFFFF" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/></svg>`
       const hx = Math.max(1, Math.round(size * (3 / 24)))
       const hy = Math.max(1, Math.round(size * (2 / 24)))

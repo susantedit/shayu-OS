@@ -1,13 +1,14 @@
 import { useState, useEffect, useRef } from 'react'
 import {
   Wifi, WifiOff, Battery, BatteryCharging, BatteryFull, BatteryMedium, BatteryLow, BatteryWarning,
-  Volume2, BookOpen, Sun, Moon, Sliders, Check, Lock, Radio, Zap, RotateCw, Video
+  Volume2, BookOpen, Sun, Moon, Sliders, Check, Lock, Radio, Zap, RotateCw, Video, Clipboard
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useDesktopStore } from '../store/desktopStore'
 import { useThemeStore } from '../store/themeStore'
 import { useNetworkStore } from '../store/networkStore'
 import { useBatteryStore } from '../store/batteryStore'
+import { useClipboardStore } from '../store/clipboardStore'
 import { getNepaliDateBS } from '../utils/nepaliCalendar'
 
 export default function TopBar() {
@@ -37,13 +38,16 @@ export default function TopBar() {
   const activeWin = windows.find(w => w.id === activeWindowId)
   const menuRef = useRef<HTMLDivElement>(null)
 
+  const isClipboardOpen = useClipboardStore(s => s.isOpen)
+  const toggleClipboard = useClipboardStore(s => s.toggleOpen)
+  const clipboardItemsCount = useClipboardStore(s => s.items.length)
+
   useEffect(() => {
     const interval = setInterval(() => setTime(new Date()), 1000)
     initBattery()
     return () => clearInterval(interval)
   }, [initBattery])
 
-  // Close dropdown on outside click
   useEffect(() => {
     if (!menuOpen) return
     const handler = (e: MouseEvent) => {
@@ -57,7 +61,6 @@ export default function TopBar() {
   const formatDate = (d: Date) => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
   const appName = activeWin?.title || 'स्याउ OS'
 
-  // Dynamic Battery Icon Helper
   const renderBatteryIcon = (size = 12) => {
     if (isCharging) {
       return <BatteryCharging size={size} style={{ color: '#4ADE80' }} />
@@ -75,12 +78,14 @@ export default function TopBar() {
   }
 
   const logoMenuItems = [
-    { label: 'Creator Profile (Susant)', action: () => { openWindow('creator', 'Kantaraj Luitel (Susant) - Creator Profile', 860, 580); setMenuOpen(null) } },
-    { label: 'About स्याउ OS', action: () => { openWindow('about', 'About Me', 480, 540); setMenuOpen(null) } },
-    { label: 'स्याउ OS Devlogs', action: () => { openWindow('devlogs', 'स्याउ OS Devlogs', 840, 560); setMenuOpen(null) } },
-    { label: 'Settings', action: () => { openWindow('settings', 'Settings', 460, 560); setMenuOpen(null) } },
-    { divider: true },
+    { label: 'About स्याउ OS', action: () => { openWindow('about', 'About Me', 480, 520); setMenuOpen(null) } },
+    { label: 'स्याउ OS Devlogs', action: () => { openWindow('devlogs', 'स्याउ OS Devlogs', 800, 540); setMenuOpen(null) } },
+    { label: 'Nepali Calendar & Units', action: () => { openWindow('nepali-converter', 'नेपाली पात्रो र एकाइ रूपान्तरण (Nepali Calendar & Units)', 780, 560); setMenuOpen(null) } },
     { label: 'Terminal', action: () => { openWindow('terminal', 'Terminal', 600, 400); setMenuOpen(null) } },
+    { label: 'Notes', action: () => { openWindow('notes', 'Notes', 640, 480); setMenuOpen(null) } },
+    { label: 'Calculator', action: () => { openWindow('calculator', 'Calculator', 320, 460); setMenuOpen(null) } },
+    { divider: true },
+    { label: 'Settings', action: () => { openWindow('settings', 'Settings', 580, 480); setMenuOpen(null) } },
   ]
 
   return (
@@ -173,6 +178,38 @@ export default function TopBar() {
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="2" y="3" width="8" height="8" rx="1"/><rect x="14" y="3" width="8" height="8" rx="1"/><rect x="2" y="13" width="8" height="8" rx="1"/><rect x="14" y="13" width="8" height="8" rx="1"/></svg>
           </button>
         )}
+
+        <button
+          data-clipboard-toggle
+          onClick={toggleClipboard}
+          title="Clipboard History (Ctrl+Shift+V)"
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            position: 'relative',
+            width: 26, height: 24, borderRadius: 6,
+            border: '1px solid ' + (isClipboardOpen ? 'var(--color-sakura)' : 'var(--color-glass-border)'),
+            background: isClipboardOpen ? 'rgba(232,130,155,0.18)' : 'var(--color-glass-card)',
+            cursor: 'pointer',
+            color: isClipboardOpen ? 'var(--color-sakura)' : 'var(--color-text-secondary)',
+            transition: 'all 0.15s',
+          }}
+        >
+          <Clipboard size={12} />
+          {clipboardItemsCount > 0 && (
+            <span
+              style={{
+                position: 'absolute',
+                top: 3,
+                right: 3,
+                width: 5,
+                height: 5,
+                borderRadius: '50%',
+                background: 'var(--color-sakura)',
+                boxShadow: '0 0 5px rgba(232,130,155,0.8)',
+              }}
+            />
+          )}
+        </button>
 
         <div className="topbar-hide-mobile" style={{ display: 'flex', gap: 5, alignItems: 'center', padding: '0 2px' }}>
           {Array.from({ length: maxWorkspaces }, (_, i) => i + 1).map(ws => {

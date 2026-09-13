@@ -13,6 +13,7 @@ export interface WindowState {
   zIndex: number
   workspace: number
   origin?: { x: number; y: number }
+  prevBounds?: { x: number; y: number; width: number; height: number }
 }
 
 const MAX_WORKSPACES = 4
@@ -34,6 +35,8 @@ interface DesktopStore {
   focusWindow: (id: string) => void
   minimizeWindow: (id: string) => void
   toggleMaximize: (id: string) => void
+  restoreAndMoveWindow: (id: string, x: number, y: number) => void
+  snapWindow: (id: string, snapType: 'left' | 'right' | 'maximize') => void
   updateWindowPosition: (id: string, x: number, y: number) => void
   updateWindowSize: (id: string, width: number, height: number) => void
   setDockHovered: (appId: string | null) => void
@@ -60,7 +63,6 @@ export const useDesktopStore = create<DesktopStore>((set, get) => ({
 
   openWindow: (appId, title, width = 640, height = 480, origin) => {
     const { windows, nextZIndex, currentWorkspace } = get()
-    // Only check for existing windows on the CURRENT workspace
     const existing = windows.find(w => w.appId === appId && w.workspace === currentWorkspace && !w.minimized)
     if (existing) {
       if (get().activeWindowId === existing.id) {
@@ -135,9 +137,93 @@ export const useDesktopStore = create<DesktopStore>((set, get) => ({
   })),
 
   toggleMaximize: (id) => set(state => ({
-    windows: state.windows.map(w =>
-      w.id === id ? { ...w, maximized: !w.maximized, minimized: false } : w
-    ),
+    windows: state.windows.map(w => {
+      if (w.id !== id) return w
+      if (!w.maximized) {
+        return {
+          ...w,
+          maximized: true,
+          minimized: false,
+          prevBounds: { x: w.x, y: w.y, width: w.width, height: w.height },
+        }
+      } else {
+        const prev = w.prevBounds || {
+          x: Math.max(80, 100),
+          y: 70,
+          width: Math.min(window.innerWidth - 100, 760),
+          height: Math.min(window.innerHeight - 120, 520)
+        }
+        return {
+          ...w,
+          maximized: false,
+          x: prev.x,
+          y: prev.y,
+          width: prev.width,
+          height: prev.height,
+        }
+      }
+    }),
+  })),
+
+  restoreAndMoveWindow: (id, x, y) => set(state => ({
+    windows: state.windows.map(w => {
+      if (w.id !== id) return w
+      const prev = w.prevBounds || {
+        x: Math.max(80, 100),
+        y: 70,
+        width: Math.min(window.innerWidth - 100, 760),
+        height: Math.min(window.innerHeight - 120, 520)
+      }
+      return {
+        ...w,
+        maximized: false,
+        x: Math.max(0, Math.min(window.innerWidth - 100, x)),
+        y: Math.max(34, y),
+        width: prev.width,
+        height: prev.height,
+      }
+    }),
+  })),
+
+  snapWindow: (id, snapType) => set(state => ({
+    windows: state.windows.map(w => {
+      if (w.id !== id) return w
+      const screenW = window.innerWidth
+      const screenH = window.innerHeight - 34
+      if (snapType === 'maximize') {
+        return {
+          ...w,
+          maximized: true,
+          minimized: false,
+          prevBounds: w.maximized ? w.prevBounds : { x: w.x, y: w.y, width: w.width, height: w.height },
+        }
+      }
+      if (snapType === 'left') {
+        return {
+          ...w,
+          maximized: false,
+          minimized: false,
+          x: 0,
+          y: 34,
+          width: Math.floor(screenW / 2),
+          height: screenH,
+          prevBounds: w.maximized ? w.prevBounds : { x: w.x, y: w.y, width: w.width, height: w.height },
+        }
+      }
+      if (snapType === 'right') {
+        return {
+          ...w,
+          maximized: false,
+          minimized: false,
+          x: Math.floor(screenW / 2),
+          y: 34,
+          width: Math.ceil(screenW / 2),
+          height: screenH,
+          prevBounds: w.maximized ? w.prevBounds : { x: w.x, y: w.y, width: w.width, height: w.height },
+        }
+      }
+      return w
+    }),
   })),
 
   updateWindowPosition: (id, x, y) => set(state => ({
@@ -192,7 +278,6 @@ export const useDesktopStore = create<DesktopStore>((set, get) => ({
   isStoreAppInstalled: (appId) => get().installedStoreApps.includes(appId),
 }))
 
-// Notification store
 export interface Notification { id: string; message: string; icon?: string; duration?: number }
 interface NotificationStore {
   notifications: Notification[]

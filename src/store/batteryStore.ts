@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { useNotificationStore } from "./desktopStore";
 
 interface BatteryStore {
-  level: number; // 0 to 100
+  level: number;
   charging: boolean;
   chargingTime: number | null;
   dischargingTime: number | null;
