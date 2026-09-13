@@ -37,6 +37,8 @@ public/reels/
 
 # Local scratch/test scripts
 test.py
+TeST.py
+test.ts
 *.py
 /index.tsx
 /main.tsx
