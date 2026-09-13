@@ -18,6 +18,9 @@ import { useThemeStore } from './store/themeStore'
 import { initClipboardListener } from './store/clipboardStore'
 import './store/cursorStore'
 
+import DesktopPet from './components/DesktopPet'
+import MeoAssistant from './components/MeoAssistant'
+
 const AboutMe = lazy(() => import('./apps/AboutMe'))
 const Terminal = lazy(() => import('./apps/Terminal'))
 const Notes = lazy(() => import('./apps/Notes'))
@@ -25,19 +28,53 @@ const Calculator = lazy(() => import('./apps/Calculator'))
 const Settings = lazy(() => import('./apps/Settings'))
 const Devlogs = lazy(() => import('./apps/Devlogs'))
 const NepaliConverter = lazy(() => import('./apps/NepaliConverter'))
+const MusicPlayer = lazy(() => import('./apps/MusicPlayer'))
+const Gallery = lazy(() => import('./apps/Gallery'))
+const Browser = lazy(() => import('./apps/Browser'))
+const Guide = lazy(() => import('./apps/Guide'))
+const FileManager = lazy(() => import('./apps/FileManager'))
+const Store = lazy(() => import('./apps/Store'))
+const Creator = lazy(() => import('./apps/Creator'))
+const Capture = lazy(() => import('./apps/Capture'))
+const Studio = lazy(() => import('./apps/Studio'))
+const Doomscroll = lazy(() => import('./apps/Doomscroll'))
+
+const STORE_APPS: Record<string, React.LazyExoticComponent<React.FC>> = {
+  weather: lazy(() => import('./apps/StoreApps').then(m => ({ default: m.WeatherApp }))),
+  kanban: lazy(() => import('./apps/StoreApps').then(m => ({ default: m.KanbanApp }))),
+  timer: lazy(() => import('./apps/StoreApps').then(m => ({ default: m.TimerApp }))),
+  'typing-speed': lazy(() => import('./apps/StoreApps').then(m => ({ default: m.TypingSpeedApp }))),
+  'paint-studio': lazy(() => import('./apps/StoreApps').then(m => ({ default: m.PaintApp }))),
+  'image-editor': lazy(() => import('./apps/StoreApps').then(m => ({ default: m.ImageEditorApp }))),
+}
 
 const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.FC>> = {
   about: AboutMe,
+  creator: Creator,
   terminal: Terminal,
   notes: Notes,
   calculator: Calculator,
   calc: Calculator,
+  music: MusicPlayer,
+  gallery: Gallery,
+  browser: Browser,
   settings: Settings,
+  guide: Guide,
+  files: FileManager,
+  store: Store,
   devlogs: Devlogs,
+  capture: Capture,
+  recorder: Capture,
+  studio: Studio,
+  code: Studio,
+  ide: Studio,
+  doomscroll: Doomscroll,
+  reels: Doomscroll,
   nepali: NepaliConverter,
   'nepali-converter': NepaliConverter,
   calendar: NepaliConverter,
   patro: NepaliConverter,
+  ...STORE_APPS,
 }
 
 type BootPhase = 'waiting' | 'topbar' | 'desktop' | 'dock' | 'done'
@@ -145,6 +182,8 @@ export default function App() {
           <Widgets />
           <WindowSwitcher />
           <ClipboardPopover />
+          <DesktopPet />
+          <MeoAssistant />
         </>
       )}
     </>
