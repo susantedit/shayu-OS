@@ -89,7 +89,6 @@ export default function BootScreen() {
   const [bootPhase, setBootPhase] = useState<BootPhase>('logo')
   const [logoSharp, setLogoSharp] = useState(false)
   const [lines, setLines] = useState(0)
-  const [glitch, setGlitch] = useState(false)
   const termRef = useRef<HTMLDivElement>(null)
   const burstParticles = useRef<Array<{ x: number; y: number; vx: number; vy: number; life: number; r: number; c: string }>>([])
 
@@ -176,12 +175,6 @@ export default function BootScreen() {
     let idx = 0
     let timer: ReturnType<typeof setTimeout>
     const next = () => {
-      const prevPhase = idx > 0 ? getTerminalPhase(idx - 1) : ''
-      const nextPhase = getTerminalPhase(idx)
-      if (prevPhase !== nextPhase && idx > 0) {
-        setGlitch(true)
-        setTimeout(() => setGlitch(false), 300)
-      }
       if (idx < BOOT_LINES.length) {
         idx++
         setLines(idx)

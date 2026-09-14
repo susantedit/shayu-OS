@@ -9,28 +9,6 @@ interface WindowProps {
   children: React.ReactNode
 }
 
-const APP_SHADOW_COLORS: Record<string, string> = {
-  about: 'rgba(232,130,155,0.18)',
-  terminal: 'rgba(126,221,214,0.18)',
-  notes: 'rgba(253,186,116,0.16)',
-  calculator: 'rgba(196,181,253,0.18)',
-  music: 'rgba(232,130,155,0.22)',
-  gallery: 'rgba(126,221,214,0.16)',
-  browser: 'rgba(147,197,253,0.18)',
-  files: 'rgba(147,197,253,0.18)',
-  settings: 'rgba(155,136,158,0.16)',
-  weather: 'rgba(147,197,253,0.18)',
-  kanban: 'rgba(134,239,172,0.16)',
-  timer: 'rgba(253,186,116,0.18)',
-  'typing-speed': 'rgba(196,181,253,0.18)',
-  'paint-studio': 'rgba(134,239,172,0.18)',
-  'image-editor': 'rgba(232,130,155,0.18)',
-  sysmon: 'rgba(74,222,128,0.18)',
-  'nepali-converter': 'rgba(239,68,68,0.18)',
-  'ambient-synth': 'rgba(99,102,241,0.18)',
-  'generative-studio': 'rgba(244,114,182,0.22)',
-}
-
 type SnapZone = 'left' | 'right' | 'maximize' | null
 
 export default function Window({ window: win, children }: WindowProps) {
@@ -49,8 +27,6 @@ export default function Window({ window: win, children }: WindowProps) {
   const dragOffset = useRef({ x: 0, y: 0 })
   const resizeStart = useRef({ x: 0, y: 0, w: 0, h: 0, wx: 0, wy: 0 })
   const dragPos = useRef({ x: win.x, y: win.y })
-
-  const accentColor = APP_SHADOW_COLORS[win.appId] || 'rgba(232,130,155,0.12)'
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
 
   const getSnapZone = useCallback((clientX: number, clientY: number): SnapZone => {
