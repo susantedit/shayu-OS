@@ -240,8 +240,9 @@ export default function Window({ window: win, children }: WindowProps) {
   if (win.minimized) return null
 
   const windowShadow = isActive
-    ? `0 24px 60px -12px rgba(0,0,0,0.75), 0 0 0 1px rgba(232,130,155,0.3), 0 0 32px ${accentColor}`
-    : `0 12px 36px -8px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.08)`
+    ? '0 16px 40px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.12)'
+    : '0 8px 24px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.06)'
+
 
   return (
     <>

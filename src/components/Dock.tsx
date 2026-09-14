@@ -122,8 +122,8 @@ export default function Dock() {
   const containerRef = useRef<HTMLDivElement>(null)
   const itemRefs = useRef<(HTMLDivElement | null)[]>([])
   const [bouncing, setBouncing] = useState<string | null>(null)
-  const [ripple, setRipple] = useState<{ x: number; y: number } | null>(null)
   const [isMagnifying, setIsMagnifying] = useState(false)
+
 
   const dockItems = useMemo(() => {
     const installed = (installedStoreApps || [])
@@ -181,8 +181,7 @@ export default function Dock() {
     openWindow(item.id, appTitles[item.id] || item.label, w, h, origin)
     setBouncing(item.id)
     setTimeout(() => setBouncing(null), 650)
-    setRipple({ x: origin.x, y: origin.y })
-    setTimeout(() => setRipple(null), 800)
+
     try { (window as any).__syauPlayClick?.('open') } catch {}
     addNotif(`${item.label} launched`, 'rocket', 1800)
   }
@@ -239,17 +238,6 @@ export default function Dock() {
           ))}
         </motion.div>
       </div>
-
-      {ripple && (
-        <div style={{
-          position: 'fixed', left: ripple.x, top: ripple.y,
-          width: 20, height: 20, borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(232,130,155,0.3) 0%, transparent 70%)',
-          transform: 'translate(-50%, -50%)',
-          animation: 'launch-ripple 0.8s ease-out forwards',
-          pointerEvents: 'none', zIndex: 95,
-        }} />
-      )}
     </>
   )
 }

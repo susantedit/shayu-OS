@@ -120,8 +120,9 @@ export const applyCursorStyles = (defaultCursor: CursorTheme, pointerCursor: Cur
 }
 
 const getInitialConfig = () => {
-  const savedDefault = (localStorage.getItem('syau-cursor-default') as CursorTheme) || 'sukuna'
-  const savedPointer = (localStorage.getItem('syau-cursor-pointer') as CursorTheme) || 'demonslayer'
+  const savedDefault = (localStorage.getItem('syau-cursor-default') as CursorTheme) || 'system'
+  const savedPointer = (localStorage.getItem('syau-cursor-pointer') as CursorTheme) || 'system'
+
   const savedScaleStr = localStorage.getItem('syau-cursor-scale')
   let scale = 100
   if (savedScaleStr) {

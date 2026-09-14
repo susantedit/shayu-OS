@@ -252,16 +252,8 @@ export default function BootScreen() {
         </div>
       ))}
 
-      <div style={{ position: 'absolute', width: 400, height: 400, top: '10%', left: '15%', borderRadius: '50%', background: 'radial-gradient(circle, rgba(232,130,155,0.06) 0%, transparent 70%)', filter: 'blur(80px)', animation: 'slow-drift 20s ease-in-out infinite, glow-pulse 4s ease-in-out infinite', pointerEvents: 'none' }} />
-      <div style={{ position: 'absolute', width: 350, height: 350, bottom: '15%', right: '20%', borderRadius: '50%', background: 'radial-gradient(circle, rgba(126,221,214,0.04) 0%, transparent 70%)', filter: 'blur(80px)', animation: 'slow-drift 25s ease-in-out infinite reverse, glow-pulse 5s ease-in-out infinite', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(225,29,72,0.04) 0%, transparent 60%)' }} />
 
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', backgroundImage: 'linear-gradient(rgba(232,130,155,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(232,130,155,0.015) 1px, transparent 1px)', backgroundSize: '60px 60px', opacity: 0.5 }} />
-
-      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px)', zIndex: 1 }} />
-
-      {glitch && (
-        <div style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'none', background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(232,130,155,0.03) 2px, rgba(232,130,155,0.03) 4px)', animation: 'glitch-1 0.3s linear' }} />
-      )}
 
       {bootPhase === 'logo' && (
         <div style={{ position: 'absolute', inset: 0, zIndex: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 14, padding: 20 }}>
@@ -321,11 +313,10 @@ export default function BootScreen() {
             width: typeof window !== 'undefined' && window.innerWidth < 768 ? '100%' : 560,
             maxWidth: '100%',
             maxHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? '48dvh' : '70vh',
-            background: 'linear-gradient(135deg, rgba(8,10,18,0.85) 0%, rgba(4,5,10,0.9) 50%, rgba(10,12,20,0.85) 100%)',
-            backdropFilter: 'blur(20px) saturate(1.3)',
-            border: '1px solid rgba(255,255,255,0.08)',
-            borderRadius: 12,
-            boxShadow: '0 8px 40px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.06) inset, inset 2px 2px 1px rgba(255,255,255,0.08), inset -1px -1px 1px rgba(255,255,255,0.03)',
+            background: '#0d0d11',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: 10,
+            boxShadow: '0 12px 30px rgba(0, 0, 0, 0.5)',
             overflow: 'hidden', display: 'flex', flexDirection: 'column',
           }}>
             <div style={{ height: 30, display: 'flex', alignItems: 'center', padding: '0 10px', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.06)', gap: 8, flexShrink: 0 }}>
@@ -343,9 +334,8 @@ export default function BootScreen() {
               maxHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? '38dvh' : '55vh',
             }}>
               {BOOT_LINES.slice(0, lines).map((line, i) => {
-                const isTransition = i === 12 || i === 23
                 return (
-                  <div key={i} className={isTransition ? 'glitch-active' : ''} data-text={line.text}
+                  <div key={i}
                     style={{ whiteSpace: 'pre', color: line.color || '#CDD6F4', animation: 'line-in 0.15s ease-out' }}>
                     {line.text || '\u00A0'}
                   </div>

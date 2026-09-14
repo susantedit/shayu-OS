@@ -34,7 +34,7 @@ public/reels/
 .env.*.local
 
 .vercel
-
+GEMINI.md
 # Local scratch/test scripts
 test.py
 TeST.py
