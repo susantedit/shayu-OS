@@ -10,24 +10,18 @@ import { useDesktopStore } from '../store/desktopStore'
 const renderAppIcon = (appId: string, size = 22) => {
   switch (appId) {
     case 'about': return <User size={size} style={{ color: 'var(--color-sakura)' }} />
-    case 'capture':
-    case 'recorder': return <Video size={size} style={{ color: '#E8829B' }} />
+    case 'syau-type': return <FileText size={size} style={{ color: 'var(--color-sakura)' }} />
+    case 'focus-audio': return <Music size={size} style={{ color: 'var(--color-miku)' }} />
+    case 'nepali-converter': return <BookOpen size={size} style={{ color: '#EF4444' }} />
+    case 'devlogs': return <BookOpen size={size} style={{ color: 'var(--color-sakura)' }} />
     case 'terminal': return <Terminal size={size} style={{ color: '#86EFAC' }} />
     case 'notes': return <FileText size={size} style={{ color: '#FDBA74' }} />
     case 'calculator': return <Calculator size={size} style={{ color: '#7EDDD6' }} />
     case 'music': return <Music size={size} style={{ color: '#C4B5FD' }} />
     case 'gallery': return <Image size={size} style={{ color: '#F472B6' }} />
-    case 'browser': return <Globe size={size} style={{ color: '#38BDF8' }} />
     case 'guide': return <BookOpen size={size} style={{ color: '#FBBF24' }} />
     case 'settings': return <SettingsIcon size={size} style={{ color: '#94A3B8' }} />
     case 'files': return <Folder size={size} style={{ color: '#FBBF24' }} />
-    case 'store': return <ShoppingBag size={size} style={{ color: '#EC4899' }} />
-    case 'weather': return <CloudSun size={size} style={{ color: '#38BDF8' }} />
-    case 'kanban': return <Kanban size={size} style={{ color: '#A78BFA' }} />
-    case 'timer': return <Timer size={size} style={{ color: '#F87171' }} />
-    case 'typing-speed': return <Keyboard size={size} style={{ color: '#34D399' }} />
-    case 'paint-studio': return <Palette size={size} style={{ color: '#F43F5E' }} />
-    case 'image-editor': return <Image size={size} style={{ color: '#06B6D4' }} />
     default: return <File size={size} style={{ color: 'var(--color-text-secondary)' }} />
   }
 }

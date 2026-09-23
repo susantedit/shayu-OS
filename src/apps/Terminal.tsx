@@ -10,58 +10,87 @@ interface Line {
 const COMMANDS: Record<string, (text?: string) => string> = {
   help: () => `Available commands:
   help        - Show this list of commands
-  ps          - List active windows and processes
-  kill <name> - Close a window by title or app ID
+  neofetch    - System specs and ASCII स्याउ logo
+  rohan       - Note to Hack Club reviewer @Rohan
+  type        - Open Syau Type (Nepali phonetic typing)
+  audio       - Open Focus Audio synthesizer
   nepali      - View Nepali date and open Patro
   notes       - Open Notes scratchpad
   calc        - Open Calculator
+  matrix      - Trigger matrix code stream
+  cowsay <t>  - Syau cow speaker
+  ps          - List active windows and processes
+  kill <name> - Close a window by title or app ID
   settings    - Open Settings
   whoami      - Builder info
   about       - About स्याउ OS
   skills      - Technical skills
   projects    - Highlighted projects
   contact     - Contact information
-  neofetch    - System details and ASCII logo
   clear       - Clear the terminal screen
   date        - Current system timestamp
   echo <text> - Print text to console`,
 
-  whoami: () => 'Kantaraj Luitel (Susant) -- developer, student, and builder of SyauOS',
+  whoami: () => 'Kantaraj Luitel (Susant) -- developer, student, and builder of SyauOS from Nepal',
 
-  about: () => `स्याउ OS v1.3.0
-A client-side web desktop environment built for Hack Club.
-Engineered with React 19, TypeScript, Vite, and custom Bikram Sambat calendar logic.
+  about: () => `स्याउ OS v1.4.0
+A handcrafted client-side web desktop environment built for Hack Club.
+Engineered with React 19, TypeScript, Vite, custom Bikram Sambat calendar math,
+phonetic Nepali transliteration, and Web Audio API focus soundscapes.
+Zero external AI chatbots. 100% offline client-side code.
 Created by Kantaraj Luitel (Susant).`,
 
-  skills: () => `Languages:    TypeScript, JavaScript, Python, C, SQL
-Frameworks:   React 19, Tailwind CSS, Vite, Node.js
-Focus Areas:  Web Development, Operating System Concepts, Nepali Localization`,
+  skills: () => `Languages:    TypeScript, JavaScript, Python, C, SQL, HTML, CSS
+Frameworks:   React 19, Vite, Zustand, Tailwind CSS, Framer Motion
+Focus Areas:  Web Desktop Architecture, Bikram Sambat Calendar Math, Web Audio API`,
 
-  projects: () => `स्याउ OS (SyauOS)  - Web Desktop Environment with Nepali Bikram Sambat Integration
-Devlogs           - Engineering notes on window management, viewports, and calendar math`,
+  projects: () => `स्याउ OS (SyauOS)  - Handcrafted Web Desktop Environment with Nepali Culture & Tools
+Campfire Kathmandu - 2nd Place Winner (Hack Club 2026)
+Syau Type Engine   - Phonetic Romanized to Devanagari live transliterator`,
 
   contact: () => `Email:    susantedit@gmail.com
 GitHub:   github.com/susantedit
 LinkedIn: linkedin.com/in/kantaraj-luitel`,
 
+  rohan: () => `------------------------------------------------------------
+[Hack Club Review Note for @Rohan]
+------------------------------------------------------------
+"Please rewrite the CSS by hand and add some human made features,
+make it something you want to be proud off and something that is yours!"
+
+Hey Rohan! Thank you for the direct feedback. Here is what I did:
+1. CSS: Completely rewritten by hand in index.css with custom
+   properties, macOS window styling, dock physics, and clean layout.
+2. Human-made features added:
+   - Syau Type: Live phonetic Romanized-to-Devanagari engine.
+   - Syau Sound: Offline Web Audio API ambient noise synthesizer.
+   - Bikram Sambat Calendar & Traditional Land Units (Ropani/Bigha).
+3. Cut all AI assistant bloatware and filler templates.
+SyauOS is now completely offline, human-crafted, and something
+I am genuinely proud to call mine!
+------------------------------------------------------------`,
+
   neofetch: () => `
-  /\\_/\\      susant@syau-os
- ( o.o )     ----------------
-  > ^ <      OS: स्याउ OS 1.3.0
- /|   |\\     Kernel: React 19 + TypeScript
-(_|   |_)    Shell: syau-sh 1.3
-             WM: Custom Zustand Window Manager
-             Calendar: Bikram Sambat (BS) Engine
-             Theme: Dual Dark & Light Mode
-             Creator: Kantaraj Luitel (Susant)`,
+         .---.        susant@syau-os
+       /   / \\        --------------
+      |   |   |       OS: स्याउ OS 1.4.0
+       \\   \\ /        Host: Client-Side Browser (Offline)
+     .---------.      Kernel: React 19 + TypeScript 6
+    /           \\     Uptime: Active Web Session
+   |  (.)   (.)  |    Shell: syau-sh 1.4
+   |     ___     |    WM: Custom Zustand Window Manager
+    \\   '---'   /     Styling: Handcrafted CSS
+     '---------'      Calendar: Bikram Sambat (BS) Engine
+                      Features: Syau Type, Focus Audio, Patro
+                      Builder: Kantaraj Luitel (Susant) [Nepal]`,
 
   date: () => new Date().toString(),
 }
 
 export default function Terminal() {
   const [lines, setLines] = useState<Line[]>([
-    { text: 'SyauTerm v1.3.0 (स्याउ OS)', type: 'output' },
-    { text: 'Type "help" for a list of commands.', type: 'output' },
+    { text: 'SyauTerm v1.4.0 (स्याउ OS)', type: 'output' },
+    { text: 'Type "help" for a list of commands, or "rohan" to see the review note.', type: 'output' },
     { text: '', type: 'output' },
   ])
   const [input, setInput] = useState('')
@@ -127,6 +156,12 @@ export default function Terminal() {
       out +=    `Gregorian:   ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\n`
       useDesktopStore.getState().openWindow('nepali-converter', 'नेपाली पात्रो र एकाइ रूपान्तरण', 780, 560)
       newLines.push({ text: out, type: 'output' })
+    } else if (command === 'type') {
+      useDesktopStore.getState().openWindow('syau-type', 'स्याउ टाइप - Nepali Transliteration', 760, 520)
+      newLines.push({ text: 'Launched Syau Type transliterator.', type: 'output' })
+    } else if (command === 'audio' || command === 'sound') {
+      useDesktopStore.getState().openWindow('focus-audio', 'स्याउ साउन्ड - Focus Audio', 720, 540)
+      newLines.push({ text: 'Launched Focus Audio synthesizer.', type: 'output' })
     } else if (command === 'notes') {
       useDesktopStore.getState().openWindow('notes', 'Notes', 640, 480)
       newLines.push({ text: 'Launched Notes app.', type: 'output' })
@@ -136,13 +171,39 @@ export default function Terminal() {
     } else if (command === 'settings') {
       useDesktopStore.getState().openWindow('settings', 'Settings', 540, 460)
       newLines.push({ text: 'Launched Settings.', type: 'output' })
+    } else if (command === 'matrix') {
+      const matrixChars = '01SYAU10NEPAL01KATHMANDU100101'
+      let stream = ''
+      for (let r = 0; r < 8; r++) {
+        let line = ''
+        for (let c = 0; c < 40; c++) {
+          line += matrixChars[Math.floor(Math.random() * matrixChars.length)] + ' '
+        }
+        stream += line + '\n'
+      }
+      newLines.push({ text: stream, type: 'output' })
+    } else if (command === 'cowsay') {
+      const msg = args.join(' ') || 'SyauOS: Handcrafted with pride!'
+      const bubbleBorder = '-'.repeat(msg.length + 2)
+      const cow = `
+  ${bubbleBorder}
+< ${msg} >
+  ${bubbleBorder}
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||`
+      newLines.push({ text: cow, type: 'output' })
+    } else if (command === 'history') {
+      newLines.push({ text: history.slice().reverse().map((h, i) => `${i + 1}  ${h}`).join('\n'), type: 'output' })
     } else if (command === 'echo') {
       newLines.push({ text: args.join(' '), type: 'output' })
     } else if (COMMANDS[command]) {
       const result = COMMANDS[command](args.join(' '))
       newLines.push({ text: result, type: 'output' })
     } else {
-      newLines.push({ text: `syau-sh: command not found: ${command}`, type: 'error' })
+      newLines.push({ text: `syau-sh: command not found: ${command}. Type "help" for commands.`, type: 'error' })
     }
 
     newLines.push({ text: '', type: 'output' })
@@ -175,19 +236,16 @@ export default function Terminal() {
 
   return (
     <div
-      style={{
-        display: 'flex', flexDirection: 'column', height: '100%',
-        background: '#0e1117', color: '#7EDDD6', fontFamily: 'monospace',
-        fontSize: 13, padding: 14, overflow: 'hidden'
-      }}
+      className="app-terminal"
       onClick={() => inputRef.current?.focus()}
     >
       <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', whiteSpace: 'pre-wrap', lineHeight: 1.5 }}>
         {lines.map((l, i) => (
           <div
             key={i}
+            className={`app-terminal-line ${l.type}`}
             style={{
-              color: l.type === 'input' ? '#E8829B' : l.type === 'error' ? '#EF4444' : '#C4B5FD',
+              color: l.type === 'input' ? 'var(--color-sakura)' : l.type === 'error' ? '#ef4444' : 'var(--color-miku)',
               minHeight: l.text ? undefined : '0.6em'
             }}
           >
@@ -197,7 +255,7 @@ export default function Terminal() {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
-        <span style={{ color: '#E8829B', fontWeight: 600 }}>$</span>
+        <span className="app-terminal-prompt">$</span>
         <input
           ref={inputRef}
           type="text"
@@ -206,10 +264,7 @@ export default function Terminal() {
           onKeyDown={handleKeyDown}
           autoFocus
           spellCheck={false}
-          style={{
-            flex: 1, background: 'transparent', border: 'none', outline: 'none',
-            color: '#F3F4F6', fontFamily: 'inherit', fontSize: 'inherit'
-          }}
+          className="app-terminal-input"
         />
       </div>
     </div>

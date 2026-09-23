@@ -81,6 +81,8 @@ export default function TopBar() {
     { label: 'About स्याउ OS', action: () => { openWindow('about', 'About Me', 480, 520); setMenuOpen(null) } },
     { label: 'स्याउ OS Devlogs', action: () => { openWindow('devlogs', 'स्याउ OS Devlogs', 800, 540); setMenuOpen(null) } },
     { label: 'Nepali Calendar & Units', action: () => { openWindow('nepali-converter', 'नेपाली पात्रो र एकाइ रूपान्तरण (Nepali Calendar & Units)', 780, 560); setMenuOpen(null) } },
+    { label: 'स्याउ टाइप (Nepali Type)', action: () => { openWindow('syau-type', 'स्याउ टाइप - Nepali Transliteration', 760, 520); setMenuOpen(null) } },
+    { label: 'स्याउ साउन्ड (Focus Audio)', action: () => { openWindow('focus-audio', 'स्याउ साउन्ड - Focus Audio', 720, 540); setMenuOpen(null) } },
     { label: 'Terminal', action: () => { openWindow('terminal', 'Terminal', 600, 400); setMenuOpen(null) } },
     { label: 'Notes', action: () => { openWindow('notes', 'Notes', 640, 480); setMenuOpen(null) } },
     { label: 'Calculator', action: () => { openWindow('calculator', 'Calculator', 320, 460); setMenuOpen(null) } },

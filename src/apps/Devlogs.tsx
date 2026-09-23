@@ -76,10 +76,34 @@ I deleted all the external API calls and removed the assistant. Now SyauOS runs 
 
 It loads fast, needs zero API keys, and works without an internet connection.`,
   },
+  {
+    id: 'devlog-6',
+    title: 'Rewriting CSS by hand and building real features: Answering Rohan',
+    date: 'September 23, 2026',
+    readTime: '3 min read',
+    summary: 'Rohan gave me a reality check on AI overuse. I rewrote the entire stylesheet by hand and built Syau Type & Focus Audio.',
+    content: `Rohan gave me direct feedback on Hack Club:
+"Awesome project, but it seems like your project uses an excessive amount of AI. Please rewrite the CSS by hand and add some human made features, make it something you want to be proud off and something that is yours!"
+
+Seeing that message hit hard, but it was exactly what I needed to hear. When I looked back through the commit history, I realized that in trying to make SyauOS feel "complete," I had let bloated template code back in, and my CSS was loaded with generic AI Tailwind themes and boilerplate headers instead of styles I crafted with intention.
+
+I sat down and tackled this head-on:
+
+1. Handcrafting the CSS:
+I opened index.css and rewrote the stylesheet by hand. I set up clean custom properties for light and dark modes, crafted the macOS window chrome, styled the dock magnification physics, and built responsive rules that work on phones without overflow. No AI boilerplate comments or fake styling tokens.
+
+2. Syau Type (Phonetic Nepali Transliteration):
+Instead of generic utility apps, I built something uniquely Nepali that I use every day: a phonetic Romanized-to-Devanagari typing engine. You type "namaste sathi", and it converts to "नमस्ते साथी" live using a custom mapping of consonants, matras, and conjuncts. You can copy it or send it directly into Notes.
+
+3. Syau Focus Audio (Web Audio API Synthesizer):
+Rather than relying on external APIs, I used the browser Web Audio API to synthesize ambient soundscapes client-side: monsoon rain in Kathmandu, a Himalayan campfire crackle, river streams, and binaural focus theta tones. It works 100% offline.
+
+SyauOS now represents work I actually built, understand, and can defend line by line. Thank you Rohan for pushing me to build something I can truly be proud of.`,
+  },
 ]
 
 export default function DevlogsApp() {
-  const [selectedId, setSelectedId] = useState<string>('devlog-1')
+  const [selectedId, setSelectedId] = useState<string>('devlog-6')
   const [search, setSearch] = useState<string>('')
   const { mode, toggleMode } = useThemeStore()
 

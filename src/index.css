@@ -1,65 +1,17 @@
 @import "tailwindcss";
 
-/* ==========================================================================
-   स्याउ OS (SyauOS) - Main Stylesheet
-   Handcrafted clean CSS for SyauOS desktop environment.
-   Focused on clean layout, macOS-inspired windowing, and simple theme tokens.
-   ========================================================================== */
+/* 
+ * स्याउ OS (SyauOS) Stylesheet
+ * Handcrafted by Kantaraj Luitel (Susant) for Hack Club.
+ * macOS-inspired desktop layout with Nepali cultural identity.
+ */
 
-/* --------------------------------------------------------------------------
-   1. Design Tokens & Theme Variables
-   -------------------------------------------------------------------------- */
-@theme {
-  --color-cream: #09090b;
-  --color-cream-dark: #050507;
-  --color-sakura: #e11d48;
-  --color-sakura-deep: #be123c;
-  --color-gothic-rose: #9f1239;
-  --color-gothic-purple: #7c3aed;
-  --color-gothic-dark: #121215;
-  --color-miku: #06b6d4;
-  --color-miku-deep: #0891b2;
-  --color-lavender: #a78bfa;
-  --color-lavender-deep: #8b5cf6;
-  --color-mint: #22c55e;
-  --color-peach: #f97316;
-  --color-sky: #38bdf8;
-  --color-black-soft: #121214;
-  --color-window-bg: #18181b;
-  --color-window-header: #202024;
-  --color-text-primary: #f4f4f5;
-  --color-text-secondary: #a1a1aa;
-  --color-text-muted: #71717a;
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-active: rgba(255, 255, 255, 0.22);
-  --color-shadow: rgba(0, 0, 0, 0.35);
-  --color-shadow-heavy: rgba(0, 0, 0, 0.55);
-
-  --font-syau: 'Noto Sans Devanagari', sans-serif;
-  --font-heading: 'Space Grotesk', sans-serif;
-  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'Space Mono', monospace;
-
-  --radius-window: 12px;
-  --radius-dock: 16px;
-  --radius-button: 6px;
-  --radius-pill: 999px;
-}
-
-:root {
-  --os-brightness: 100%;
-  --os-window-blur: 16px;
-  --os-window-opacity: 0.94;
-  --os-wallpaper-blur: 0px;
-  --os-wallpaper-dim: 0.2;
-}
-
-/* Dark Mode (Default) */
 :root, [data-theme="dark"] {
   --color-cream: #09090b;
   --color-cream-dark: #050507;
   --color-sakura: #e11d48;
   --color-sakura-deep: #be123c;
+  --color-sakura-glow: rgba(225, 29, 72, 0.2);
   --color-gothic-rose: #9f1239;
   --color-gothic-purple: #7c3aed;
   --color-gothic-dark: #121215;
@@ -82,14 +34,30 @@
   --color-shadow-heavy: rgba(0, 0, 0, 0.55);
   --color-glass-card: rgba(255, 255, 255, 0.04);
   --color-glass-border: rgba(255, 255, 255, 0.08);
+
+  --font-syau: 'Noto Sans Devanagari', sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  --radius-window: 12px;
+  --radius-dock: 16px;
+  --radius-button: 6px;
+  --radius-pill: 999px;
+
+  --os-brightness: 100%;
+  --os-window-blur: 16px;
+  --os-window-opacity: 0.94;
+  --os-wallpaper-blur: 0px;
+  --os-wallpaper-dim: 0.2;
 }
 
-/* Light Mode */
 [data-theme="light"] {
   --color-cream: #f4f4f5;
   --color-cream-dark: #e4e4e7;
   --color-sakura: #e11d48;
   --color-sakura-deep: #be123c;
+  --color-sakura-glow: rgba(225, 29, 72, 0.15);
   --color-gothic-rose: #be185d;
   --color-gothic-purple: #7c3aed;
   --color-gothic-dark: #d4d4d8;
@@ -114,9 +82,7 @@
   --color-glass-border: rgba(0, 0, 0, 0.08);
 }
 
-/* --------------------------------------------------------------------------
-   2. Global Reset & Base
-   -------------------------------------------------------------------------- */
+/* Base resets */
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -142,7 +108,7 @@ html, body, #root {
   color: #ffffff;
 }
 
-/* Clean Custom Scrollbar */
+/* Scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -152,33 +118,13 @@ html, body, #root {
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(125, 125, 125, 0.25);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(125, 125, 125, 0.45);
 }
 
-/* Focus Visible */
-*:focus-visible {
-  outline: 2px solid var(--color-sakura);
-  outline-offset: 1px;
-}
-
-button {
-  font-family: inherit;
-}
-
-button:active {
-  transform: scale(0.98);
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
-
-/* --------------------------------------------------------------------------
-   3. Typography Utility Classes
-   -------------------------------------------------------------------------- */
+/* Typography classes */
 .font-syau {
   font-family: var(--font-syau);
   font-weight: 600;
@@ -200,9 +146,7 @@ button:active {
   font-weight: 400;
 }
 
-/* --------------------------------------------------------------------------
-   4. Desktop Environment
-   -------------------------------------------------------------------------- */
+/* Desktop shell */
 .desktop {
   position: fixed;
   inset: 0;
@@ -217,9 +161,7 @@ button:active {
   pointer-events: none;
 }
 
-/* --------------------------------------------------------------------------
-   5. Top Bar
-   -------------------------------------------------------------------------- */
+/* Top bar (macOS style menubar) */
 .top-bar {
   position: fixed;
   top: 0;
@@ -237,6 +179,7 @@ button:active {
   font-weight: 500;
   user-select: none;
   box-shadow: 0 1px 8px var(--color-shadow);
+  backdrop-filter: blur(12px);
 }
 
 .top-bar-left {
@@ -280,13 +223,14 @@ button:active {
   position: absolute;
   top: 32px;
   left: 0;
-  min-width: 180px;
+  min-width: 190px;
   background: var(--color-window-header);
   border: 1px solid var(--color-border);
   border-radius: 0 0 8px 8px;
   box-shadow: 0 8px 24px var(--color-shadow-heavy);
   padding: 4px;
   z-index: 200;
+  backdrop-filter: blur(16px);
 }
 
 .topbar-dropdown-item {
@@ -313,9 +257,7 @@ button:active {
   margin: 4px 6px;
 }
 
-/* --------------------------------------------------------------------------
-   6. Window Manager
-   -------------------------------------------------------------------------- */
+/* Window management */
 .window {
   position: absolute;
   background: var(--color-window-bg);
@@ -327,6 +269,7 @@ button:active {
   overflow: hidden;
   min-width: 300px;
   min-height: 180px;
+  backdrop-filter: blur(var(--os-window-blur, 16px));
 }
 
 .window.is-dragging {
@@ -419,7 +362,7 @@ button:active {
   position: relative;
 }
 
-/* Resize Handles */
+/* Resize handles */
 .resize-handle {
   position: absolute;
   z-index: 10;
@@ -433,9 +376,7 @@ button:active {
 .resize-handle-ne { right: 0; top: 36px; width: 12px; height: 12px; cursor: nesw-resize; }
 .resize-handle-nw { left: 0; top: 36px; width: 12px; height: 12px; cursor: nwse-resize; }
 
-/* --------------------------------------------------------------------------
-   7. Dock & App Launcher
-   -------------------------------------------------------------------------- */
+/* Floating Dock */
 .dock-wrapper {
   position: fixed;
   bottom: 10px;
@@ -458,6 +399,7 @@ button:active {
   border-radius: var(--radius-dock);
   border: 1px solid var(--color-border);
   box-shadow: 0 8px 24px var(--color-shadow);
+  backdrop-filter: blur(16px);
 }
 
 .dock-item {
@@ -474,7 +416,7 @@ button:active {
 }
 
 .dock-item:hover {
-  transform: translateY(-4px) scale(1.08);
+  transform: translateY(-4px) scale(1.12);
 }
 
 .dock-icon-wrapper {
@@ -525,63 +467,7 @@ button:active {
   opacity: 1;
 }
 
-/* Dock Positions */
-[data-dock-position="left"] .dock-wrapper {
-  bottom: 16px;
-  top: 48px;
-  left: 10px;
-  right: auto;
-  align-items: center;
-}
-[data-dock-position="left"] .dock-container {
-  flex-direction: column;
-}
-[data-dock-position="left"] .dock-tooltip {
-  top: 50%;
-  left: calc(100% + 8px);
-  transform: translateY(-50%);
-}
-
-[data-dock-position="right"] .dock-wrapper {
-  bottom: 16px;
-  top: 48px;
-  right: 10px;
-  left: auto;
-  align-items: center;
-}
-[data-dock-position="right"] .dock-container {
-  flex-direction: column;
-}
-[data-dock-position="right"] .dock-tooltip {
-  top: 50%;
-  right: calc(100% + 8px);
-  left: auto;
-  transform: translateY(-50%);
-}
-
-/* Dock Sizes */
-[data-dock-size="compact"] .dock-item {
-  width: 38px;
-  height: 38px;
-}
-[data-dock-size="compact"] .dock-icon-wrapper {
-  width: 34px;
-  height: 34px;
-}
-[data-dock-size="large"] .dock-item {
-  width: 56px;
-  height: 56px;
-}
-[data-dock-size="large"] .dock-icon-wrapper {
-  width: 50px;
-  height: 50px;
-}
-
-/* --------------------------------------------------------------------------
-   8. Built-in Apps Layouts
-   -------------------------------------------------------------------------- */
-
-/* Calculator */
+/* Calculator app */
 .app-calc {
   padding: 14px;
   display: flex;
@@ -648,7 +534,7 @@ button:active {
   background: var(--color-sakura-deep);
 }
 
-/* Terminal */
+/* Terminal app */
 .app-terminal {
   background: #09090b;
   color: #e4e4e7;
@@ -671,7 +557,7 @@ button:active {
 }
 
 .app-terminal-prompt {
-  color: var(--color-miku);
+  color: var(--color-sakura);
   font-weight: 600;
 }
 
@@ -680,7 +566,7 @@ button:active {
   line-height: 1.5;
 }
 
-/* Notes */
+/* Notes app */
 .app-notes {
   padding: 16px;
   height: 100%;
@@ -700,9 +586,442 @@ button:active {
   background: transparent;
 }
 
-/* --------------------------------------------------------------------------
-   9. Context Menu & Notifications
-   -------------------------------------------------------------------------- */
+/* Syau Type (Nepali Transliteration) App */
+.syautype-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  gap: 12px;
+  background: var(--color-window-bg);
+  overflow-y: auto;
+}
+
+.syautype-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 12px;
+}
+
+.syautype-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.syautype-badge {
+  background: var(--color-sakura);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: var(--radius-button);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.syautype-sub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.syautype-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.syautype-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--color-border);
+  background: var(--color-glass-card);
+  color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.syautype-btn:hover {
+  background: var(--color-border);
+  color: var(--color-sakura);
+}
+
+.syautype-btn.primary {
+  background: var(--color-sakura);
+  color: #ffffff;
+  border-color: var(--color-sakura);
+}
+
+.syautype-btn.primary:hover {
+  background: var(--color-sakura-deep);
+}
+
+.syautype-btn.danger:hover {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.syautype-guide {
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-button);
+  padding: 12px;
+}
+
+.syautype-guide-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--color-text-primary);
+}
+
+.syautype-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 6px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.syautype-guide-grid code {
+  color: var(--color-sakura);
+  font-family: var(--font-mono);
+  background: rgba(225, 29, 72, 0.08);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.syautype-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.syautype-chips-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.syautype-chip {
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-family: var(--font-syau);
+  transition: all 0.12s ease;
+}
+
+.syautype-chip:hover {
+  background: var(--color-sakura);
+  color: #ffffff;
+  border-color: var(--color-sakura);
+}
+
+.syautype-editors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  min-height: 240px;
+}
+
+.syautype-box {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  overflow: hidden;
+}
+
+.syautype-box.output {
+  background: rgba(225, 29, 72, 0.03);
+  border-color: rgba(225, 29, 72, 0.2);
+}
+
+.syautype-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.syautype-count {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.syautype-textarea {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.syautype-output {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.syautype-placeholder {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 13px;
+}
+
+/* Focus Audio (Web Audio Ambient Deck) */
+.focus-audio-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 18px;
+  gap: 14px;
+  background: var(--color-window-bg);
+  overflow-y: auto;
+}
+
+.focus-audio-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 14px;
+  gap: 12px;
+}
+
+.focus-audio-title h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-top: 4px;
+}
+
+.focus-audio-title p {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.focus-badge {
+  display: inline-block;
+  background: var(--color-sakura);
+  color: #ffffff;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.focus-main-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--color-sakura);
+  background: var(--color-sakura);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.focus-main-toggle:hover {
+  background: var(--color-sakura-deep);
+}
+
+.focus-main-toggle.playing {
+  background: rgba(225, 29, 72, 0.15);
+  color: var(--color-sakura);
+}
+
+.focus-presets {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.focus-presets-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.focus-preset-btn {
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 4px 12px;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  transition: all 0.12s ease;
+}
+
+.focus-preset-btn:hover {
+  background: var(--color-sakura);
+  color: #ffffff;
+  border-color: var(--color-sakura);
+}
+
+.focus-master-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  padding: 10px 14px;
+}
+
+.focus-master-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  min-width: 120px;
+}
+
+.focus-slider {
+  flex: 1;
+  accent-color: var(--color-sakura);
+  cursor: pointer;
+}
+
+.focus-vol-percent {
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--color-text-secondary);
+  min-width: 38px;
+  text-align: right;
+}
+
+.focus-tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.focus-track-card {
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all 0.15s ease;
+}
+
+.focus-track-card.active {
+  border-color: rgba(225, 29, 72, 0.4);
+  background: rgba(225, 29, 72, 0.04);
+}
+
+.focus-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.focus-card-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.focus-card-icon-btn.on {
+  background: var(--color-sakura);
+  color: #ffffff;
+  border-color: var(--color-sakura);
+}
+
+.focus-card-icon-btn.off {
+  background: transparent;
+  color: var(--color-text-muted);
+}
+
+.focus-card-info {
+  flex: 1;
+}
+
+.focus-card-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.focus-card-nepali {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.focus-status-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.focus-status-indicator.pulse {
+  background: var(--color-sakura);
+  box-shadow: 0 0 8px var(--color-sakura);
+}
+
+.focus-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.focus-track-vol {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: var(--color-text-muted);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* Context menu */
 .context-menu {
   position: fixed;
   z-index: 200;
@@ -715,6 +1034,7 @@ button:active {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  backdrop-filter: blur(16px);
 }
 
 .context-menu-item {
@@ -768,7 +1088,7 @@ button:active {
   margin: 3px 6px;
 }
 
-/* Notification Toast */
+/* Notifications */
 .notification {
   position: fixed;
   top: 40px;
@@ -786,36 +1106,10 @@ button:active {
   font-weight: 500;
   color: var(--color-text-primary);
   max-width: 320px;
-  animation: notif-in 0.25s ease-out;
+  backdrop-filter: blur(16px);
 }
 
-/* --------------------------------------------------------------------------
-   10. Clean Keyframes
-   -------------------------------------------------------------------------- */
-@keyframes notif-in {
-  from {
-    transform: translateY(-8px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes cursor-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-/* --------------------------------------------------------------------------
-   11. Mobile & Responsive Styles
-   -------------------------------------------------------------------------- */
+/* Responsive design for tablets and mobile */
 @media (max-width: 768px) {
   .top-bar {
     padding: 0 8px;
@@ -859,13 +1153,8 @@ button:active {
     height: 40px !important;
   }
 
-  .traffic-light {
-    width: 18px !important;
-    height: 18px !important;
-  }
-
-  .traffic-light svg {
-    opacity: 1 !important;
+  .syautype-editors {
+    grid-template-columns: 1fr;
   }
 }
 
