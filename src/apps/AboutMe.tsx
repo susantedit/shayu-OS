@@ -55,7 +55,7 @@ export default function AboutMe() {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        {['Developer', 'Cybersecurity', 'Content Creator', 'AI Enthusiast'].map(tag => (
+        {['High School Builder', 'Nepal', 'Cybersecurity', 'Hack Club Campfire'].map(tag => (
           <span
             key={tag}
             style={{

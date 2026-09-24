@@ -9,12 +9,13 @@ A handcrafted web desktop environment inspired by macOS, built with Nepali cultu
 ## What Makes SyauOS Unique
 
 ### 1. Distinctive Nepali Culture & Utilities
+- **बाघचाल (Bagh-Chal - Tigers & Goats)**: Full native implementation of Nepal's traditional 5x5 strategic board game with 4 corner tigers, 20 goats, jump-capture detection, and pass-and-play or vs-computer modes.
 - **Nepali Patro & Calendar Engine (नेपाली पात्रो)**: Full Bikram Sambat (BS) calendar engine with month length tables from 2000 BS to 2090 BS, AD/BS date conversion, and holiday recognition.
 - **Traditional Land Measurement Converter**: Real conversion formulas between Pahad units (Ropani, Aana, Paisa, Daam), Terai units (Bigha, Kattha, Dhur), and Square Feet.
 - **Syau Type (स्याउ टाइप)**: Live phonetic Romanized-to-Devanagari typing engine (e.g. typing `namaste sathi` live-converts to `नमस्ते साथी`) with one-click copy and direct export to Notes.
 
 ### 2. Handcrafted CSS & Window Manager
-- **100% Handwritten Stylesheet**: Clean CSS with custom properties (`:root`, light/dark themes), custom scrollbars, frosted glass topbar, and responsive rules for mobile phones using `100dvh`.
+- **100% Handwritten Stylesheet**: Clean vanilla CSS with custom properties (`:root`, light/dark themes), custom scrollbars, frosted glass topbar, and responsive rules for mobile phones using `100dvh`. Zero Tailwind CSS or framework wrappers.
 - **macOS Windowing Physics**: Realistic titlebar chrome with traffic light controls (close, minimize, maximize), global dragging handlers, smooth window elevation, and multi-workspace support.
 - **Dock with Magnification**: Floating dock with magnification on hover, active app dots, and smooth spring transitions.
 
@@ -29,6 +30,7 @@ A handcrafted web desktop environment inspired by macOS, built with Nepali cultu
 
 | App | Description | Key Architecture |
 |---|---|---|
+| **बाघचाल (Bagh-Chal)** | Nepal's traditional strategy board game (4 Tigers vs 20 Goats) | 5x5 board geometry, jump-capture algorithm & AI |
 | **नेपाली पात्रो (Calendar & Units)** | Bikram Sambat calendar with AD/BS converter and traditional land/gold units | Algorithmic lookup tables & conversion math |
 | **स्याउ टाइप (Syau Type)** | Real-time phonetic Romanized to Devanagari transliteration engine | Custom phonetic parser & rule engine |
 | **स्याउ साउन्ड (Focus Audio)** | Ambient focus audio mixer (rain, campfire, stream, binaural beats) | Web Audio API procedural synthesis |

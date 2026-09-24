@@ -78,32 +78,36 @@ It loads fast, needs zero API keys, and works without an internet connection.`,
   },
   {
     id: 'devlog-6',
-    title: 'Rewriting CSS by hand and building real features: Answering Rohan',
+    title: 'Stripping Tailwind and writing pure vanilla CSS',
     date: 'September 23, 2026',
     readTime: '3 min read',
-    summary: 'Rohan gave me a reality check on AI overuse. I rewrote the entire stylesheet by hand and built Syau Type & Focus Audio.',
-    content: `Rohan gave me direct feedback on Hack Club:
-"Awesome project, but it seems like your project uses an excessive amount of AI. Please rewrite the CSS by hand and add some human made features, make it something you want to be proud off and something that is yours!"
+    summary: 'Removing the Tailwind dependency, writing custom properties, and organizing the stylesheet by hand.',
+    content: `I started out using Tailwind utility classes because they are quick to prototype with, but having a utility framework inside a desktop environment became messy. When windows needed dynamic positioning, custom window chrome, and theme transitions, utility classes kept conflicting and bloating the code.
 
-Seeing that message hit hard, but it was exactly what I needed to hear. When I looked back through the commit history, I realized that in trying to make SyauOS feel "complete," I had let bloated template code back in, and my CSS was loaded with generic AI Tailwind themes and boilerplate headers instead of styles I crafted with intention.
+I took the time to completely detach Tailwind. I removed the Vite plugin and rewrote the stylesheet by hand using CSS custom properties for dark and light modes, realistic window titlebars with traffic light buttons, dock magnification, and mobile responsive rules using 100dvh.
 
-I sat down and tackled this head-on:
+Writing the CSS in pure vanilla style makes the layout behavior transparent, easy to tweak, and completely mine.`,
+  },
+  {
+    id: 'devlog-7',
+    title: 'Building Bagh-Chal: Nepal\'s traditional strategy board game',
+    date: 'September 24, 2026',
+    readTime: '3 min read',
+    summary: 'Implementing the 5x5 board, diagonal connections, tiger jump captures, and trap mechanics.',
+    content: `I wanted to build an authentic app in SyauOS that genuinely reflects where I come from. Bagh-Chal (बाघचाल - Tigers and Goats) is the traditional board game of Nepal that I grew up playing.
 
-1. Handcrafting the CSS:
-I opened index.css and rewrote the stylesheet by hand. I set up clean custom properties for light and dark modes, crafted the macOS window chrome, styled the dock magnification physics, and built responsive rules that work on phones without overflow. No AI boilerplate comments or fake styling tokens.
+Building it in TypeScript was an interesting algorithmic challenge. The board is a 5x5 grid with 25 intersections, but diagonal lines only connect points where (row + column) is even.
 
-2. Syau Type (Phonetic Nepali Transliteration):
-Instead of generic utility apps, I built something uniquely Nepali that I use every day: a phonetic Romanized-to-Devanagari typing engine. You type "namaste sathi", and it converts to "नमस्ते साथी" live using a custom mapping of consonants, matras, and conjuncts. You can copy it or send it directly into Notes.
+The game has two distinct phases:
+1. The placement phase, where 20 goats are placed on the board one by one while 4 tigers hunt and jump over them.
+2. The movement phase, where goats can slide along connected lines to trap all four tigers.
 
-3. Syau Focus Audio (Web Audio API Synthesizer):
-Rather than relying on external APIs, I used the browser Web Audio API to synthesize ambient soundscapes client-side: monsoon rain in Kathmandu, a Himalayan campfire crackle, river streams, and binaural focus theta tones. It works 100% offline.
-
-SyauOS now represents work I actually built, understand, and can defend line by line. Thank you Rohan for pushing me to build something I can truly be proud of.`,
+Writing the jump-detection math—calculating midpoint coordinates, checking straight-line connectivity, and updating the board state—took real care to get right. I also wired procedural sound effects using the Web Audio API for piece placements, moves, captures, and wins without any external audio libraries.`,
   },
 ]
 
 export default function DevlogsApp() {
-  const [selectedId, setSelectedId] = useState<string>('devlog-6')
+  const [selectedId, setSelectedId] = useState<string>('devlog-7')
   const [search, setSearch] = useState<string>('')
   const { mode, toggleMode } = useThemeStore()
 

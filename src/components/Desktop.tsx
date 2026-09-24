@@ -4,7 +4,7 @@ import {
   User, BookOpen, Terminal as TermIcon,
   FileText, Settings as SettingsIcon,
   Calendar, LayoutGrid, Image as ImageIcon, Plus,
-  Calculator as CalcIcon, Upload
+  Calculator as CalcIcon, Upload, Shield
 } from 'lucide-react'
 import { useDesktopStore, useNotificationStore } from '../store/desktopStore'
 import { useThemeStore } from '../store/themeStore'
@@ -24,12 +24,13 @@ export interface DesktopIconItem {
 
 const DEFAULT_DESKTOP_ICONS: DesktopIconItem[] = [
   { id: 'icon-nepali', name: 'पात्रो / Units', appId: 'nepali-converter', iconType: 'app', gridCol: 0, gridRow: 0, color: '#EF4444' },
-  { id: 'icon-terminal', name: 'Terminal', appId: 'terminal', iconType: 'app', gridCol: 0, gridRow: 1, color: 'var(--color-miku)' },
-  { id: 'icon-notes', name: 'Notes', appId: 'notes', iconType: 'app', gridCol: 0, gridRow: 2, color: 'var(--color-peach)' },
-  { id: 'icon-calculator', name: 'Calculator', appId: 'calculator', iconType: 'app', gridCol: 0, gridRow: 3, color: 'var(--color-lavender)' },
-  { id: 'icon-devlogs', name: 'Devlogs', appId: 'devlogs', iconType: 'app', gridCol: 0, gridRow: 4, color: 'var(--color-sakura)' },
-  { id: 'icon-settings', name: 'Settings', appId: 'settings', iconType: 'app', gridCol: 1, gridRow: 0, color: 'var(--color-text-secondary)' },
-  { id: 'icon-about', name: 'About Me', appId: 'about', iconType: 'app', gridCol: 1, gridRow: 1, color: 'var(--color-sakura)' },
+  { id: 'icon-baghchal', name: 'बाघचाल', appId: 'bagh-chal', iconType: 'app', gridCol: 0, gridRow: 1, color: '#EA580C' },
+  { id: 'icon-terminal', name: 'Terminal', appId: 'terminal', iconType: 'app', gridCol: 0, gridRow: 2, color: 'var(--color-miku)' },
+  { id: 'icon-notes', name: 'Notes', appId: 'notes', iconType: 'app', gridCol: 0, gridRow: 3, color: 'var(--color-peach)' },
+  { id: 'icon-calculator', name: 'Calculator', appId: 'calculator', iconType: 'app', gridCol: 0, gridRow: 4, color: 'var(--color-lavender)' },
+  { id: 'icon-devlogs', name: 'Devlogs', appId: 'devlogs', iconType: 'app', gridCol: 1, gridRow: 0, color: 'var(--color-sakura)' },
+  { id: 'icon-settings', name: 'Settings', appId: 'settings', iconType: 'app', gridCol: 1, gridRow: 1, color: 'var(--color-text-secondary)' },
+  { id: 'icon-about', name: 'About Me', appId: 'about', iconType: 'app', gridCol: 1, gridRow: 2, color: 'var(--color-sakura)' },
 ]
 
 const GRID_W = 86
@@ -410,6 +411,7 @@ export default function Desktop() {
     if (icon.appId) {
       const appConfigs: Record<string, { title: string; w: number; h: number }> = {
         'nepali-converter': { title: 'नेपाली पात्रो र एकाइ रूपान्तरण (Nepali Calendar & Units)', w: 780, h: 560 },
+        'bagh-chal': { title: 'बाघचाल (Bagh-Chal) - Traditional Nepalese Strategy Board Game', w: 820, h: 560 },
         terminal: { title: 'Terminal', w: 600, h: 400 },
         notes: { title: 'Notes', w: 640, h: 480 },
         calculator: { title: 'Calculator', w: 320, h: 460 },
@@ -446,6 +448,7 @@ export default function Desktop() {
     { label: 'Appearance & Settings', icon: SettingsIcon, shortcut: 'Cmd+,', action: () => openWindow('settings', 'Settings', 580, 480) },
     { label: 'New Note', icon: Plus, shortcut: 'Cmd+N', action: () => openWindow('notes', 'Notes', 640, 480) },
     { label: 'Open Terminal', icon: TermIcon, shortcut: 'Cmd+T', action: () => openWindow('terminal', 'Terminal', 600, 400) },
+    { label: 'Bagh-Chal (बाघचाल)', icon: Shield, action: () => openWindow('bagh-chal', 'बाघचाल (Bagh-Chal) - Traditional Nepalese Strategy Board Game', 820, 560) },
     { label: 'Clean Up Icons', icon: LayoutGrid, action: handleCleanUpIcons },
     { divider: true },
     { label: 'Nepali Calendar & Units', icon: Calendar, action: () => openWindow('nepali-converter', 'नेपाली पात्रो र एकाइ रूपान्तरण (Nepali Calendar & Units)', 780, 560) },
@@ -458,6 +461,7 @@ export default function Desktop() {
   const renderIconGraphic = (icon: DesktopIconItem) => {
     if (icon.iconType === 'image') return <ImageIcon size={28} style={{ color: icon.color }} />
     if (icon.iconType === 'file') return <FileText size={28} style={{ color: icon.color }} />
+    if (icon.appId === 'bagh-chal') return <Shield size={28} style={{ color: icon.color }} />
     if (icon.appId === 'terminal') return <TermIcon size={28} style={{ color: icon.color }} />
     if (icon.appId === 'notes') return <FileText size={28} style={{ color: icon.color }} />
     if (icon.appId === 'nepali-converter') return <Calendar size={28} style={{ color: icon.color }} />

@@ -31,6 +31,7 @@ const MusicPlayer = lazy(() => import('./apps/MusicPlayer'))
 const Gallery = lazy(() => import('./apps/Gallery'))
 const Guide = lazy(() => import('./apps/Guide'))
 const FileManager = lazy(() => import('./apps/FileManager'))
+const BaghChal = lazy(() => import('./apps/BaghChal'))
 
 const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.FC>> = {
   about: AboutMe,
@@ -54,6 +55,9 @@ const APP_COMPONENTS: Record<string, React.LazyExoticComponent<React.FC>> = {
   'focus-audio': FocusAudio,
   audio: FocusAudio,
   sound: FocusAudio,
+  'bagh-chal': BaghChal,
+  baghchal: BaghChal,
+  bagh: BaghChal,
 }
 
 type BootPhase = 'waiting' | 'topbar' | 'desktop' | 'dock' | 'done'

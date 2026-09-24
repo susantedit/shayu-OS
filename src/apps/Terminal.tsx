@@ -11,7 +11,7 @@ const COMMANDS: Record<string, (text?: string) => string> = {
   help: () => `Available commands:
   help        - Show this list of commands
   neofetch    - System specs and ASCII स्याउ logo
-  rohan       - Note to Hack Club reviewer @Rohan
+  baghchal    - Play बाघचाल (Bagh-Chal board game)
   type        - Open Syau Type (Nepali phonetic typing)
   audio       - Open Focus Audio synthesizer
   nepali      - View Nepali date and open Patro
@@ -41,10 +41,11 @@ Zero external AI chatbots. 100% offline client-side code.
 Created by Kantaraj Luitel (Susant).`,
 
   skills: () => `Languages:    TypeScript, JavaScript, Python, C, SQL, HTML, CSS
-Frameworks:   React 19, Vite, Zustand, Tailwind CSS, Framer Motion
-Focus Areas:  Web Desktop Architecture, Bikram Sambat Calendar Math, Web Audio API`,
+Styling:      100% Handcrafted Vanilla CSS (Zero Tailwind), CSS Custom Properties
+Focus Areas:  Web Desktop Architecture, Board Game Algorithms, Web Audio API`,
 
   projects: () => `स्याउ OS (SyauOS)  - Handcrafted Web Desktop Environment with Nepali Culture & Tools
+Bagh-Chal Engine   - Nepal's National Traditional Board Game (Tigers & Goats)
 Campfire Kathmandu - 2nd Place Winner (Hack Club 2026)
 Syau Type Engine   - Phonetic Romanized to Devanagari live transliterator`,
 
@@ -52,23 +53,9 @@ Syau Type Engine   - Phonetic Romanized to Devanagari live transliterator`,
 GitHub:   github.com/susantedit
 LinkedIn: linkedin.com/in/kantaraj-luitel`,
 
-  rohan: () => `------------------------------------------------------------
-[Hack Club Review Note for @Rohan]
-------------------------------------------------------------
-"Please rewrite the CSS by hand and add some human made features,
-make it something you want to be proud off and something that is yours!"
-
-Hey Rohan! Thank you for the direct feedback. Here is what I did:
-1. CSS: Completely rewritten by hand in index.css with custom
-   properties, macOS window styling, dock physics, and clean layout.
-2. Human-made features added:
-   - Syau Type: Live phonetic Romanized-to-Devanagari engine.
-   - Syau Sound: Offline Web Audio API ambient noise synthesizer.
-   - Bikram Sambat Calendar & Traditional Land Units (Ropani/Bigha).
-3. Cut all AI assistant bloatware and filler templates.
-SyauOS is now completely offline, human-crafted, and something
-I am genuinely proud to call mine!
-------------------------------------------------------------`,
+  baghchal: () => `बाघचाल (Bagh-Chal) is Nepal's ancient two-player strategy game.
+4 Tigers vs 20 Goats on a 5x5 grid with diagonal paths.
+Launching game board...`,
 
   neofetch: () => `
          .---.        susant@syau-os
@@ -79,9 +66,9 @@ I am genuinely proud to call mine!
     /           \\     Uptime: Active Web Session
    |  (.)   (.)  |    Shell: syau-sh 1.4
    |     ___     |    WM: Custom Zustand Window Manager
-    \\   '---'   /     Styling: Handcrafted CSS
+    \\   '---'   /     Styling: 100% Handcrafted Vanilla CSS
      '---------'      Calendar: Bikram Sambat (BS) Engine
-                      Features: Syau Type, Focus Audio, Patro
+                      Features: Bagh-Chal, Syau Type, Focus Audio
                       Builder: Kantaraj Luitel (Susant) [Nepal]`,
 
   date: () => new Date().toString(),
@@ -90,7 +77,7 @@ I am genuinely proud to call mine!
 export default function Terminal() {
   const [lines, setLines] = useState<Line[]>([
     { text: 'SyauTerm v1.4.0 (स्याउ OS)', type: 'output' },
-    { text: 'Type "help" for a list of commands, or "rohan" to see the review note.', type: 'output' },
+    { text: 'Type "help" for a list of commands, or "baghchal" to play the board game.', type: 'output' },
     { text: '', type: 'output' },
   ])
   const [input, setInput] = useState('')
@@ -156,6 +143,9 @@ export default function Terminal() {
       out +=    `Gregorian:   ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\n`
       useDesktopStore.getState().openWindow('nepali-converter', 'नेपाली पात्रो र एकाइ रूपान्तरण', 780, 560)
       newLines.push({ text: out, type: 'output' })
+    } else if (command === 'baghchal' || command === 'bagh') {
+      useDesktopStore.getState().openWindow('bagh-chal', 'बाघचाल (Bagh-Chal) - Traditional Nepalese Strategy Board Game', 820, 560)
+      newLines.push({ text: 'Launched बाघचाल (Bagh-Chal) board game.', type: 'output' })
     } else if (command === 'type') {
       useDesktopStore.getState().openWindow('syau-type', 'स्याउ टाइप - Nepali Transliteration', 760, 520)
       newLines.push({ text: 'Launched Syau Type transliterator.', type: 'output' })

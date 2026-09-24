@@ -2,11 +2,12 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   User, Terminal, FileText, Calculator,
-  BookOpen, Settings, X, Search, Calendar, Music
+  BookOpen, Settings, X, Search, Calendar, Music, Shield
 } from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 
 const APPS = [
+  { id: 'bagh-chal', title: 'बाघचाल (Bagh-Chal Board Game)', kw: 'bagh chal tiger goat nepali traditional game board strategy pass play', Icon: Shield, color: '#EA580C' },
   { id: 'nepali-converter', title: 'Nepali Calendar & Units', kw: 'nepali calendar bikram sambat patro converter ropani aana bigha tola gold weight land date', Icon: Calendar, color: '#EF4444' },
   { id: 'syau-type', title: 'स्याउ टाइप (Nepali Transliteration)', kw: 'nepali typing transliteration romanized devanagari preeti type write translate', Icon: FileText, color: 'var(--color-sakura)' },
   { id: 'focus-audio', title: 'स्याउ साउन्ड (Focus Audio)', kw: 'audio sound soundscape rain campfire lofi stream ambient music focus binaural noise', Icon: Music, color: 'var(--color-miku)' },
