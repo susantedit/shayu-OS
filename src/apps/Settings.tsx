@@ -5,11 +5,11 @@ import {
 import { useThemeStore, type DockSize } from '../store/themeStore'
 
 const ACCENTS = [
-  { name: 'Sakura Pink', primary: '#E8829B', dark: '#C45A7C' },
-  { name: 'Cyber Miku', primary: '#7EDDD6', dark: '#39C5BB' },
-  { name: 'Lavender Neon', primary: '#C4B5FD', dark: '#A78BFA' },
-  { name: 'Mint Leaf', primary: '#86EFAC', dark: '#4ADE80' },
-  { name: 'Warm Peach', primary: '#FDBA74', dark: '#FB923C' },
+  { name: 'Rhododendron (लालीगुराँस)', primary: '#E11D48', dark: '#BE123C' },
+  { name: 'Himalayan Sky (हिमाल नीलो)', primary: '#06B6D4', dark: '#0891B2' },
+  { name: 'Marigold Gold (सयपत्री)', primary: '#F59E0B', dark: '#D97706' },
+  { name: 'Terai Green (तराई हरियो)', primary: '#10B981', dark: '#059669' },
+  { name: 'Monastery Violet (गुम्बा बैजनी)', primary: '#8B5CF6', dark: '#6D28D9' },
 ]
 
 export default function Settings() {

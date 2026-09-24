@@ -40,9 +40,8 @@ const MARGIN_Y = 46
 
 export default function Desktop() {
   const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null)
-  const [bgMode, setBgMode] = useState<'dark' | 'static' | 'live' | 'custom' | 'generative'>(() => (localStorage.getItem('syau-os-bg') as any) || 'dark')
+  const [bgMode, setBgMode] = useState<'dark' | 'static' | 'custom' | 'generative'>(() => (localStorage.getItem('syau-os-bg') as any) || 'dark')
   const [wallpaper, setWallpaper] = useState(() => localStorage.getItem('syau-os-wallpaper') || 'wall-1')
-  const [liveWall, setLiveWall] = useState(() => localStorage.getItem('syau-os-live-wall') || 'live-1')
   const customWallpaper = useThemeStore(s => s.customWallpaper)
   const wallpaperBlur = useThemeStore(s => s.wallpaperBlur)
   const wallpaperDim = useThemeStore(s => s.wallpaperDim)
@@ -53,9 +52,6 @@ export default function Desktop() {
   const bgRef = useRef<HTMLDivElement>(null)
   const genCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const mousePosRef = useRef<{ x: number; y: number }>({ x: -1000, y: -1000 })
-  const orb1Ref = useRef<HTMLDivElement>(null)
-  const orb2Ref = useRef<HTMLDivElement>(null)
-  const glowRef = useRef<HTMLDivElement>(null)
   const [icons, setIcons] = useState<DesktopIconItem[]>(() => {
     try {
       const saved = localStorage.getItem('syau-desktop-icons')
@@ -129,7 +125,6 @@ export default function Desktop() {
       const detail = (e as CustomEvent).detail
       if (detail?.mode) setBgMode(detail.mode)
       if (detail?.wallpaper) setWallpaper(detail.wallpaper)
-      if (detail?.liveWall) setLiveWall(detail.liveWall)
     }
     window.addEventListener('syau-os-bg-change', handler)
     return () => window.removeEventListener('syau-os-bg-change', handler)
@@ -145,14 +140,9 @@ export default function Desktop() {
       cancelAnimationFrame(raf)
       raf = requestAnimationFrame(() => {
         const rect = el.getBoundingClientRect()
-        const nx = ((e.clientX - rect.left) / rect.width - 0.5) * -10
-        const ny = ((e.clientY - rect.top) / rect.height - 0.5) * -10
+        const nx = ((e.clientX - rect.left) / rect.width - 0.5) * -8
+        const ny = ((e.clientY - rect.top) / rect.height - 0.5) * -8
         if (bgRef.current) bgRef.current.style.transform = `translate(${nx}px, ${ny}px)`
-        if (orb1Ref.current) orb1Ref.current.style.transform = `translate(${nx * 2}px, ${ny * 2}px)`
-        if (orb2Ref.current) orb2Ref.current.style.transform = `translate(${nx * 1.5}px, ${ny * 1.5}px)`
-        if (glowRef.current) {
-          glowRef.current.style.transform = `translate3d(${e.clientX - 200}px, ${e.clientY - 200}px, 0)`
-        }
       })
     }
     el.addEventListener('mousemove', onMove, { passive: true })
@@ -504,15 +494,6 @@ export default function Desktop() {
         }} />
       )}
 
-      {bgMode === 'live' && (
-        <video key={liveWall} autoPlay loop muted playsInline ref={bgRef as any} style={{
-          position: 'absolute', inset: 0, width: '100%', height: '100%',
-          objectFit: 'cover', zIndex: 0, opacity: 0.75, transition: 'transform 0.3s ease-out',
-        }}>
-          <source src={mediaUrl(`/video/${liveWall}.mp4`)} type="video/mp4" />
-        </video>
-      )}
-
       {bgMode === 'static' && (
         <div ref={bgRef} style={{
           position: 'absolute', inset: 0, width: '100%', height: '100%',
@@ -523,7 +504,7 @@ export default function Desktop() {
         }} />
       )}
 
-      {(bgMode === 'live' || bgMode === 'static' || (customWallpaper && bgMode === 'custom')) && (
+      {(bgMode === 'static' || (customWallpaper && bgMode === 'custom')) && (
         <div style={{
           position: 'absolute', inset: 0, zIndex: 1,
           background: `rgba(5, 5, 8, var(--os-wallpaper-dim, ${wallpaperDim / 100}))`,
@@ -533,28 +514,6 @@ export default function Desktop() {
       )}
 
       <div className="desktop-pattern" />
-
-      <div ref={orb1Ref} style={{
-        position: 'absolute', top: '10%', right: '15%', width: 350, height: 350,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(232,130,155,0.04) 0%, rgba(107,63,160,0.02) 40%, transparent 70%)',
-        pointerEvents: 'none', filter: 'blur(40px)', transition: 'transform 0.4s ease-out',
-      }} />
-      <div ref={orb2Ref} style={{
-        position: 'absolute', bottom: '20%', left: '10%', width: 300, height: 300,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(126,221,214,0.02) 0%, rgba(107,63,160,0.01) 40%, transparent 70%)',
-        pointerEvents: 'none', filter: 'blur(50px)', transition: 'transform 0.5s ease-out',
-      }} />
-
-      <div ref={glowRef} style={{
-        position: 'fixed', pointerEvents: 'none', zIndex: 1,
-        top: 0, left: 0,
-        width: 400, height: 400, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(232,130,155,0.015) 0%, transparent 60%)',
-        transform: 'translate3d(-500px, -500px, 0)',
-        willChange: 'transform',
-      }} />
 
       <div style={{
         position: 'absolute', inset: 0,
