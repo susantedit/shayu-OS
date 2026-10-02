@@ -41,10 +41,10 @@ Zero external AI chatbots. 100% offline client-side code.
 Created by Kantaraj Luitel (Susant).`,
 
   skills: () => `Languages:    TypeScript, JavaScript, Python, C, SQL, HTML, CSS
-Styling:      100% Handcrafted Vanilla CSS (Zero Tailwind), CSS Custom Properties
+Styling:      Vanilla CSS, CSS Custom Properties
 Focus Areas:  Web Desktop Architecture, Board Game Algorithms, Web Audio API`,
 
-  projects: () => `स्याउ OS (SyauOS)  - Handcrafted Web Desktop Environment with Nepali Culture & Tools
+  projects: () => `स्याउ OS (SyauOS)  - Web Desktop Environment with Nepali Culture & Tools
 Bagh-Chal Engine   - Nepal's National Traditional Board Game (Tigers & Goats)
 Campfire Kathmandu - 2nd Place Winner (Hack Club 2026)
 Syau Type Engine   - Phonetic Romanized to Devanagari live transliterator`,
@@ -66,7 +66,7 @@ Launching game board...`,
     /           \\     Uptime: Active Web Session
    |  (.)   (.)  |    Shell: syau-sh 1.4
    |     ___     |    WM: Custom Zustand Window Manager
-    \\   '---'   /     Styling: 100% Handcrafted Vanilla CSS
+    \\   '---'   /     Styling: Vanilla CSS (Custom Properties)
      '---------'      Calendar: Bikram Sambat (BS) Engine
                       Features: Bagh-Chal, Syau Type, Focus Audio
                       Builder: Kantaraj Luitel (Susant) [Nepal]`,

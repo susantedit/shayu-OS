@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react'
 import { Copy, Check, FileText, Trash2, Sparkles, BookOpen } from 'lucide-react'
 import { transliterateText } from '../utils/nepaliTranslit'
 import { useDesktopStore, useNotificationStore } from '../store/desktopStore'
+import './SyauType.css'
 
 const QUICK_PHRASES = [
   { label: 'नमस्ते', roman: 'namaste sathi, k cha khabar?' },

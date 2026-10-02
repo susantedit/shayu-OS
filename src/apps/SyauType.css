@@ -1,0 +1,216 @@
+.syautype-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  gap: 12px;
+  background: var(--color-window-bg);
+  overflow-y: auto;
+}
+
+.syautype-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 12px;
+}
+
+.syautype-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.syautype-badge {
+  background: var(--color-sakura);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: var(--radius-button);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.syautype-sub {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.syautype-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.syautype-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: var(--radius-button);
+  border: 1px solid var(--color-border);
+  background: var(--color-glass-card);
+  color: var(--color-text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.syautype-btn:hover {
+  background: var(--color-border);
+  color: var(--color-sakura);
+}
+
+.syautype-btn.primary {
+  background: var(--color-sakura);
+  color: #ffffff;
+  border-color: var(--color-sakura);
+}
+
+.syautype-btn.primary:hover {
+  background: var(--color-sakura-deep);
+}
+
+.syautype-btn.danger:hover {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.syautype-guide {
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-glass-border);
+  border-radius: var(--radius-button);
+  padding: 12px;
+}
+
+.syautype-guide-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--color-text-primary);
+}
+
+.syautype-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 6px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.syautype-guide-grid code {
+  color: var(--color-sakura);
+  font-family: var(--font-mono);
+  background: rgba(225, 29, 72, 0.08);
+  padding: 1px 4px;
+  border-radius: 4px;
+}
+
+.syautype-chips {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.syautype-chips-label {
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.syautype-chip {
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  font-family: var(--font-syau);
+  transition: all 0.12s ease;
+}
+
+.syautype-chip:hover {
+  background: var(--color-sakura);
+  color: #ffffff;
+  border-color: var(--color-sakura);
+}
+
+.syautype-editors {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+  min-height: 240px;
+}
+
+.syautype-box {
+  display: flex;
+  flex-direction: column;
+  background: var(--color-glass-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  overflow: hidden;
+}
+
+.syautype-box.output {
+  background: rgba(225, 29, 72, 0.03);
+  border-color: rgba(225, 29, 72, 0.2);
+}
+
+.syautype-box-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.syautype-count {
+  font-size: 10px;
+  color: var(--color-text-muted);
+}
+
+.syautype-textarea {
+  flex: 1;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+}
+
+.syautype-output {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--color-text-primary);
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.syautype-placeholder {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 13px;
+}
+
+@media (max-width: 768px) {
+  .syautype-editors {
+    grid-template-columns: 1fr;
+  }
+}

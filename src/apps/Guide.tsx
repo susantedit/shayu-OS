@@ -44,7 +44,7 @@ const sections = [
     title: 'Architecture & Craftsmanship',
     icon: Palette,
     items: [
-      { label: '100% Handcrafted CSS', desc: 'Built entirely with handwritten vanilla CSS and custom properties (--color-*, --radius-*, --font-*). Zero Tailwind or external CSS frameworks.' },
+      { label: 'Modular Vanilla CSS', desc: 'Built with modular CSS files and custom properties (--color-*, --radius-*, --font-*). Zero Tailwind or external CSS frameworks.' },
       { label: 'Zero AI Chatbots & Zero API Keys', desc: 'Every application runs purely client-side in the browser with offline capability.' },
       { label: 'Strictly Vector Graphics', desc: 'Zero emojis across the interface. Clean vector iconography powered by Lucide React and custom SVG elements.' },
       { label: 'Audio Synthesis', desc: 'Procedural sound design powered by the browser\'s native Web Audio API oscillators and gain nodes.' },

@@ -1,5 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from 'react'
 import { RotateCcw, HelpCircle, Users, Bot, Trophy, Info, Volume2, VolumeX } from 'lucide-react'
+import './BaghChal.css'
 
 type Piece = 'T' | 'G' | null // T = Tiger, G = Goat, null = Empty
 

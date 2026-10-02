@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Volume2, VolumeX, CloudRain, Flame, Waves, Radio, Keyboard, Play, Pause } from 'lucide-react'
+import './FocusAudio.css'
 
 interface SoundTrack {
   id: string
