@@ -1,0 +1,118 @@
+/* Calculator */
+.app-calc {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+.app-calc-display {
+  background: rgba(125, 125, 125, 0.08);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  padding: 14px;
+  text-align: right;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  min-height: 56px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.app-calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  flex: 1;
+}
+
+.app-calc-btn {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-button);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  background: rgba(125, 125, 125, 0.08);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s ease;
+}
+
+.app-calc-btn:hover {
+  background: rgba(125, 125, 125, 0.16);
+}
+
+.app-calc-btn.op {
+  background: rgba(225, 29, 72, 0.15);
+  color: var(--color-sakura);
+}
+
+.app-calc-btn.op:hover {
+  background: rgba(225, 29, 72, 0.25);
+}
+
+.app-calc-btn.equals {
+  background: var(--color-sakura);
+  color: #ffffff;
+}
+
+.app-calc-btn.equals:hover {
+  background: var(--color-sakura-deep);
+}
+
+/* Terminal */
+.app-terminal {
+  background: #09090b;
+  color: #e4e4e7;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 14px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.app-terminal-input {
+  background: transparent;
+  border: none;
+  color: #f4f4f5;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+  caret-color: var(--color-sakura);
+}
+
+.app-terminal-prompt {
+  color: var(--color-sakura);
+  font-weight: 600;
+}
+
+.app-terminal-line {
+  margin-bottom: 3px;
+  line-height: 1.5;
+}
+
+/* Notes */
+.app-notes {
+  padding: 16px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-notes textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background: transparent;
+}

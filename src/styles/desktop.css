@@ -1,0 +1,13 @@
+.desktop {
+  position: fixed;
+  inset: 0;
+  background: var(--color-cream);
+  overflow: hidden;
+}
+
+.desktop-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.04;
+  pointer-events: none;
+}

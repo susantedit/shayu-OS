@@ -1,0 +1,124 @@
+.dock-wrapper {
+  position: fixed;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 90;
+}
+
+.dock-container {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--color-window-header);
+  border-radius: var(--radius-dock);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 24px var(--color-shadow);
+  backdrop-filter: blur(16px);
+}
+
+.dock-item {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+  transition: transform 0.15s ease;
+}
+
+.dock-item:hover {
+  transform: translateY(-4px) scale(1.12);
+}
+
+.dock-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.dock-icon-wrapper svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.dock-item-dot {
+  position: absolute;
+  bottom: -4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-sakura);
+}
+
+.dock-tooltip {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-window-header);
+  color: var(--color-text-primary);
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px var(--color-shadow);
+  transition: opacity 0.15s ease;
+}
+
+.dock-item:hover .dock-tooltip {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .dock-wrapper {
+    bottom: 6px;
+  }
+
+  .dock-container {
+    padding: 4px 8px;
+    gap: 4px;
+    max-width: calc(100vw - 12px);
+    overflow-x: auto;
+  }
+
+  .dock-item {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .dock-icon-wrapper {
+    width: 36px !important;
+    height: 36px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .dock-item {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  .dock-icon-wrapper {
+    width: 32px !important;
+    height: 32px !important;
+  }
+}

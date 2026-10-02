@@ -1,0 +1,111 @@
+.top-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 32px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 12px;
+  background: var(--color-window-header);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 13px;
+  font-weight: 500;
+  user-select: none;
+  box-shadow: 0 1px 8px var(--color-shadow);
+  backdrop-filter: blur(12px);
+}
+
+.top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+}
+
+.top-bar-logo {
+  font-weight: 700;
+  color: var(--color-sakura);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.top-bar-menu {
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: var(--radius-button);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+
+.top-bar-menu:hover {
+  background: rgba(125, 125, 125, 0.12);
+  color: var(--color-text-primary);
+}
+
+.topbar-dropdown {
+  position: absolute;
+  top: 32px;
+  left: 0;
+  min-width: 190px;
+  background: var(--color-window-header);
+  border: 1px solid var(--color-border);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 8px 24px var(--color-shadow-heavy);
+  padding: 4px;
+  z-index: 200;
+  backdrop-filter: blur(16px);
+}
+
+.topbar-dropdown-item {
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.1s;
+}
+
+.topbar-dropdown-item:hover {
+  background: var(--color-border);
+  color: var(--color-sakura);
+}
+
+.topbar-dropdown-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 4px 6px;
+}
+
+@media (max-width: 768px) {
+  .top-bar {
+    padding: 0 8px;
+    height: 32px;
+  }
+
+  .topbar-hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar-hide-small-mobile {
+    display: none !important;
+  }
+}
