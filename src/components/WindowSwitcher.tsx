@@ -1,9 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
-  User, Terminal, FileText, Calculator, Music, Image, Globe,
-  BookOpen, Settings as SettingsIcon, Folder, ShoppingBag, CloudSun,
-  Kanban, Timer, Keyboard, Palette, File, Video
+  User, Terminal, FileText, Calculator, Music, Image,
+  BookOpen, Settings as SettingsIcon, Folder, File
 } from 'lucide-react'
 import { useDesktopStore } from '../store/desktopStore'
 

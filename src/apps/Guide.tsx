@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import {
-  Rocket, Layout, Terminal as TerminalIcon, Palette,
-  Settings as SettingsIcon, BookOpen, ChevronRight, ChevronDown, Shield
+  Rocket, Layout, Palette,
+  BookOpen, ChevronRight, ChevronDown, Shield
 } from 'lucide-react'
 
 const sections = [

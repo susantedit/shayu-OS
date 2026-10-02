@@ -14,8 +14,8 @@ A handcrafted web desktop environment inspired by macOS, built with Nepali cultu
 - **Traditional Land Measurement Converter**: Real conversion formulas between Pahad units (Ropani, Aana, Paisa, Daam), Terai units (Bigha, Kattha, Dhur), and Square Feet.
 - **Syau Type (स्याउ टाइप)**: Live phonetic Romanized-to-Devanagari typing engine (e.g. typing `namaste sathi` live-converts to `नमस्ते साथी`) with one-click copy and direct export to Notes.
 
-### 2. Handcrafted CSS & Window Manager
-- **100% Handwritten Stylesheet**: Clean vanilla CSS with custom properties (`:root`, light/dark themes), custom scrollbars, frosted glass topbar, and responsive rules for mobile phones using `100dvh`. Zero Tailwind CSS or framework wrappers.
+### 2. Modular CSS & Window Manager
+- **Vanilla CSS**: Clean, modular CSS stylesheets with custom properties (`:root`, light/dark themes), custom scrollbars, frosted glass topbar, and responsive rules for mobile phones using `100dvh`. Zero Tailwind CSS or heavy framework wrappers.
 - **macOS Windowing Physics**: Realistic titlebar chrome with traffic light controls (close, minimize, maximize), global dragging handlers, smooth window elevation, and multi-workspace support.
 - **Dock with Magnification**: Floating dock with magnification on hover, active app dots, and smooth spring transitions.
 

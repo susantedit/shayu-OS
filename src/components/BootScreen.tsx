@@ -12,7 +12,7 @@ function playBootChime() {
 
     // Warm macOS-style major chord: C4, E4, G4, C5
     const freqs = [261.63, 329.63, 392.00, 523.25]
-    freqs.forEach((freq, i) => {
+    freqs.forEach(freq => {
       const osc = ctx.createOscillator()
       const gain = ctx.createGain()
       osc.type = 'sine'
